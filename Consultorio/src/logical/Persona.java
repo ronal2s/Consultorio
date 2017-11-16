@@ -4,9 +4,10 @@ public abstract class Persona {
 	protected String cedula, nombre, apellidos, direccion, telefono;
 	protected char sexo;
 	protected String fechaNacimiento;
+	protected String tipoSangre;
 	
 	public Persona(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento) {
+			String fechaNacimiento, String tipoSangre) {
 		super();
 		this.cedula = cedula;
 		this.nombre = nombre;
@@ -15,7 +16,19 @@ public abstract class Persona {
 		this.telefono = telefono;
 		this.sexo = sexo;
 		this.fechaNacimiento = fechaNacimiento;
+		this.tipoSangre = tipoSangre;
 	}
+
+	
+	public String getTipoSangre() {
+		return tipoSangre;
+	}
+
+
+	public void setTipoSangre(String tipoSangre) {
+		this.tipoSangre = tipoSangre;
+	}
+
 
 	public String getCedula() {
 		return cedula;

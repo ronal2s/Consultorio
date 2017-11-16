@@ -10,8 +10,8 @@ public class Paciente extends Persona{
 	private boolean estado;
 	
 	public Paciente(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento,ArrayList<String> alergias, ArrayList<String> enfermedades, ArrayList<Vacuna> vacunas,ArrayList<Cosulta> historiaClinica) {
-		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento);
+			String fechaNacimiento, String tipoSangre, ArrayList<String> alergias, ArrayList<String> enfermedades, ArrayList<Vacuna> vacunas,ArrayList<Cosulta> historiaClinica) {
+		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
 		this.alergias = alergias;
 		this.enfermedades = enfermedades;
 		this.vacunas = vacunas;
