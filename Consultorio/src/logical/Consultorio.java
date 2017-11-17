@@ -67,7 +67,7 @@ public class Consultorio {
 		}
 		
 	}
-	
+	//Crear cita
 	public void crearCita(Paciente paciente, String descripcion, String sala, Doctor doctor, String tipo, String fecha,
 			String hora, double duracion, String nota)
 	{
@@ -82,7 +82,7 @@ public class Consultorio {
 			JOptionPane.showMessageDialog(null, "Paciente no existe");
 		}
 	}
-	
+	//Buscar paciente
 	public int buscarPaciente(String cedula)
 	{
 		int posicion = -1;
@@ -98,7 +98,39 @@ public class Consultorio {
 		}
 		return posicion;
 	}
-
+	//Buscar Doctor
+	public int buscarDoctor(String cedula)
+	{
+		int posicion = -1;
+		int i=0;
+		//A este while en algún momento habrá que ponerle un try catch	s
+		while(i<doctores.size() || posicion == -1)
+		{
+			if(doctores.get(i).getCedula().equalsIgnoreCase(cedula))
+			{
+				posicion = i;
+			}
+			i++;
+		}
+		return posicion;
+	}
+	//Buscar Empleado
+	public int buscarEmpleado(String cedula)
+	{
+		int posicion = -1;
+		int i=0;
+		//A este while en algún momento habrá que ponerle un try catch	s
+		while(i<empleados.size() || posicion == -1)
+		{
+			if(empleados.get(i).getCedula().equalsIgnoreCase(cedula))
+			{
+				posicion = i;
+			}
+			i++;
+		}
+		return posicion;
+	}
+	
 	public ArrayList<Paciente> getPacientes() {
 		return pacientes;
 	}
