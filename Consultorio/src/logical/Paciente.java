@@ -6,18 +6,34 @@ public class Paciente extends Persona{
 
 	private ArrayList<String> alergias, enfermedades;
 	private ArrayList<Vacuna> vacunas;
-	private ArrayList<Cosulta> historiaClinica;
+	private ArrayList<Consulta> historiaClinica;
+	private ArrayList<Consulta> consultas;
 	private boolean estado;
 	
 	public Paciente(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento, String tipoSangre, ArrayList<String> alergias, ArrayList<String> enfermedades, ArrayList<Vacuna> vacunas,ArrayList<Cosulta> historiaClinica) {
+			String fechaNacimiento, String tipoSangre, ArrayList<String> alergias, ArrayList<String> enfermedades, ArrayList<Vacuna> vacunas,ArrayList<Consulta> historiaClinica) {
 		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
 		this.alergias = alergias;
 		this.enfermedades = enfermedades;
 		this.vacunas = vacunas;
 		this.historiaClinica = historiaClinica;
+		this.consultas = new ArrayList<Consulta>();
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public ArrayList<Consulta> getConsultas() {
+		return consultas;
+	}
+
+
+
+	public void setConsultas(ArrayList<Consulta> consultas) {
+		this.consultas = consultas;
+	}
+
+
 
 	public ArrayList<String> getAlergias() {
 		return alergias;
@@ -43,11 +59,11 @@ public class Paciente extends Persona{
 		this.vacunas = vacunas;
 	}
 
-	public ArrayList<Cosulta> getHistoriaClinica() {
+	public ArrayList<Consulta> getHistoriaClinica() {
 		return historiaClinica;
 	}
 
-	public void setHistoriaClinica(ArrayList<Cosulta> historiaClinica) {
+	public void setHistoriaClinica(ArrayList<Consulta> historiaClinica) {
 		this.historiaClinica = historiaClinica;
 	}
 

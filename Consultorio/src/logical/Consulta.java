@@ -2,7 +2,7 @@ package logical;
 
 import java.util.ArrayList;
 
-public class Cosulta {
+public class Consulta {
 	private String fecha;
 	private Paciente paciente;
 	private Doctor doctor;
@@ -14,7 +14,7 @@ public class Cosulta {
 	private String enfermedad;
 	private Cita cita;
 	
-	public Cosulta(String fecha, Paciente paciente, Doctor doctor, ArrayList<String> sintomas, String anamnesis,
+	public Consulta(String fecha, Paciente paciente, Doctor doctor, ArrayList<String> sintomas, String anamnesis,
 			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita) {
 		super();
 		this.fecha = fecha;
