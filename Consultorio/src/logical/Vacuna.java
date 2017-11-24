@@ -6,7 +6,7 @@ public class Vacuna {
 	private String tipo;//Tipo
 	private ArrayList<String> dosis;//Lista de dosis
 	private boolean estado;//Si la tiene puesta o no
-	public String ELIMINAESTALINEAAVER;
+	public String ELIMINAESTALINEAAVER2;
 	
 	
 	public Vacuna(String tipo, ArrayList<String> lista, boolean estado) {
