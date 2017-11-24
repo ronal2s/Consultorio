@@ -4,15 +4,28 @@ import java.util.ArrayList;
 
 public class Doctor extends Persona {
 	private String especialidad;
+	private String clave;
 	private ArrayList<Cita> citas;
 	
 	public Doctor(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento, String tipoSangre,String especialidad) {
+			String fechaNacimiento, String tipoSangre,String especialidad, String clave) {
 		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
 		this.especialidad = especialidad;
 		this.citas = new ArrayList<Cita>();
+		this.clave = clave;
 		//Creo el objeto ArrayList acá porque al crear un doctor se supon que el no tiene ninguna cita aún
 	}
+
+	
+	public String getClave() {
+		return clave;
+	}
+
+
+	public void setClave(String clave) {
+		this.clave = clave;
+	}
+
 
 	public String getEspecialidad() {
 		return especialidad;
