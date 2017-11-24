@@ -3,14 +3,14 @@ package logical;
 import java.util.ArrayList;
 
 public class Vacuna {
-	private String tipo;
-	private ArrayList<String> lista;
-	private boolean estado;
+	private String tipo;//Tipo
+	private ArrayList<String> dosis;//Lista de dosis
+	private boolean estado;//Si la tiene puesta o no
 	
 	public Vacuna(String tipo, ArrayList<String> lista, boolean estado) {
 		super();
 		this.tipo = tipo;
-		this.lista = lista;
+		this.dosis = lista;
 		this.estado = estado;
 	}
 
@@ -23,11 +23,11 @@ public class Vacuna {
 	}
 
 	public ArrayList<String> getLista() {
-		return lista;
+		return dosis;
 	}
 
 	public void setLista(ArrayList<String> lista) {
-		this.lista = lista;
+		this.dosis = lista;
 	}
 
 	public boolean isEstado() {
