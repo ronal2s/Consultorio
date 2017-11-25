@@ -33,15 +33,15 @@ public class Consultorio {
 	
 	//Creando empleado nuevo
 	//Realmente simplemente se podía poner crearEmpleado(Empleado empleado) y ya, lo hice así largo para luego en la parte visual tener que escribir menos código, creo
-	public void crearEmpleado(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String cargo)
+	public void crearEmpleado(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String cargo, String clave)
 	{
-		Empleado empleado = new Empleado(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, cargo);
+		Empleado empleado = new Empleado(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, cargo, clave);
 		empleados.add(empleado);
 	}
 	//Agregar doctor
-	public void crearDoctor(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String especialidad)
+	public void crearDoctor(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String especialidad, String clave)
 	{
-		Doctor doctor = new Doctor(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, especialidad);
+		Doctor doctor = new Doctor(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, especialidad, clave);
 		doctores.add(doctor);
 	}
 	//Agregar enfermedad
