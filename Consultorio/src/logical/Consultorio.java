@@ -11,6 +11,8 @@ public class Consultorio {
 	private ArrayList<Enfermedad> enfermedades;
 	private ArrayList<Cita> citas;
 	private static Consultorio consultorio;
+	private ArrayList<Vacuna> vacuna;
+	private ArrayList<Usuario> usuario;
 	
 	private Consultorio()
 	{
@@ -48,6 +50,18 @@ public class Consultorio {
 		Enfermedad enfermedad = new Enfermedad(nombre, tipo, caracteristicas);
 		enfermedades.add(enfermedad);
 	}
+	
+	//Crear nueva vacuna
+	public void crearVacuna ( String tipo, ArrayList<String> lista) {
+		Vacuna vacuna = new Vacuna ( tipo, lista );
+		this.vacuna.add(vacuna);
+	}
+	
+	//Asignar lista de vacunas a Paciente
+	public void vacunaPaciente ( ArrayList<Vacuna> v, int ind ) {
+		pacientes.get(ind).setVacunas(v);
+	}
+	
 	//Crear consulta para el paciente
 	public void crearConsulta(String fecha, Paciente paciente, Doctor doctor, ArrayList<String> sintomas, String anamnesis,
 			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita)
@@ -67,10 +81,11 @@ public class Consultorio {
 		}
 		
 	}
+	
 	//Crear cita
 	public void crearCita(Paciente paciente, String descripcion, String sala, Doctor doctor, String tipo, String fecha,
-			String hora, double duracion, String nota)
-	{
+			String hora, double duracion, String nota){
+		
 		int posPaciente = buscarPaciente(paciente.getCedula());
 		if(posPaciente != -1)
 		{
@@ -131,6 +146,24 @@ public class Consultorio {
 		return posicion;
 	}
 	
+	
+	
+	public ArrayList<Usuario> getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(ArrayList<Usuario> usuario) {
+		this.usuario = usuario;
+	}
+
+	public ArrayList<Vacuna> getVacunas() {
+		return vacuna;
+	}
+
+	public void setVacunas(ArrayList<Vacuna> vacunas) {
+		this.vacuna = vacunas;
+	}
+
 	public ArrayList<Paciente> getPacientes() {
 		return pacientes;
 	}

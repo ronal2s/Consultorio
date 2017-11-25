@@ -4,16 +4,18 @@ import java.util.ArrayList;
 
 public class Vacuna {
 	private String tipo;//Tipo
-	private ArrayList<String> dosis;//Lista de dosis
-	private boolean estado;//Si la tiene puesta o no
+	private ArrayList<String> dosis;//Lista de fechas dosis asignada
 	public String ELIMINAESTALINEAAVER2;
 	
 	
-	public Vacuna(String tipo, ArrayList<String> lista, boolean estado) {
+	public Vacuna(String tipo, ArrayList<String> lista ) {
 		super();
 		this.tipo = tipo;
 		this.dosis = lista;
-		this.estado = estado;
+	}
+	
+	public void addDosis ( String v ) {
+		dosis.add(v);
 	}
 
 	public String getTipo() {
@@ -31,14 +33,5 @@ public class Vacuna {
 	public void setLista(ArrayList<String> lista) {
 		this.dosis = lista;
 	}
-
-	public boolean isEstado() {
-		return estado;
-	}
-
-	public void setEstado(boolean estado) {
-		this.estado = estado;
-	}
-	
 	
 }

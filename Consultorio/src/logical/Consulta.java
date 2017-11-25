@@ -28,6 +28,10 @@ public class Consulta {
 		this.enfermedad = enfermedad;
 		this.cita = cita;
 	}
+	
+	public void addSintoma(String s) {
+		sintomas.add(s);
+	}
 
 	public String getFecha() {
 		return fecha;
