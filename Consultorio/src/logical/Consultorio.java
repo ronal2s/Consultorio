@@ -1,5 +1,13 @@
 package logical;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
@@ -31,17 +39,69 @@ public class Consultorio {
 		return consultorio;
 	}
 	
+	public void guardarDatos() throws IOException
+	{
+		FileOutputStream archivo = new FileOutputStream("Pacientes.dat");
+		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivo);
+		//Guardando pacientes
+		pacienteObject.writeInt(pacientes.size());
+		for (Paciente p : pacientes) {
+			pacienteObject.writeObject(p);
+		}
+		archivo.close();
+		
+	}
+	
+	public void cargarDatos() throws IOException, ClassNotFoundException
+	{
+		try
+		{
+			FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");
+			ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
+			int n = pacienteObject.readInt();
+			for (int i = 0; i < n; i++) 
+			{
+				pacientes.add((Paciente) pacienteObject.readObject());
+			}
+			System.out.println("Hay " + pacientes.size() + " pacientes.");
+			archivoPacientes.close();
+		}catch(IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
+	}
+	
+	//Crear paciente
+	public void crearPaciente(String cedula, String nombre, String apellidos, String direccion, String telefono, String estadoCivil,String movil, char sexo,
+			String fechaNacimiento, String tipoSangre, int edad, String alergias, String antecedentes, String observaciones)
+	{
+		Paciente paciente = new Paciente(cedula, nombre, apellidos, direccion, estadoCivil, telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, alergias, antecedentes, observaciones);
+		pacientes.add(paciente);
+		System.out.println("Nombre: " + nombre );
+		System.out.println("Apellido: " + apellidos);
+		System.out.println("Direccion: " + direccion);
+		System.out.println("Telefono: " + telefono);
+		System.out.println("Estado civil: " + estadoCivil);
+		System.out.println("Movil: " + movil);
+		System.out.println("FechaNac: " + fechaNacimiento);
+		System.out.println("TipoSangre: " + tipoSangre);
+		System.out.println("Alergias: " + alergias);
+		System.out.println("Antecedentes: " + antecedentes);
+		System.out.println("Observaciones: " + paciente.getObservaciones());
+	}
 	//Creando empleado nuevo
 	//Realmente simplemente se podía poner crearEmpleado(Empleado empleado) y ya, lo hice así largo para luego en la parte visual tener que escribir menos código, creo
-	public void crearEmpleado(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String cargo, String clave)
+	public void crearEmpleado(String cedula, String nombre, String apellidos, String direccion, String estadoCivil,String telefono, String movil, char sexo, 
+			String fechaNacimiento, String tipoSangre, int edad, String cargo, String clave)
 	{
-		Empleado empleado = new Empleado(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, cargo, clave);
+		Empleado empleado = new Empleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil,sexo, fechaNacimiento, tipoSangre, edad, cargo, clave);
 		empleados.add(empleado);
 	}
 	//Agregar doctor
-	public void crearDoctor(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo, String fechaNacimiento, String tipoSangre, String especialidad, String clave)
+	public void crearProfesional(String cedula, String nombre, String apellidos, String direccion, String estadoCivil,String telefono, String movil, char sexo, 
+			String fechaNacimiento, String tipoSangre, int edad, String especialidad, String clave)
 	{
-		Doctor doctor = new Doctor(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre, especialidad, clave);
+		Doctor doctor = new Doctor(cedula, nombre, apellidos, direccion, estadoCivil, telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, especialidad, clave);
 		doctores.add(doctor);
 	}
 	//Agregar enfermedad
@@ -103,13 +163,23 @@ public class Consultorio {
 		int posicion = -1;
 		int i=0;
 		//A este while en algún momento habrá que ponerle un try catch	s
-		while(i<pacientes.size() || posicion == -1)
+		
+		while(i<pacientes.size())
 		{
-			if(pacientes.get(i).getCedula().equalsIgnoreCase(cedula))
-			{
-				posicion = i;
-			}
-			i++;
+			//try
+			//{
+				if(pacientes.get(i).getCedula().equalsIgnoreCase(cedula))
+				{
+					posicion = i;
+				}
+				i++;
+
+			//}catch(Exception e)
+			//{
+				//System.out.println("Busqueda de paciente: null");
+				//break;
+			//}
+
 		}
 		return posicion;
 	}
@@ -144,6 +214,26 @@ public class Consultorio {
 			i++;
 		}
 		return posicion;
+	}
+	
+	public void sustituirPaciente(int posPacienteDesactualizado, Paciente pacienteActualizado)
+	{
+		pacientes.get(posPacienteDesactualizado).setCedula(pacienteActualizado.getCedula());
+		pacientes.get(posPacienteDesactualizado).setNombre(pacienteActualizado.getNombre());
+		pacientes.get(posPacienteDesactualizado).setApellidos(pacienteActualizado.getApellidos());
+		pacientes.get(posPacienteDesactualizado).setDireccion(pacienteActualizado.getDireccion());
+		pacientes.get(posPacienteDesactualizado).setTelefono(pacienteActualizado.getTelefono());
+		pacientes.get(posPacienteDesactualizado).setMovil(pacienteActualizado.getMovil());
+		pacientes.get(posPacienteDesactualizado).setAlergias(pacienteActualizado.getAlergias());
+		pacientes.get(posPacienteDesactualizado).setAntecedentes(pacienteActualizado.getAntecedentes());
+		pacientes.get(posPacienteDesactualizado).setObservaciones(pacienteActualizado.getObservaciones());
+		pacientes.get(posPacienteDesactualizado).setEdad(pacienteActualizado.getEdad());
+		pacientes.get(posPacienteDesactualizado).setFechaNacimiento(pacienteActualizado.getFechaNacimiento());
+		pacientes.get(posPacienteDesactualizado).setSexo(pacienteActualizado.getSexo());
+		pacientes.get(posPacienteDesactualizado).setEstadoCivil(pacienteActualizado.getEstadoCivil());
+		pacientes.get(posPacienteDesactualizado).setTipoSangre(pacienteActualizado.getTipoSangre());
+		
+		
 	}
 	
 	

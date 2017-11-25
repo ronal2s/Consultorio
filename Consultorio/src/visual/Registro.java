@@ -8,10 +8,15 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+
+import logical.Consultorio;
+import logical.Paciente;
+
 import javax.swing.JRadioButton;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -25,6 +30,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Registro extends JDialog {
 
@@ -46,7 +53,17 @@ public class Registro extends JDialog {
 	private JLabel lblClave;
 	private JPasswordField txtConfirmarClave;
 	private JLabel lblConfirmarClave;
-
+	private JComboBox comboGrupoSanguineo;
+	private JSpinner spinnerEdad;
+	private JRadioButton radioMasculino;
+	private JRadioButton radioFemenino;
+	private JTextArea txtObservaciones;
+	private JTextArea txtAntecedentes;
+	private JTextArea txtAlergias;
+	private JComboBox comboEstadoCivil;
+	private int posModificar;
+	private String nombreBoton;
+	private JButton okButton;
 	/**
 	 * Launch the application.
 	 */
@@ -65,20 +82,20 @@ public class Registro extends JDialog {
 	 */
 	public Registro(String tipo) {
 		setTitle("Registro");
-		setBounds(w, h, x, y);
+		setBounds(w, h, 880, 653);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
 		panelRegistro = new JPanel();
-		panelRegistro.setBounds(0, 0, 858, 322);
+		panelRegistro.setBounds(0, 0, 858, 334);
 		setLocationRelativeTo(null);
 		contentPanel.add(panelRegistro);
 		panelRegistro.setLayout(null);
 		
 		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Registro.class.getResource("/imgs/photo.png")));
+		label.setIcon(new ImageIcon(Registro.class.getResource("/img/photo.png")));
 		label.setBounds(15, 16, 151, 128);
 		panelRegistro.add(label);
 		
@@ -88,6 +105,35 @@ public class Registro extends JDialog {
 		panelRegistro.add(lblCdula);
 		
 		txtCedula = new JTextField();
+		txtCedula.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Evento de darle a enter a Cedula
+				String cedula = txtCedula.getText();
+				posModificar = Consultorio.getInstance().buscarPaciente(cedula);
+				if(posModificar != -1)
+				{
+					Paciente paciente =Consultorio.getInstance().getPacientes().get(posModificar); 
+					txtNombre.setText(paciente.getNombre());
+					txtApellidos.setText(paciente.getApellidos());
+					txtDireccion.setText(paciente.getDireccion());
+					txtTelefono.setText(paciente.getTelefono());
+					txtMovil.setText(paciente.getMovil());
+					spinnerEdad.setValue(paciente.getEdad());
+					txtObservaciones.setText(paciente.getObservaciones());
+					txtAntecedentes.setText(paciente.getAntecedentes());
+					txtAlergias.setText(paciente.getAlergias());
+					//txtVacunas.setText(paciente.getVacunas().toString());
+					txtFechaNacimiento.setText(paciente.getFechaNacimiento());
+					boolean sexoM = paciente.getSexo() == 'M'? true: false;
+					boolean sexoF = paciente.getSexo() == 'F'? true: false;
+					radioMasculino.setSelected(sexoM);
+					radioFemenino.setSelected(sexoF);
+					comboGrupoSanguineo.setSelectedItem(paciente.getTipoSangre());
+					comboEstadoCivil.setSelectedItem(paciente.getEstadoCivil());
+					modoModificarPaciente(false);
+				}
+			}
+		});
 		txtCedula.setBounds(260, 12, 202, 28);
 		panelRegistro.add(txtCedula);
 		txtCedula.setColumns(10);
@@ -146,25 +192,39 @@ public class Registro extends JDialog {
 		panelRegistro.add(panel);
 		panel.setBorder(new TitledBorder(null, "Sexo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Masculino");
+		radioMasculino = new JRadioButton("Masculino");
+		radioMasculino.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioFemenino.setSelected(false);
+				radioMasculino.setSelected(true);
+
+			}
+		});
 		
-		JRadioButton rdbtnFemenino = new JRadioButton("Femenino");
+		radioFemenino = new JRadioButton("Femenino");
+		radioFemenino.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioMasculino.setSelected(false);
+				radioFemenino.setSelected(true);
+
+			}
+		});
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(rdbtnNewRadioButton)
-						.addComponent(rdbtnFemenino))
+						.addComponent(radioMasculino)
+						.addComponent(radioFemenino))
 					.addContainerGap(128, Short.MAX_VALUE))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addComponent(rdbtnNewRadioButton)
+					.addComponent(radioMasculino)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(rdbtnFemenino)
+					.addComponent(radioFemenino)
 					.addContainerGap(24, Short.MAX_VALUE))
 		);
 		panel.setLayout(gl_panel);
@@ -174,26 +234,29 @@ public class Registro extends JDialog {
 		lblEdad.setBounds(179, 186, 71, 20);
 		panelRegistro.add(lblEdad);
 		
-		JSpinner spinnerEdad = new JSpinner();
+		spinnerEdad = new JSpinner();
 		spinnerEdad.setBounds(259, 182, 77, 28);
 		panelRegistro.add(spinnerEdad);
 		spinnerEdad.setModel(new SpinnerNumberModel(1, 1, 150, 1));
 		
 		JLabel lblEstadoCivil = new JLabel("Estado civil:");
+		lblEstadoCivil.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblEstadoCivil.setBounds(561, 186, 91, 20);
 		panelRegistro.add(lblEstadoCivil);
 		
-		JComboBox comboEstadoCivil = new JComboBox();
+		comboEstadoCivil = new JComboBox();
 		comboEstadoCivil.setBounds(667, 182, 125, 28);
 		panelRegistro.add(comboEstadoCivil);
 		comboEstadoCivil.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Casado", "Soltero"}));
 		
 		JLabel lblGrupoSanguineo = new JLabel("Grupo Sanguineo");
-		lblGrupoSanguineo.setBounds(351, 186, 151, 20);
+		lblGrupoSanguineo.setHorizontalAlignment(SwingConstants.RIGHT);
+		lblGrupoSanguineo.setBounds(351, 186, 103, 20);
 		panelRegistro.add(lblGrupoSanguineo);
 		
-		JComboBox comboGrupoSanguineo = new JComboBox();
-		comboGrupoSanguineo.setBounds(487, 182, 61, 28);
+		comboGrupoSanguineo = new JComboBox();
+		comboGrupoSanguineo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "...", "...", "..."}));
+		comboGrupoSanguineo.setBounds(459, 182, 89, 28);
 		panelRegistro.add(comboGrupoSanguineo);
 		
 		JLabel lblFechaNacimiento = new JLabel("Fecha Nacimiento:");
@@ -240,7 +303,7 @@ public class Registro extends JDialog {
 		
 		panelPaciente = new JPanel();
 		panelPaciente.setBorder(new TitledBorder(null, "Campos espec\u00EDficos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelPaciente.setBounds(0, 324, 858, 251);
+		panelPaciente.setBounds(0, 335, 858, 251);
 		contentPanel.add(panelPaciente);
 		panelPaciente.setLayout(null);
 		
@@ -248,23 +311,76 @@ public class Registro extends JDialog {
 		tabbedPane.setBounds(15, 16, 828, 219);
 		panelPaciente.add(tabbedPane);
 		
-		JTextArea txtObservaciones = new JTextArea();
+		txtObservaciones = new JTextArea();
 		tabbedPane.addTab("Observaciones", null, txtObservaciones, null);
 		
-		JTextArea txtAntecedentes = new JTextArea();
+		txtAntecedentes = new JTextArea();
 		tabbedPane.addTab("Antecedentes", null, txtAntecedentes, null);
 		
-		JTextArea txtAlergias = new JTextArea();
+		txtAlergias = new JTextArea();
 		tabbedPane.addTab("Alergias", null, txtAlergias, null);
-		
-		JTextArea txtVacunas = new JTextArea();
-		tabbedPane.addTab("Vacunas", null, txtVacunas, null);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("Registrar");
+				okButton = new JButton(nombreBoton);
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String cedula, nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",antecedentes="",observaciones="";
+						char sexo;
+						int edad;
+						cedula = txtCedula.getText();
+						nombre = txtNombre.getText();
+						apellidos = txtApellidos.getText();
+						direccion = txtDireccion.getText();
+						telefono = txtTelefono.getText();
+						movil = txtMovil.getText();
+						sexo = radioMasculino.isSelected()?'M': 'F';
+						fechaNacimiento = txtFechaNacimiento.getText();
+						tipoSangre = comboGrupoSanguineo.getSelectedItem().toString();
+						edad = (int) spinnerEdad.getValue();
+						estadoCivil = (String) comboEstadoCivil.getSelectedItem();
+						switch(tipo)
+						{
+						case "RegistrarPaciente":
+							alergias = txtAlergias.getText();
+							antecedentes = txtAntecedentes.getText();
+							observaciones = txtObservaciones.getText();
+							Consultorio.getInstance().crearPaciente(cedula, nombre, apellidos, direccion, telefono, estadoCivil, movil,sexo, fechaNacimiento, 
+									tipoSangre,edad, alergias, antecedentes, observaciones);
+							JOptionPane.showMessageDialog(null, "Agregado correctamente");
+							//limpiarCampos();
+							System.out.println("Hay " + Consultorio.getInstance().getPacientes().size() + " pacientes.");
+							break;
+						case "ModificarPaciente":
+							Paciente pacienteModificado = new Paciente(cedula, nombre, apellidos, direccion, estadoCivil, 
+									telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, alergias, antecedentes, observaciones);
+							Consultorio.getInstance().sustituirPaciente(posModificar, pacienteModificado);
+							JOptionPane.showMessageDialog(null, "Modificado correctamente");
+							limpiarCampos();
+							break;
+						case "RegistrarProfesional":
+							String especialidad = txtEspecialidad.getText();
+							String clave = txtClave.getText();
+							if(clave.equalsIgnoreCase(txtConfirmarClave.getText()))
+							{
+								Consultorio.getInstance().crearProfesional(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,especialidad, clave);
+								JOptionPane.showMessageDialog(null, "Agregado correctamente");
+								limpiarCampos();
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "La confirmación de la clave no coincide");
+								txtClave.setText("");
+								txtConfirmarClave.setText("");
+								txtClave.requestFocus();
+							}
+							break;
+						}
+						
+					}
+				});
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
@@ -279,16 +395,27 @@ public class Registro extends JDialog {
 			switch(tipo)
 			{
 			case "RegistrarPaciente": 
+				nombreBoton = "Registrar";
+				okButton.setText(nombreBoton);
 				habilitarEmpleado(false);
 				habilitarProfesional(false);
 				habilitarPacientes(true);
 				break;
+			case "ModificarPaciente":
+				nombreBoton = "Modificar";
+				okButton.setText(nombreBoton);
+				modoModificarPaciente(true);
+				break;
 			case "RegistrarProfesional":
+				nombreBoton = "Registrar";
+				okButton.setText(nombreBoton);
 				habilitarPacientes(false);
 				habilitarEmpleado(false);
 				habilitarProfesional(true);
 				break;
 			case "RegistrarEmpleado":
+				nombreBoton = "Registrar";
+				okButton.setText(nombreBoton);
 				habilitarProfesional(false);
 				habilitarPacientes(false);
 				habilitarEmpleado(true);
@@ -297,8 +424,65 @@ public class Registro extends JDialog {
 
 		}
 			setLocationRelativeTo(null);
-
 		}
+	
+	public void limpiarCampos()
+	{
+		try
+		{
+			txtCedula.requestFocus();
+			txtApellidos.setText("");
+			txtCedula.setText("");
+			txtClave.setText("");
+			txtConfirmarClave.setText("");
+			txtDireccion.setText("");
+			txtEspecialidad.setText("");
+			txtFechaNacimiento.setText("");
+			txtMovil.setText("");
+			txtNombre.setText("");
+			txtTelefono.setText("");
+			comboCargo.setSelectedIndex(0);
+			comboGrupoSanguineo.setSelectedIndex(0);
+			spinnerEdad.setValue(0);
+			txtAlergias.setText("");
+			txtObservaciones.setText("");
+			txtAntecedentes.setText("");
+			//txtVacunas.setText("");
+		}
+		catch(Exception e)
+		{
+			System.out.println("Hay campos que no estan visibles y no pueden limpiarse");
+		}
+	}
+	
+	public void modoModificarPaciente(boolean enabled)
+	{
+		txtCedula.requestFocus();
+		txtApellidos.setEnabled(!enabled);
+		txtClave.setEnabled(!enabled);
+		txtConfirmarClave.setEnabled(!enabled);
+		txtDireccion.setEnabled(!enabled);
+		//txtEspecialidad.setEnabled(!enabled);
+		txtFechaNacimiento.setEnabled(!enabled);
+		txtMovil.setEnabled(!enabled);
+		txtNombre.setEnabled(!enabled);
+		txtTelefono.setEnabled(!enabled);
+		//comboCargo.setEnabled(!enabled);
+		comboGrupoSanguineo.setEnabled(!enabled);
+		spinnerEdad.setEnabled(!enabled);
+		txtAlergias.setEnabled(!enabled);
+		txtObservaciones.setEnabled(!enabled);
+		txtAntecedentes.setEnabled(!enabled);
+		//txtVacunas.setEnabled(!enabled);
+		//txtVacunas.setVisible(false);
+		txtClave.setVisible(false);
+		lblClave.setVisible(false);
+		txtConfirmarClave.setVisible(false);
+		lblConfirmarClave.setVisible(false);
+		lblEspecialidad.setVisible(false);
+		txtEspecialidad.setVisible(false);
+	}
+	
 	
 	public void configuracionDefault()
 	{
@@ -312,28 +496,32 @@ public class Registro extends JDialog {
 	{
 		
 		panelPaciente.setEnabled(enabled);
+		//txtVacunas.setVisible(false);
 		txtClave.setVisible(false);
 		lblClave.setVisible(false);
 		txtConfirmarClave.setVisible(false);
 		lblConfirmarClave.setVisible(false);
+		//txtVacunas.setVisible(false);
 		w=100; h=100; x=880; y=enabled?670:400;
 		setBounds(w, h, x, y);
 
 	}
 	public void habilitarProfesional(boolean enabled)
 	{
+		panelPaciente.setVisible(false);
 		txtEspecialidad.setVisible(enabled);
 		lblEspecialidad.setVisible(enabled);
 		txtClave.setVisible(enabled);
 		lblClave.setVisible(enabled);
 		txtConfirmarClave.setVisible(enabled);
 		lblConfirmarClave.setVisible(enabled);
-		w=100; h=100; x=880; y=enabled?400:670;;
+		w=100; h=100; x=880; y=enabled?410:670;;
 		setBounds(w, h, x, y);
 	}
 	
 	public void habilitarEmpleado(boolean enabled)
 	{//Usuario = empleado
+		panelPaciente.setVisible(false);
 		lblEspecialidad.setVisible(enabled);
 		txtClave.setVisible(enabled);
 		lblClave.setVisible(enabled);

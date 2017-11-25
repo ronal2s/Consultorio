@@ -5,9 +5,9 @@ public class Empleado extends Persona{
 	private String cargo;
 	private String clave;
 
-	public Empleado(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento, String tipoSangre, String cargo,String clave) {
-		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
+	public Empleado(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
+			String fechaNacimiento, String tipoSangre, int edad, String cargo,String clave) {
+		super(cedula, nombre, apellidos, direccion, estadoCivil, telefono,movil,  sexo, fechaNacimiento, tipoSangre, edad);
 		// TODO Auto-generated constructor stub
 		this.cargo = cargo;
 		this.clave = clave;

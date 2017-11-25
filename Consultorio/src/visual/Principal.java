@@ -6,10 +6,16 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import logical.Consultorio;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class Principal extends JFrame {
@@ -25,6 +31,26 @@ public class Principal extends JFrame {
 				try {
 					Principal frame = new Principal();
 					frame.setVisible(true);
+					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+					frame.addWindowListener(new java.awt.event.WindowAdapter() {
+					    @Override
+					    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+					        if (JOptionPane.showConfirmDialog(frame, 
+					            "¿Seguro que desea salir?", "Salir", 
+					            JOptionPane.YES_NO_OPTION,
+					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+					        	try {
+								//System.out.print("ss");
+					        			Consultorio.getInstance().guardarDatos();
+					        		//	Banco.getInstance().imprimirRevision("402");
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+					            System.exit(0);
+					        }
+					    }
+					});	
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -38,7 +64,7 @@ public class Principal extends JFrame {
 	public Principal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 816, 435);
-		
+		setLocationRelativeTo(null);
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
@@ -46,6 +72,13 @@ public class Principal extends JFrame {
 		menuBar.add(mnPacientes);
 		
 		JMenuItem mntmListar = new JMenuItem("Listar");
+		mntmListar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Listar listar = new Listar("Pacientes");
+				listar.setModal(true);
+				listar.setVisible(true);
+			}
+		});
 		mnPacientes.add(mntmListar);
 		
 		JMenuItem mntmAgregar = new JMenuItem("Agregar");
@@ -59,6 +92,13 @@ public class Principal extends JFrame {
 		mnPacientes.add(mntmAgregar);
 		
 		JMenuItem mntmModificar = new JMenuItem("Modificar");
+		mntmModificar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Registro modificar = new Registro("ModificarPaciente");
+				modificar.setModal(true);
+				modificar.setVisible(true);
+			}
+		});
 		mnPacientes.add(mntmModificar);
 		
 		JMenu mnProfesionales = new JMenu("Profesionales");
@@ -137,6 +177,13 @@ public class Principal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		try {
+			Consultorio.getInstance().cargarDatos();
+		} catch (ClassNotFoundException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 	}
 
 }

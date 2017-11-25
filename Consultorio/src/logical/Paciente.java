@@ -1,27 +1,57 @@
 package logical;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Paciente extends Persona{
+public class Paciente extends Persona implements Serializable{
 
-	private ArrayList<String> alergias, enfermedades;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private String alergias, antecedentes, observaciones;
 	private ArrayList<Vacuna> vacunas;
 	private ArrayList<Consulta> historiaClinica;
 	private ArrayList<Consulta> consultas;
-	private boolean estado;
+	//private boolean estado; la quito porque el profe dijo que para la clinica un paciente nunca está de alta o de baja, algo así dijo
 	
-	public Paciente(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento, String tipoSangre, ArrayList<String> alergias, ArrayList<String> enfermedades, ArrayList<Vacuna> vacunas,ArrayList<Consulta> historiaClinica) {
-		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
+	public Paciente(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
+			String fechaNacimiento, String tipoSangre, int edad,  String alergias, String antecedentes, String observaciones) {
+		super(cedula, nombre, apellidos, direccion, estadoCivil, telefono, movil, sexo, fechaNacimiento, tipoSangre, edad);
 		this.alergias = alergias;
-		this.enfermedades = enfermedades;
-		this.vacunas = vacunas;
-		this.historiaClinica = historiaClinica;
+		this.antecedentes = antecedentes;
+		this.vacunas = new ArrayList<Vacuna>();
+		this.historiaClinica = new ArrayList<Consulta>();
 		this.consultas = new ArrayList<Consulta>();
+		this.observaciones = observaciones;
 		// TODO Auto-generated constructor stub
 	}
 	
 	
+
+	public String getAntecedentes() {
+		return antecedentes;
+	}
+
+
+
+	public void setAntecedentes(String antecedentes) {
+		this.antecedentes = antecedentes;
+	}
+
+
+
+	public String getObservaciones() {
+		return observaciones;
+	}
+
+
+
+	public void setObservaciones(String observaciones) {
+		this.observaciones = observaciones;
+	}
+
+
 
 	public ArrayList<Consulta> getConsultas() {
 		return consultas;
@@ -35,21 +65,21 @@ public class Paciente extends Persona{
 
 
 
-	public ArrayList<String> getAlergias() {
+	public String getAlergias() {
 		return alergias;
 	}
 
-	public void setAlergias(ArrayList<String> alergias) {
+	public void setAlergias(String alergias) {
 		this.alergias = alergias;
 	}
 
-	public ArrayList<String> getEnfermedades() {
-		return enfermedades;
+	/*public String getEnfermedades() {
+		return antecedentes;
 	}
 
-	public void setEnfermedades(ArrayList<String> enfermedades) {
-		this.enfermedades = enfermedades;
-	}
+	public void setEnfermedades(String enfermedades) {
+		this.antecedentes = enfermedades;
+	}*/
 
 	public ArrayList<Vacuna> getVacunas() {
 		return vacunas;
@@ -66,15 +96,5 @@ public class Paciente extends Persona{
 	public void setHistoriaClinica(ArrayList<Consulta> historiaClinica) {
 		this.historiaClinica = historiaClinica;
 	}
-
-	public boolean isEstado() {
-		return estado;
-	}
-
-	public void setEstado(boolean estado) {
-		this.estado = estado;
-	}
-	
-	
-
+		
 }

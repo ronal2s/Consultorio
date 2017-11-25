@@ -7,9 +7,9 @@ public class Doctor extends Persona {
 	private String clave;
 	private ArrayList<Cita> citas;
 	
-	public Doctor(String cedula, String nombre, String apellidos, String direccion, String telefono, char sexo,
-			String fechaNacimiento, String tipoSangre,String especialidad, String clave) {
-		super(cedula, nombre, apellidos, direccion, telefono, sexo, fechaNacimiento, tipoSangre);
+	public Doctor(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
+			String fechaNacimiento, String tipoSangre, int edad, String especialidad, String clave) {
+		super(cedula, nombre, apellidos, direccion,estadoCivil,  telefono, movil, sexo, fechaNacimiento, tipoSangre, edad);
 		this.especialidad = especialidad;
 		this.citas = new ArrayList<Cita>();
 		this.clave = clave;
