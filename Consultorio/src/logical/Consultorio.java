@@ -26,6 +26,7 @@ public class Consultorio {
 	{
 		pacientes = new ArrayList<Paciente>();
 		profesionales = new ArrayList<Profesional>();
+		empleados = new ArrayList<Empleado>();
 		enfermedades = new ArrayList<Enfermedad>();
 		citas = new ArrayList<Cita>();
 	}
@@ -43,8 +44,10 @@ public class Consultorio {
 	{
 		FileOutputStream archivoPaciente = new FileOutputStream("Pacientes.dat");
 		FileOutputStream archivoProfesional = new FileOutputStream("Profesionales.dat");
+		FileOutputStream archivoEmpleado = new FileOutputStream("Empleados.dat");
 		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivoPaciente);
 		ObjectOutputStream profesionalObject = new ObjectOutputStream(archivoProfesional);
+		ObjectOutputStream empleadoObject = new ObjectOutputStream(archivoEmpleado);
 		//Guardando pacientes
 		pacienteObject.writeInt(pacientes.size());
 		for (Paciente p : pacientes) {
@@ -55,6 +58,12 @@ public class Consultorio {
 		for (Profesional d : profesionales) {
 			profesionalObject.writeObject(d);
 		}
+		//Guardando empleados
+		empleadoObject.writeInt(empleados.size());
+		for (Empleado p : empleados) {
+			empleadoObject.writeObject(p);
+		}
+		archivoEmpleado.close();
 		archivoPaciente.close();
 		archivoProfesional.close();
 		
@@ -66,8 +75,10 @@ public class Consultorio {
 		{
 			FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");
 			FileInputStream archivoProfesionales = new FileInputStream("Profesionales.dat");
+			FileInputStream archivoEmpleados = new FileInputStream("Empleados.dat");
 			ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
 			ObjectInputStream profesionalObject = new ObjectInputStream(archivoProfesionales);
+			ObjectInputStream empleadoObject = new ObjectInputStream(archivoEmpleados);
 			//Cargando pacientes
 			int n = pacienteObject.readInt();
 			for (int i = 0; i < n; i++) 
@@ -81,7 +92,14 @@ public class Consultorio {
 				profesionales.add((Profesional) profesionalObject.readObject());
 			}
 			System.out.println("Hay " + pacientes.size() + " profesionales.");
-
+			//Cargando empleados
+			n = empleadoObject.readInt();
+			for (int i = 0; i < n; i++) {
+				empleados.add((Empleado) empleadoObject.readObject());
+			}
+			System.out.println("Hay " + empleados.size() + " empleados..");
+			
+			archivoEmpleados.close();
 			archivoPacientes.close();
 			archivoProfesionales.close();
 		}catch(IOException e)
@@ -123,7 +141,7 @@ public class Consultorio {
 		System.out.println("Movil: " + movil);
 		System.out.println("FechaNac: " + fechaNacimiento);
 		System.out.println("TipoSangre: " + tipoSangre);
-		System.out.println("Cargo: " + cargo);
+		System.out.println("Cargo: " + empleado.getCargo());
 	}
 	//Agregar doctor
 	public void crearProfesional(String cedula, String nombre, String apellidos, String direccion, String estadoCivil,String telefono, String movil, char sexo, 
@@ -260,8 +278,6 @@ public class Consultorio {
 		pacientes.get(posPacienteDesactualizado).setSexo(pacienteActualizado.getSexo());
 		pacientes.get(posPacienteDesactualizado).setEstadoCivil(pacienteActualizado.getEstadoCivil());
 		pacientes.get(posPacienteDesactualizado).setTipoSangre(pacienteActualizado.getTipoSangre());
-		
-		
 	}
 	
 	public void sustituirProfesional(int posProfesionalDesactualizado, Profesional profesionalActualizado)
@@ -277,9 +293,26 @@ public class Consultorio {
 		profesionales.get(posProfesionalDesactualizado).setSexo(profesionalActualizado.getSexo());
 		profesionales.get(posProfesionalDesactualizado).setEstadoCivil(profesionalActualizado.getEstadoCivil());
 		profesionales.get(posProfesionalDesactualizado).setTipoSangre(profesionalActualizado.getTipoSangre());
-		
+		profesionales.get(posProfesionalDesactualizado).setEspecialidad(profesionalActualizado.getEspecialidad());
+
 	}
 	
+	public void sustituirEmpleado(int posEmpleadoDesactualizado, Empleado empleadoActualizado)
+	{
+		empleados.get(posEmpleadoDesactualizado).setCedula(empleadoActualizado.getCedula());
+		empleados.get(posEmpleadoDesactualizado).setNombre(empleadoActualizado.getNombre());
+		empleados.get(posEmpleadoDesactualizado).setApellidos(empleadoActualizado.getApellidos());
+		empleados.get(posEmpleadoDesactualizado).setDireccion(empleadoActualizado.getDireccion());
+		empleados.get(posEmpleadoDesactualizado).setTelefono(empleadoActualizado.getTelefono());
+		empleados.get(posEmpleadoDesactualizado).setMovil(empleadoActualizado.getMovil());
+		empleados.get(posEmpleadoDesactualizado).setEdad(empleadoActualizado.getEdad());
+		empleados.get(posEmpleadoDesactualizado).setFechaNacimiento(empleadoActualizado.getFechaNacimiento());
+		empleados.get(posEmpleadoDesactualizado).setSexo(empleadoActualizado.getSexo());
+		empleados.get(posEmpleadoDesactualizado).setEstadoCivil(empleadoActualizado.getEstadoCivil());
+		empleados.get(posEmpleadoDesactualizado).setTipoSangre(empleadoActualizado.getTipoSangre());
+		empleados.get(posEmpleadoDesactualizado).setCargo(empleadoActualizado.getCargo());
+
+	}
 	public ArrayList<Usuario> getUsuario() {
 		return usuario;
 	}

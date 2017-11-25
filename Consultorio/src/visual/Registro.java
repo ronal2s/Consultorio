@@ -15,6 +15,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import logical.Consultorio;
+import logical.Empleado;
 import logical.Paciente;
 import logical.Profesional;
 
@@ -47,7 +48,7 @@ public class Registro extends JDialog {
 	private JTextField txtFechaNacimiento;
 	private JPanel panelPaciente;
 	private JLabel lblEspecialidad;
-	private JComboBox comboCargo;
+	private JComboBox comboCargo = new JComboBox();
 	private JPanel panelRegistro;
 	private int w=100,h=100,x=880,y=670;
 	private JPasswordField txtClave;
@@ -157,6 +158,24 @@ public class Registro extends JDialog {
 						tipoSangre = profesional.getTipoSangre();
 						estadoCivil = profesional.getEstadoCivil();
 						txtEspecialidad.setText(profesional.getEspecialidad());
+						modoModificar(false);
+					}
+					if(tipo.equalsIgnoreCase("ModificarEmpleado"))
+					{
+						posModificar = Consultorio.getInstance().buscarEmpleado(cedula);
+						Empleado empleado = Consultorio.getInstance().getEmpleados().get(posModificar);
+						nombre = empleado.getNombre();
+						apellidos = empleado.getApellidos();
+						direccion = empleado.getDireccion();
+						telefono = empleado.getTelefono();
+						movil = empleado.getMovil();
+						edad = empleado.getEdad();
+						fechaNacimiento = empleado.getFechaNacimiento();
+						sexoM = empleado.getSexo() == 'M'? true: false;
+						sexoF = empleado.getSexo() == 'F'? true: false;
+						tipoSangre = empleado.getTipoSangre();
+						estadoCivil = empleado.getEstadoCivil();
+						comboCargo.setSelectedItem(empleado.getCargo());
 						modoModificar(false);
 					}
 					//Rellenando los valores globales de persona
@@ -414,15 +433,37 @@ public class Registro extends JDialog {
 								limpiarCampos();
 
 							}
-
 							break;
 						case "ModificarProfesional":
 							clave = txtClave.getText();
+							cargo = txtEspecialidad.getText();
 							if(validarClave(clave))
 							{
 								Profesional profesionalModificado = new Profesional(cedula, nombre, apellidos, direccion, estadoCivil, 
 										telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, cargo, clave);
 								Consultorio.getInstance().sustituirProfesional(posModificar, profesionalModificado);
+								JOptionPane.showMessageDialog(null, "Modificado correctamente");
+								limpiarCampos();
+							}
+							break;
+						case "RegistrarEmpleado":
+							cargo = comboCargo.getSelectedItem().toString();
+							clave = txtClave.getText();
+							if(validarClave(clave))
+							{
+								Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
+								JOptionPane.showMessageDialog(null, "Agregado correctamente");
+								limpiarCampos();
+							}
+							break;
+						case "ModificarEmpleado":
+							clave = txtClave.getText();
+							cargo = comboCargo.getSelectedItem().toString();
+							if(validarClave(clave))
+							{
+								Empleado empleadoModificado = new Empleado(cedula, nombre, apellidos, direccion, estadoCivil, 
+										telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, cargo, clave);
+								Consultorio.getInstance().sustituirEmpleado(posModificar, empleadoModificado);
 								JOptionPane.showMessageDialog(null, "Modificado correctamente");
 								limpiarCampos();
 							}
@@ -476,11 +517,21 @@ public class Registro extends JDialog {
 				habilitarPacientes(false);
 				habilitarEmpleado(true);
 				break;
+			case "ModificarEmpleado":
+				nombreBoton = "Modificar";
+				okButton.setText(nombreBoton);
+				habilitarProfesional(false);
+				habilitarPacientes(false);
+				habilitarEmpleado(true);
+				break;
 			}
+			setLocationRelativeTo(null);
 
 		}
-			setLocationRelativeTo(null);
+
 		}
+
+
 	
 	public void limpiarCampos()
 	{
@@ -548,6 +599,11 @@ public class Registro extends JDialog {
 		{
 			enabled = true;
 			panelPaciente.setVisible(false);
+			if(tipo.equalsIgnoreCase("ModificarProfesional"))
+			{
+				lblEspecialidad.setVisible(enabled);
+				txtEspecialidad.setVisible(enabled);
+			}
 		}
 		else
 		{
@@ -557,8 +613,6 @@ public class Registro extends JDialog {
 		lblClave.setVisible(enabled);
 		txtConfirmarClave.setVisible(enabled);
 		lblConfirmarClave.setVisible(enabled);
-		lblEspecialidad.setVisible(enabled);
-		txtEspecialidad.setVisible(enabled);
 
 	}
 	
@@ -608,7 +662,7 @@ public class Registro extends JDialog {
 		txtConfirmarClave.setVisible(enabled);
 		lblConfirmarClave.setVisible(enabled);
 		lblEspecialidad.setText("Cargo:");
-		comboCargo = new JComboBox();
+		//comboCargo = new JComboBox();
 		comboCargo.setBounds(329, 259, 237, 28);
 		panelRegistro.add(comboCargo);
 		comboCargo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Administrador", "Secretaria"}));

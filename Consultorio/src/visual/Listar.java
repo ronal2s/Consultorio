@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logical.Consultorio;
+import logical.Empleado;
 import logical.Paciente;
 import logical.Profesional;
 
@@ -75,7 +76,10 @@ public class Listar extends JDialog {
 					{
 						listarProfesionales("Cedula");	
 					}
-					
+					if(tipoLista.equalsIgnoreCase("Empleados"))
+					{
+						listarEmpleados("Cedula");	
+					}
 				}
 				else
 				{
@@ -86,6 +90,10 @@ public class Listar extends JDialog {
 					if(tipoLista.equalsIgnoreCase("Profesionales"))
 					{
 						listarProfesionales("Todos");	
+					}
+					if(tipoLista.equalsIgnoreCase("Empleados"))
+					{
+						listarEmpleados("Todos");	
 					}
 				}
 
@@ -119,6 +127,10 @@ public class Listar extends JDialog {
 			String[] profesionales = {"Profesional", "Especialidad", "Cedula", "Fecha Nacimiento", "Teléfono", "Móvil","Citas"};
 			columnNames = profesionales;
 			break;
+		case "Empleados":
+			String[] empleados = {"Empleado", "Cargo", "Cedula", "Fecha Nacimiento", "Teléfono", "Móvil"};
+			columnNames = empleados;
+			break;
 		}
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columnNames);
@@ -129,6 +141,9 @@ public class Listar extends JDialog {
 			break;
 		case "Profesionales":
 			listarProfesionales("Todos");
+			break;
+		case "Empleados":
+			listarEmpleados("Todos");
 			break;
 		}
 		table.setModel(model);
@@ -161,7 +176,6 @@ public class Listar extends JDialog {
 		{
 
 		case "Todos":
-			profesionales = Consultorio.getInstance().getProfesionales();
 			System.out.println("Tamaño profesionales lista: " + profesionales.size());
 			for (Profesional profesional : profesionales) {
 				fila[0] = profesional.getNombre() + " " + profesional.getApellidos();
@@ -191,7 +205,41 @@ public class Listar extends JDialog {
 			break;
 		}
 	}
-
+	public void listarEmpleados(String tipo) 
+	{
+		model.setRowCount(0);
+		fila = new Object[model.getColumnCount()];
+		ArrayList<Empleado> empleados = Consultorio.getInstance().getEmpleados();;
+		switch(tipo)
+		{
+		case "Todos":
+			System.out.println("Tamaño empleados lista: " + empleados.size());
+			for (Empleado empleado : empleados) {
+				fila[0] = empleado.getNombre() + " " + empleado.getApellidos();
+				fila[1] = empleado.getCargo();
+				fila[2] = empleado.getCedula();
+				fila[3] = empleado.getFechaNacimiento();
+				fila[4] = empleado.getTelefono();
+				fila[5] = empleado.getMovil();
+				model.addRow(fila);
+			}
+			break;
+		case "Cedula":
+			for (Empleado empleado : empleados) {
+				if(empleado.getCedula().equalsIgnoreCase(CedulaBuscar))
+				{
+					fila[0] = empleado.getNombre() + " " + empleado.getApellidos();
+					fila[1] = empleado.getCargo();
+					fila[2] = empleado.getCedula();
+					fila[3] = empleado.getFechaNacimiento();
+					fila[4] = empleado.getTelefono();
+					fila[5] = empleado.getMovil();
+					model.addRow(fila);
+				}
+			}
+			break;
+		}
+	}
 	public void listarPacientes(String tipo)
 	{
 		model.setRowCount(0);
