@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 
 import logical.Consultorio;
 import logical.Paciente;
+import logical.Profesional;
 
 import javax.swing.JRadioButton;
 import javax.swing.GroupLayout;
@@ -64,6 +65,7 @@ public class Registro extends JDialog {
 	private int posModificar;
 	private String nombreBoton;
 	private JButton okButton;
+	private String tipo;
 	/**
 	 * Launch the application.
 	 */
@@ -81,6 +83,7 @@ public class Registro extends JDialog {
 	 * Create the dialog.
 	 */
 	public Registro(String tipo) {
+		this.tipo = tipo;
 		setTitle("Registro");
 		setBounds(w, h, 880, 653);
 		getContentPane().setLayout(new BorderLayout());
@@ -109,30 +112,70 @@ public class Registro extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				//Evento de darle a enter a Cedula
 				String cedula = txtCedula.getText();
-				posModificar = Consultorio.getInstance().buscarPaciente(cedula);
+				//Datos personales globales
+				String nombre = "", apellidos= "", direccion= "", telefono= "", movil= "", fechaNacimiento= "", tipoSangre= "", estadoCivil= "";
+				int edad=0;
+				boolean sexoM = false,sexoF = false;
+				
 				if(posModificar != -1)
 				{
-					Paciente paciente =Consultorio.getInstance().getPacientes().get(posModificar); 
-					txtNombre.setText(paciente.getNombre());
-					txtApellidos.setText(paciente.getApellidos());
-					txtDireccion.setText(paciente.getDireccion());
-					txtTelefono.setText(paciente.getTelefono());
-					txtMovil.setText(paciente.getMovil());
-					spinnerEdad.setValue(paciente.getEdad());
-					txtObservaciones.setText(paciente.getObservaciones());
-					txtAntecedentes.setText(paciente.getAntecedentes());
-					txtAlergias.setText(paciente.getAlergias());
-					//txtVacunas.setText(paciente.getVacunas().toString());
-					txtFechaNacimiento.setText(paciente.getFechaNacimiento());
-					boolean sexoM = paciente.getSexo() == 'M'? true: false;
-					boolean sexoF = paciente.getSexo() == 'F'? true: false;
+
+					if(tipo.equalsIgnoreCase("ModificarPaciente"))
+					{
+						posModificar = Consultorio.getInstance().buscarPaciente(cedula);
+						Paciente paciente =Consultorio.getInstance().getPacientes().get(posModificar); 
+						txtObservaciones.setText(paciente.getObservaciones());
+						txtAntecedentes.setText(paciente.getAntecedentes());
+						txtAlergias.setText(paciente.getAlergias());
+						nombre = paciente.getNombre();
+						apellidos = paciente.getApellidos();
+						direccion = paciente.getDireccion();
+						telefono = paciente.getTelefono();
+						movil = paciente.getMovil();
+						edad = paciente.getEdad();
+						fechaNacimiento = paciente.getFechaNacimiento();
+						sexoM = paciente.getSexo() == 'M'? true: false;
+						sexoF = paciente.getSexo() == 'F'? true: false;
+						tipoSangre = paciente.getTipoSangre();
+						estadoCivil = paciente.getEstadoCivil();
+						modoModificar(false);
+
+					}
+					if(tipo.equalsIgnoreCase("ModificarProfesional"))
+					{
+						posModificar = Consultorio.getInstance().buscarProfesional(cedula);
+						Profesional profesional = Consultorio.getInstance().getProfesionales().get(posModificar);
+						nombre = profesional.getNombre();
+						apellidos = profesional.getApellidos();
+						direccion = profesional.getDireccion();
+						telefono = profesional.getTelefono();
+						movil = profesional.getMovil();
+						edad = profesional.getEdad();
+						fechaNacimiento = profesional.getFechaNacimiento();
+						sexoM = profesional.getSexo() == 'M'? true: false;
+						sexoF = profesional.getSexo() == 'F'? true: false;
+						tipoSangre = profesional.getTipoSangre();
+						estadoCivil = profesional.getEstadoCivil();
+						txtEspecialidad.setText(profesional.getEspecialidad());
+						modoModificar(false);
+					}
+					//Rellenando los valores globales de persona
+					txtNombre.setText(nombre);
+					txtApellidos.setText(apellidos);
+					txtDireccion.setText(direccion);
+					txtTelefono.setText(telefono);
+					txtMovil.setText(movil);
+					spinnerEdad.setValue(edad);
+					txtFechaNacimiento.setText(fechaNacimiento);
 					radioMasculino.setSelected(sexoM);
 					radioFemenino.setSelected(sexoF);
-					comboGrupoSanguineo.setSelectedItem(paciente.getTipoSangre());
-					comboEstadoCivil.setSelectedItem(paciente.getEstadoCivil());
-					modoModificarPaciente(false);
+					comboGrupoSanguineo.setSelectedItem(tipoSangre);
+					comboEstadoCivil.setSelectedItem(estadoCivil);
+
 				}
 			}
+
+
 		});
 		txtCedula.setBounds(260, 12, 202, 28);
 		panelRegistro.add(txtCedula);
@@ -327,7 +370,8 @@ public class Registro extends JDialog {
 				okButton = new JButton(nombreBoton);
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						String cedula, nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",antecedentes="",observaciones="";
+						String cedula, nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",
+								antecedentes="",observaciones="", cargo="",clave="";
 						char sexo;
 						int edad;
 						cedula = txtCedula.getText();
@@ -362,19 +406,25 @@ public class Registro extends JDialog {
 							break;
 						case "RegistrarProfesional":
 							String especialidad = txtEspecialidad.getText();
-							String clave = txtClave.getText();
-							if(clave.equalsIgnoreCase(txtConfirmarClave.getText()))
+							clave = txtClave.getText();
+							if(validarClave(clave))
 							{
 								Consultorio.getInstance().crearProfesional(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,especialidad, clave);
 								JOptionPane.showMessageDialog(null, "Agregado correctamente");
 								limpiarCampos();
+
 							}
-							else
+
+							break;
+						case "ModificarProfesional":
+							clave = txtClave.getText();
+							if(validarClave(clave))
 							{
-								JOptionPane.showMessageDialog(null, "La confirmación de la clave no coincide");
-								txtClave.setText("");
-								txtConfirmarClave.setText("");
-								txtClave.requestFocus();
+								Profesional profesionalModificado = new Profesional(cedula, nombre, apellidos, direccion, estadoCivil, 
+										telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, cargo, clave);
+								Consultorio.getInstance().sustituirProfesional(posModificar, profesionalModificado);
+								JOptionPane.showMessageDialog(null, "Modificado correctamente");
+								limpiarCampos();
 							}
 							break;
 						}
@@ -404,13 +454,19 @@ public class Registro extends JDialog {
 			case "ModificarPaciente":
 				nombreBoton = "Modificar";
 				okButton.setText(nombreBoton);
-				modoModificarPaciente(true);
+				modoModificar(true);
 				break;
 			case "RegistrarProfesional":
 				nombreBoton = "Registrar";
 				okButton.setText(nombreBoton);
 				habilitarPacientes(false);
 				habilitarEmpleado(false);
+				habilitarProfesional(true);
+				break;
+			case "ModificarProfesional":
+				nombreBoton = "Modificar";
+				okButton.setText(nombreBoton);
+				modoModificar(true);
 				habilitarProfesional(true);
 				break;
 			case "RegistrarEmpleado":
@@ -455,32 +511,55 @@ public class Registro extends JDialog {
 		}
 	}
 	
-	public void modoModificarPaciente(boolean enabled)
+	public boolean validarClave(String clave)
+	{
+		boolean correcto = false;
+		if(clave.equalsIgnoreCase(txtConfirmarClave.getText()))
+		{
+			correcto = true;
+		}
+		else
+		{
+			JOptionPane.showMessageDialog(null, "La confirmación de la clave no coincide");
+			txtClave.setText("");
+			txtConfirmarClave.setText("");
+			txtClave.requestFocus();
+		}
+		return correcto;
+	}
+	
+	public void modoModificar(boolean enabled)
 	{
 		txtCedula.requestFocus();
 		txtApellidos.setEnabled(!enabled);
 		txtClave.setEnabled(!enabled);
 		txtConfirmarClave.setEnabled(!enabled);
 		txtDireccion.setEnabled(!enabled);
-		//txtEspecialidad.setEnabled(!enabled);
 		txtFechaNacimiento.setEnabled(!enabled);
 		txtMovil.setEnabled(!enabled);
 		txtNombre.setEnabled(!enabled);
 		txtTelefono.setEnabled(!enabled);
-		//comboCargo.setEnabled(!enabled);
 		comboGrupoSanguineo.setEnabled(!enabled);
 		spinnerEdad.setEnabled(!enabled);
 		txtAlergias.setEnabled(!enabled);
 		txtObservaciones.setEnabled(!enabled);
 		txtAntecedentes.setEnabled(!enabled);
-		//txtVacunas.setEnabled(!enabled);
-		//txtVacunas.setVisible(false);
-		txtClave.setVisible(false);
-		lblClave.setVisible(false);
-		txtConfirmarClave.setVisible(false);
-		lblConfirmarClave.setVisible(false);
-		lblEspecialidad.setVisible(false);
-		txtEspecialidad.setVisible(false);
+		if(!tipo.equalsIgnoreCase("ModificarPaciente"))
+		{
+			enabled = true;
+			panelPaciente.setVisible(false);
+		}
+		else
+		{
+			enabled = false;
+		}
+		txtClave.setVisible(enabled);
+		lblClave.setVisible(enabled);
+		txtConfirmarClave.setVisible(enabled);
+		lblConfirmarClave.setVisible(enabled);
+		lblEspecialidad.setVisible(enabled);
+		txtEspecialidad.setVisible(enabled);
+
 	}
 	
 	
@@ -496,6 +575,7 @@ public class Registro extends JDialog {
 	{
 		
 		panelPaciente.setEnabled(enabled);
+		panelPaciente.setVisible(enabled);
 		//txtVacunas.setVisible(false);
 		txtClave.setVisible(false);
 		lblClave.setVisible(false);

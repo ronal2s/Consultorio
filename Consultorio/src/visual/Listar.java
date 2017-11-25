@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logical.Consultorio;
 import logical.Paciente;
+import logical.Profesional;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -48,6 +49,7 @@ public class Listar extends JDialog {
 	 */
 	public Listar(String tipoLista) {
 		setBounds(100, 100, 706, 477);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -65,12 +67,28 @@ public class Listar extends JDialog {
 				if(!txtCedula.getText().equalsIgnoreCase(""))
 				{
 					CedulaBuscar = txtCedula.getText();
-					listarPacientes("Cedula");
+					if(tipoLista.equalsIgnoreCase("Pacientes"))
+					{
+						listarPacientes("Cedula");	
+					}
+					if(tipoLista.equalsIgnoreCase("Profesionales"))
+					{
+						listarProfesionales("Cedula");	
+					}
+					
 				}
 				else
 				{
-					listarPacientes("Todos");
+					if(tipoLista.equalsIgnoreCase("Pacientes"))
+					{
+						listarPacientes("Todos");	
+					}
+					if(tipoLista.equalsIgnoreCase("Profesionales"))
+					{
+						listarProfesionales("Todos");	
+					}
 				}
+
 			}
 		});
 		txtCedula.setToolTipText("Escribe la cedula del paciente a buscar");
@@ -96,7 +114,10 @@ public class Listar extends JDialog {
 		case "Pacientes":
 			String[] pacientes = {"Paciente", "Cedula", "Fecha Nacimiento", "Teléfono", "Móvil", "Observaciones"};
 			columnNames = pacientes;
-			//listarPacientes("Todos");
+			break;
+		case "Profesionales":
+			String[] profesionales = {"Profesional", "Especialidad", "Cedula", "Fecha Nacimiento", "Teléfono", "Móvil","Citas"};
+			columnNames = profesionales;
 			break;
 		}
 		model = new DefaultTableModel();
@@ -105,6 +126,9 @@ public class Listar extends JDialog {
 		{
 		case "Pacientes":
 			listarPacientes("Todos");
+			break;
+		case "Profesionales":
+			listarProfesionales("Todos");
 			break;
 		}
 		table.setModel(model);
@@ -128,6 +152,46 @@ public class Listar extends JDialog {
 
 	}
 	
+	public void listarProfesionales(String tipo) 
+	{
+		model.setRowCount(0);
+		fila = new Object[model.getColumnCount()];
+		ArrayList<Profesional> 	profesionales = Consultorio.getInstance().getProfesionales();;
+		switch(tipo)
+		{
+
+		case "Todos":
+			profesionales = Consultorio.getInstance().getProfesionales();
+			System.out.println("Tamaño profesionales lista: " + profesionales.size());
+			for (Profesional profesional : profesionales) {
+				fila[0] = profesional.getNombre() + " " + profesional.getApellidos();
+				fila[1] = profesional.getEspecialidad();
+				fila[2] = profesional.getCedula();
+				fila[3] = profesional.getFechaNacimiento();
+				fila[4] = profesional.getTelefono();
+				fila[5] = profesional.getMovil();
+				fila[6] = profesional.getCitas().size();;
+				model.addRow(fila);
+			}
+			break;
+		case "Cedula":
+			for (Profesional profesional : profesionales) {
+				if(profesional.getCedula().equalsIgnoreCase(CedulaBuscar))
+				{
+					fila[0] = profesional.getNombre() + " " + profesional.getApellidos();
+					fila[1] = profesional.getEspecialidad();
+					fila[2] = profesional.getCedula();
+					fila[3] = profesional.getFechaNacimiento();
+					fila[4] = profesional.getTelefono();
+					fila[5] = profesional.getMovil();
+					fila[6] = profesional.getCitas().size();;
+					model.addRow(fila);
+				}
+			}
+			break;
+		}
+	}
+
 	public void listarPacientes(String tipo)
 	{
 		model.setRowCount(0);

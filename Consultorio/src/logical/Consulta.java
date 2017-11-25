@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Consulta {
 	private String fecha;
 	private Paciente paciente;
-	private Doctor doctor;
+	private Profesional doctor;
 	private ArrayList<String> sintomas;
 	private String anamnesis;
 	private String exploracion;
@@ -14,7 +14,7 @@ public class Consulta {
 	private String enfermedad;
 	private Cita cita;
 	
-	public Consulta(String fecha, Paciente paciente, Doctor doctor, ArrayList<String> sintomas, String anamnesis,
+	public Consulta(String fecha, Paciente paciente, Profesional doctor, ArrayList<String> sintomas, String anamnesis,
 			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita) {
 		super();
 		this.fecha = fecha;
@@ -49,11 +49,11 @@ public class Consulta {
 		this.paciente = paciente;
 	}
 
-	public Doctor getDoctor() {
+	public Profesional getDoctor() {
 		return doctor;
 	}
 
-	public void setDoctor(Doctor doctor) {
+	public void setDoctor(Profesional doctor) {
 		this.doctor = doctor;
 	}
 

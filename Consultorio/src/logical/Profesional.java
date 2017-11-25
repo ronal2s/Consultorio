@@ -1,13 +1,18 @@
 package logical;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Doctor extends Persona {
+public class Profesional extends Persona implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String especialidad;
 	private String clave;
 	private ArrayList<Cita> citas;
 	
-	public Doctor(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
+	public Profesional(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
 			String fechaNacimiento, String tipoSangre, int edad, String especialidad, String clave) {
 		super(cedula, nombre, apellidos, direccion,estadoCivil,  telefono, movil, sexo, fechaNacimiento, tipoSangre, edad);
 		this.especialidad = especialidad;

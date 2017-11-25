@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 
 public class Consultorio {
 	private ArrayList<Paciente> pacientes;
-	private ArrayList<Doctor> doctores;
+	private ArrayList<Profesional> profesionales;
 	private ArrayList<Empleado> empleados;
 	private ArrayList<Enfermedad> enfermedades;
 	private ArrayList<Cita> citas;
@@ -25,7 +25,7 @@ public class Consultorio {
 	private Consultorio()
 	{
 		pacientes = new ArrayList<Paciente>();
-		doctores = new ArrayList<Doctor>();
+		profesionales = new ArrayList<Profesional>();
 		enfermedades = new ArrayList<Enfermedad>();
 		citas = new ArrayList<Cita>();
 	}
@@ -41,14 +41,22 @@ public class Consultorio {
 	
 	public void guardarDatos() throws IOException
 	{
-		FileOutputStream archivo = new FileOutputStream("Pacientes.dat");
-		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivo);
+		FileOutputStream archivoPaciente = new FileOutputStream("Pacientes.dat");
+		FileOutputStream archivoProfesional = new FileOutputStream("Profesionales.dat");
+		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivoPaciente);
+		ObjectOutputStream profesionalObject = new ObjectOutputStream(archivoProfesional);
 		//Guardando pacientes
 		pacienteObject.writeInt(pacientes.size());
 		for (Paciente p : pacientes) {
 			pacienteObject.writeObject(p);
 		}
-		archivo.close();
+		//Guardando profesionlaes
+		profesionalObject.writeInt(profesionales.size());
+		for (Profesional d : profesionales) {
+			profesionalObject.writeObject(d);
+		}
+		archivoPaciente.close();
+		archivoProfesional.close();
 		
 	}
 	
@@ -57,14 +65,25 @@ public class Consultorio {
 		try
 		{
 			FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");
+			FileInputStream archivoProfesionales = new FileInputStream("Profesionales.dat");
 			ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
+			ObjectInputStream profesionalObject = new ObjectInputStream(archivoProfesionales);
+			//Cargando pacientes
 			int n = pacienteObject.readInt();
 			for (int i = 0; i < n; i++) 
 			{
 				pacientes.add((Paciente) pacienteObject.readObject());
 			}
 			System.out.println("Hay " + pacientes.size() + " pacientes.");
+			//Cargando profesionales
+			n = profesionalObject.readInt();
+			for (int i = 0; i < n; i++) {
+				profesionales.add((Profesional) profesionalObject.readObject());
+			}
+			System.out.println("Hay " + pacientes.size() + " profesionales.");
+
 			archivoPacientes.close();
+			archivoProfesionales.close();
 		}catch(IOException e)
 		{
 			System.out.println(e.getMessage());
@@ -96,13 +115,32 @@ public class Consultorio {
 	{
 		Empleado empleado = new Empleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil,sexo, fechaNacimiento, tipoSangre, edad, cargo, clave);
 		empleados.add(empleado);
+		System.out.println("Nombre: " + nombre );
+		System.out.println("Apellido: " + apellidos);
+		System.out.println("Direccion: " + direccion);
+		System.out.println("Telefono: " + telefono);
+		System.out.println("Estado civil: " + estadoCivil);
+		System.out.println("Movil: " + movil);
+		System.out.println("FechaNac: " + fechaNacimiento);
+		System.out.println("TipoSangre: " + tipoSangre);
+		System.out.println("Cargo: " + cargo);
 	}
 	//Agregar doctor
 	public void crearProfesional(String cedula, String nombre, String apellidos, String direccion, String estadoCivil,String telefono, String movil, char sexo, 
 			String fechaNacimiento, String tipoSangre, int edad, String especialidad, String clave)
 	{
-		Doctor doctor = new Doctor(cedula, nombre, apellidos, direccion, estadoCivil, telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, especialidad, clave);
-		doctores.add(doctor);
+		Profesional doctor = new Profesional(cedula, nombre, apellidos, direccion, estadoCivil, telefono, movil, sexo, fechaNacimiento, tipoSangre, edad, especialidad, clave);
+		profesionales.add(doctor);
+		System.out.println("Nombre: " + nombre );
+		System.out.println("Apellido: " + apellidos);
+		System.out.println("Direccion: " + direccion);
+		System.out.println("Telefono: " + telefono);
+		System.out.println("Estado civil: " + estadoCivil);
+		System.out.println("Movil: " + movil);
+		System.out.println("FechaNac: " + fechaNacimiento);
+		System.out.println("TipoSangre: " + tipoSangre);
+		System.out.println("Especialidad: " + especialidad);
+
 	}
 	//Agregar enfermedad
 	public void crearEnfermedad(String nombre, String tipo, ArrayList<String> caracteristicas)
@@ -123,7 +161,7 @@ public class Consultorio {
 	}
 	
 	//Crear consulta para el paciente
-	public void crearConsulta(String fecha, Paciente paciente, Doctor doctor, ArrayList<String> sintomas, String anamnesis,
+	public void crearConsulta(String fecha, Paciente paciente, Profesional doctor, ArrayList<String> sintomas, String anamnesis,
 			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita)
 	{
 		Consulta consulta = new Consulta(fecha, paciente, doctor, sintomas, anamnesis, exploracion, diagnostico, tratamiento, enfermedad, cita);
@@ -143,7 +181,7 @@ public class Consultorio {
 	}
 	
 	//Crear cita
-	public void crearCita(Paciente paciente, String descripcion, String sala, Doctor doctor, String tipo, String fecha,
+	public void crearCita(Paciente paciente, String descripcion, String sala, Profesional doctor, String tipo, String fecha,
 			String hora, double duracion, String nota){
 		
 		int posPaciente = buscarPaciente(paciente.getCedula());
@@ -163,35 +201,25 @@ public class Consultorio {
 		int posicion = -1;
 		int i=0;
 		//A este while en algún momento habrá que ponerle un try catch	s
-		
 		while(i<pacientes.size())
 		{
-			//try
-			//{
 				if(pacientes.get(i).getCedula().equalsIgnoreCase(cedula))
 				{
 					posicion = i;
 				}
 				i++;
-
-			//}catch(Exception e)
-			//{
-				//System.out.println("Busqueda de paciente: null");
-				//break;
-			//}
-
 		}
 		return posicion;
 	}
 	//Buscar Doctor
-	public int buscarDoctor(String cedula)
+	public int buscarProfesional(String cedula)
 	{
 		int posicion = -1;
 		int i=0;
 		//A este while en algún momento habrá que ponerle un try catch	s
-		while(i<doctores.size() || posicion == -1)
+		while(i<profesionales.size() || posicion == -1)
 		{
-			if(doctores.get(i).getCedula().equalsIgnoreCase(cedula))
+			if(profesionales.get(i).getCedula().equalsIgnoreCase(cedula))
 			{
 				posicion = i;
 			}
@@ -236,7 +264,21 @@ public class Consultorio {
 		
 	}
 	
-	
+	public void sustituirProfesional(int posProfesionalDesactualizado, Profesional profesionalActualizado)
+	{
+		profesionales.get(posProfesionalDesactualizado).setCedula(profesionalActualizado.getCedula());
+		profesionales.get(posProfesionalDesactualizado).setNombre(profesionalActualizado.getNombre());
+		profesionales.get(posProfesionalDesactualizado).setApellidos(profesionalActualizado.getApellidos());
+		profesionales.get(posProfesionalDesactualizado).setDireccion(profesionalActualizado.getDireccion());
+		profesionales.get(posProfesionalDesactualizado).setTelefono(profesionalActualizado.getTelefono());
+		profesionales.get(posProfesionalDesactualizado).setMovil(profesionalActualizado.getMovil());
+		profesionales.get(posProfesionalDesactualizado).setEdad(profesionalActualizado.getEdad());
+		profesionales.get(posProfesionalDesactualizado).setFechaNacimiento(profesionalActualizado.getFechaNacimiento());
+		profesionales.get(posProfesionalDesactualizado).setSexo(profesionalActualizado.getSexo());
+		profesionales.get(posProfesionalDesactualizado).setEstadoCivil(profesionalActualizado.getEstadoCivil());
+		profesionales.get(posProfesionalDesactualizado).setTipoSangre(profesionalActualizado.getTipoSangre());
+		
+	}
 	
 	public ArrayList<Usuario> getUsuario() {
 		return usuario;
@@ -262,12 +304,12 @@ public class Consultorio {
 		this.pacientes = pacientes;
 	}
 
-	public ArrayList<Doctor> getDoctores() {
-		return doctores;
+	public ArrayList<Profesional> getProfesionales() {
+		return profesionales;
 	}
 
-	public void setDoctores(ArrayList<Doctor> doctores) {
-		this.doctores = doctores;
+	public void setProfesionales(ArrayList<Profesional> profesionales) {
+		this.profesionales = profesionales;
 	}
 
 	public ArrayList<Empleado> getEmpleados() {

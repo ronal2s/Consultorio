@@ -4,14 +4,14 @@ public class Cita {
 	private Paciente paciente;
 	private String descripcion;
 	private String sala;
-	private Doctor doctor;
+	private Profesional doctor;
 	private String tipo;
 	private String fecha;
 	private String hora;
 	private double duracion;
 	private String nota;
 	
-	public Cita(Paciente paciente, String descripcion, String sala, Doctor doctor, String tipo, String fecha,
+	public Cita(Paciente paciente, String descripcion, String sala, Profesional doctor, String tipo, String fecha,
 			String hora, double duracion, String nota) {
 		super();
 		this.paciente = paciente;
@@ -49,11 +49,11 @@ public class Cita {
 		this.sala = sala;
 	}
 
-	public Doctor getDoctor() {
+	public Profesional getDoctor() {
 		return doctor;
 	}
 
-	public void setDoctor(Doctor doctor) {
+	public void setDoctor(Profesional doctor) {
 		this.doctor = doctor;
 	}
 
