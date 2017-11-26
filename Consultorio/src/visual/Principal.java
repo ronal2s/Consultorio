@@ -169,15 +169,6 @@ public class Principal extends JFrame {
 		});
 		mnEmpleados_1.add(menuItem_7);
 		
-		JMenu mnEmpleados = new JMenu("Usuarios");
-		menuBar.add(mnEmpleados);
-		
-		JMenuItem menuItem_2 = new JMenuItem("Listar");
-		mnEmpleados.add(menuItem_2);
-		
-		JMenuItem menuItem = new JMenuItem("Modificar");
-		mnEmpleados.add(menuItem);
-		
 		JMenu mnAgenda = new JMenu("Agenda");
 		menuBar.add(mnAgenda);
 		
@@ -197,6 +188,13 @@ public class Principal extends JFrame {
 		menuBar.add(mnCitas);
 		
 		JMenuItem menuItem_3 = new JMenuItem("Crear");
+		menuItem_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegCita cita = new RegCita();
+				cita.setModal(true);
+				cita.setVisible(true);
+			}
+		});
 		mnCitas.add(menuItem_3);
 		
 		JMenuItem menuItem_4 = new JMenuItem("Modificar");

@@ -45,9 +45,12 @@ public class Consultorio {
 		FileOutputStream archivoPaciente = new FileOutputStream("Pacientes.dat");
 		FileOutputStream archivoProfesional = new FileOutputStream("Profesionales.dat");
 		FileOutputStream archivoEmpleado = new FileOutputStream("Empleados.dat");
+		FileOutputStream archivoCitas = new FileOutputStream("Citas.dat");
 		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivoPaciente);
 		ObjectOutputStream profesionalObject = new ObjectOutputStream(archivoProfesional);
 		ObjectOutputStream empleadoObject = new ObjectOutputStream(archivoEmpleado);
+		ObjectOutputStream citasObject = new ObjectOutputStream(archivoCitas);
+
 		//Guardando pacientes
 		pacienteObject.writeInt(pacientes.size());
 		for (Paciente p : pacientes) {
@@ -63,6 +66,12 @@ public class Consultorio {
 		for (Empleado p : empleados) {
 			empleadoObject.writeObject(p);
 		}
+		//Guardando citas
+		citasObject.writeInt(citas.size());
+		for (Cita c : citas) {
+			citasObject.writeObject(c);
+		}
+		archivoCitas.close();
 		archivoEmpleado.close();
 		archivoPaciente.close();
 		archivoProfesional.close();
@@ -71,41 +80,70 @@ public class Consultorio {
 	
 	public void cargarDatos() throws IOException, ClassNotFoundException
 	{
-		try
-		{
+
 			FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");
 			FileInputStream archivoProfesionales = new FileInputStream("Profesionales.dat");
 			FileInputStream archivoEmpleados = new FileInputStream("Empleados.dat");
+			FileInputStream archivoCitas = new FileInputStream("Citas.dat");
 			ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
 			ObjectInputStream profesionalObject = new ObjectInputStream(archivoProfesionales);
 			ObjectInputStream empleadoObject = new ObjectInputStream(archivoEmpleados);
-			//Cargando pacientes
-			int n = pacienteObject.readInt();
-			for (int i = 0; i < n; i++) 
+			ObjectInputStream citasObject = new ObjectInputStream(archivoCitas);
+			int n = -1;
+			try
 			{
-				pacientes.add((Paciente) pacienteObject.readObject());
+				//Cargando pacientes
+				n = pacienteObject.readInt();
+				for (int i = 0; i < n; i++) 
+				{
+					pacientes.add((Paciente) pacienteObject.readObject());
+				}
+				System.out.println("Hay " + pacientes.size() + " pacientes.");
+			}catch(IOException e)
+			{
+				System.out.println(e.getMessage());
 			}
-			System.out.println("Hay " + pacientes.size() + " pacientes.");
-			//Cargando profesionales
-			n = profesionalObject.readInt();
-			for (int i = 0; i < n; i++) {
-				profesionales.add((Profesional) profesionalObject.readObject());
+			try
+			{
+				//Cargando profesionales
+				n = profesionalObject.readInt();
+				for (int i = 0; i < n; i++) {
+					profesionales.add((Profesional) profesionalObject.readObject());
+				}
+				System.out.println("Hay " + pacientes.size() + " profesionales.");
+				}catch(IOException e)
+			{
+				System.out.println(e.getMessage());
 			}
-			System.out.println("Hay " + pacientes.size() + " profesionales.");
+			try
+			{
 			//Cargando empleados
 			n = empleadoObject.readInt();
 			for (int i = 0; i < n; i++) {
 				empleados.add((Empleado) empleadoObject.readObject());
 			}
-			System.out.println("Hay " + empleados.size() + " empleados..");
-			
+			System.out.println("Hay " + empleados.size() + " empleados.");
+			}catch(IOException e)
+			{
+				System.out.println(e.getMessage());
+			}
+			try
+			{
+				//Cargando citas
+				n = citasObject.readInt();
+				for (int i = 0; i < n; i++) {
+					citas.add((Cita) citasObject.readObject());
+				}
+				System.out.println("Hay " + citas.size() + " citas.");
+				}catch(IOException e)
+			{
+				System.out.println(e.getMessage());
+			}
+			archivoCitas.close();
 			archivoEmpleados.close();
 			archivoPacientes.close();
 			archivoProfesionales.close();
-		}catch(IOException e)
-		{
-			System.out.println(e.getMessage());
-		}
+
 	}
 	
 	//Crear paciente
@@ -199,13 +237,12 @@ public class Consultorio {
 	}
 	
 	//Crear cita
-	public void crearCita(Paciente paciente, String descripcion, String sala, Profesional doctor, String tipo, String fecha,
-			String hora, double duracion, String nota){
+	public void crearCita(Paciente paciente, String descripcion, String sala, Profesional doctor, String tipo, String fecha, String duracion, String hora,String nota){
 		
 		int posPaciente = buscarPaciente(paciente.getCedula());
 		if(posPaciente != -1)
 		{
-			Cita cita = new Cita(pacientes.get(posPaciente), descripcion, sala, doctor, tipo, fecha, hora, duracion, nota);
+			Cita cita = new Cita(pacientes.get(posPaciente), descripcion, sala, doctor, tipo, fecha, duracion, hora,nota);
 			citas.add(cita);
 		}
 		else
@@ -294,7 +331,8 @@ public class Consultorio {
 		profesionales.get(posProfesionalDesactualizado).setEstadoCivil(profesionalActualizado.getEstadoCivil());
 		profesionales.get(posProfesionalDesactualizado).setTipoSangre(profesionalActualizado.getTipoSangre());
 		profesionales.get(posProfesionalDesactualizado).setEspecialidad(profesionalActualizado.getEspecialidad());
-
+		profesionales.get(posProfesionalDesactualizado).setCitas(profesionalActualizado.getCitas());
+		profesionales.get(posProfesionalDesactualizado).setClave(profesionalActualizado.getClave());
 	}
 	
 	public void sustituirEmpleado(int posEmpleadoDesactualizado, Empleado empleadoActualizado)
@@ -311,7 +349,8 @@ public class Consultorio {
 		empleados.get(posEmpleadoDesactualizado).setEstadoCivil(empleadoActualizado.getEstadoCivil());
 		empleados.get(posEmpleadoDesactualizado).setTipoSangre(empleadoActualizado.getTipoSangre());
 		empleados.get(posEmpleadoDesactualizado).setCargo(empleadoActualizado.getCargo());
-
+		empleados.get(posEmpleadoDesactualizado).setClave(empleadoActualizado.getClave());
+		
 	}
 	public ArrayList<Usuario> getUsuario() {
 		return usuario;

@@ -3,12 +3,15 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
 
 import logical.Consultorio;
 import logical.Empleado;
@@ -22,6 +25,9 @@ import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Observer;
 
 public class Listar extends JDialog {
 
@@ -49,7 +55,7 @@ public class Listar extends JDialog {
 	 * Create the dialog.
 	 */
 	public Listar(String tipoLista) {
-		setBounds(100, 100, 706, 477);
+		setBounds(100, 100, 706, 490);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -57,7 +63,7 @@ public class Listar extends JDialog {
 		contentPanel.setLayout(null);
 		
 		JPanel panelPacientes = new JPanel();
-		panelPacientes.setBounds(0, 0, 690, 405);
+		panelPacientes.setBounds(0, 0, 690, 533);
 		contentPanel.add(panelPacientes);
 		panelPacientes.setLayout(null);
 
@@ -100,7 +106,7 @@ public class Listar extends JDialog {
 			}
 		});
 		txtCedula.setToolTipText("Escribe la cedula del paciente a buscar");
-		txtCedula.setBounds(69, 28, 86, 28);
+		txtCedula.setBounds(69, 28, 150, 28);
 		panelPacientes.add(txtCedula);
 		txtCedula.setColumns(10);
 		
@@ -110,7 +116,7 @@ public class Listar extends JDialog {
 		panelPacientes.add(label);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 82, 670, 312);
+		scrollPane.setBounds(10, 70, 670, 312);
 		panelPacientes.add(scrollPane);
 		
 		table = new JTable();
@@ -148,6 +154,11 @@ public class Listar extends JDialog {
 		}
 		table.setModel(model);
 		scrollPane.setViewportView(table);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(508, 28, 172, 28);
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		panelPacientes.add(dateChooser);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

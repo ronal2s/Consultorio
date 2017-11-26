@@ -16,10 +16,13 @@ import javax.swing.SpinnerDateModel;
 import java.util.Date;
 import java.util.Calendar;
 import javax.swing.ImageIcon;
+import javax.swing.JTextArea;
+import javax.swing.JTable;
 
 public class RegConsulta extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -48,9 +51,27 @@ public class RegConsulta extends JDialog {
 		tabbedPane.setBounds(12, 284, 616, 196);
 		contentPanel.add(tabbedPane);
 		
+		JTextArea txtAmnesis = new JTextArea();
+		tabbedPane.addTab("Amnesis", null, txtAmnesis, null);
+		
+		JTextArea txtExploracion = new JTextArea();
+		tabbedPane.addTab("Exploracion", null, txtExploracion, null);
+		
+		JTextArea txtDiagnostico = new JTextArea();
+		tabbedPane.addTab("Diagn\u00F3stico", null, txtDiagnostico, null);
+		
+		JTextArea txtTratamiento = new JTextArea();
+		tabbedPane.addTab("Tratamiento", null, txtTratamiento, null);
+		
+		JTextArea txtEnfermedad = new JTextArea();
+		tabbedPane.addTab("Enfermedad", null, txtEnfermedad, null);
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(12, 493, 616, 168);
 		contentPanel.add(scrollPane);
+		
+		table = new JTable();
+		scrollPane.setViewportView(table);
 		
 		JLabel lblPaciente = new JLabel("Paciente:");
 		lblPaciente.setBounds(184, 143, 56, 16);

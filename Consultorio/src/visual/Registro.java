@@ -33,7 +33,10 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class Registro extends JDialog {
 
@@ -45,7 +48,6 @@ public class Registro extends JDialog {
 	private JTextField txtTelefono;
 	private JTextField txtMovil;
 	private JTextField txtEspecialidad;
-	private JTextField txtFechaNacimiento;
 	private JPanel panelPaciente;
 	private JLabel lblEspecialidad;
 	private JComboBox comboCargo = new JComboBox();
@@ -67,6 +69,8 @@ public class Registro extends JDialog {
 	private String nombreBoton;
 	private JButton okButton;
 	private String tipo;
+	private JDateChooser txtFechaNacimiento;
+	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	/**
 	 * Launch the application.
 	 */
@@ -185,7 +189,9 @@ public class Registro extends JDialog {
 					txtTelefono.setText(telefono);
 					txtMovil.setText(movil);
 					spinnerEdad.setValue(edad);
-					txtFechaNacimiento.setText(fechaNacimiento);
+					//Poner la fecha
+					//txtFechaNacimiento.setDate(df.format(txtFechaNacimiento.getDate()));
+					
 					radioMasculino.setSelected(sexoM);
 					radioFemenino.setSelected(sexoF);
 					comboGrupoSanguineo.setSelectedItem(tipoSangre);
@@ -326,13 +332,6 @@ public class Registro extends JDialog {
 		lblFechaNacimiento.setBounds(180, 226, 137, 20);
 		panelRegistro.add(lblFechaNacimiento);
 		
-		txtFechaNacimiento = new JTextField();
-		txtFechaNacimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtFechaNacimiento.setText("DD/MM/AAAA");
-		txtFechaNacimiento.setColumns(10);
-		txtFechaNacimiento.setBounds(329, 222, 237, 28);
-		panelRegistro.add(txtFechaNacimiento);
-		
 		txtEspecialidad = new JTextField();
 		txtEspecialidad.setText("Este campo es del tipo Profesional y ya");
 		txtEspecialidad.setBackground(SystemColor.info);
@@ -362,6 +361,13 @@ public class Registro extends JDialog {
 		lblConfirmarClave.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblConfirmarClave.setBounds(495, 299, 134, 20);
 		panelRegistro.add(lblConfirmarClave);
+		
+		txtFechaNacimiento = new JDateChooser();
+		txtFechaNacimiento.setBounds(326, 220, 222, 28);
+		txtFechaNacimiento.setDateFormatString("dd/MM/yyyy");
+
+
+		panelRegistro.add(txtFechaNacimiento);
 		
 		panelPaciente = new JPanel();
 		panelPaciente.setBorder(new TitledBorder(null, "Campos espec\u00EDficos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -393,6 +399,7 @@ public class Registro extends JDialog {
 								antecedentes="",observaciones="", cargo="",clave="";
 						char sexo;
 						int edad;
+						
 						cedula = txtCedula.getText();
 						nombre = txtNombre.getText();
 						apellidos = txtApellidos.getText();
@@ -400,7 +407,8 @@ public class Registro extends JDialog {
 						telefono = txtTelefono.getText();
 						movil = txtMovil.getText();
 						sexo = radioMasculino.isSelected()?'M': 'F';
-						fechaNacimiento = txtFechaNacimiento.getText();
+						fechaNacimiento = df.format(txtFechaNacimiento.getDate()) == ""? "No agregado":df.format(txtFechaNacimiento.getDate()) ;
+						//fechaNacimiento = txtFechaNacimiento.getText();
 						tipoSangre = comboGrupoSanguineo.getSelectedItem().toString();
 						edad = (int) spinnerEdad.getValue();
 						estadoCivil = (String) comboEstadoCivil.getSelectedItem();
@@ -544,7 +552,8 @@ public class Registro extends JDialog {
 			txtConfirmarClave.setText("");
 			txtDireccion.setText("");
 			txtEspecialidad.setText("");
-			txtFechaNacimiento.setText("");
+			//Limpiar la fecha
+			//txtFechaNacimiento.setText("");
 			txtMovil.setText("");
 			txtNombre.setText("");
 			txtTelefono.setText("");

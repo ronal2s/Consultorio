@@ -1,6 +1,12 @@
 package logical;
 
-public class Cita {
+import java.io.Serializable;
+
+public class Cita implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Paciente paciente;
 	private String descripcion;
 	private String sala;
@@ -8,11 +14,11 @@ public class Cita {
 	private String tipo;
 	private String fecha;
 	private String hora;
-	private double duracion;
+	private String duracion;
 	private String nota;
 	
 	public Cita(Paciente paciente, String descripcion, String sala, Profesional doctor, String tipo, String fecha,
-			String hora, double duracion, String nota) {
+		 String duracion, String hora, String nota) {
 		super();
 		this.paciente = paciente;
 		this.descripcion = descripcion;
@@ -73,19 +79,12 @@ public class Cita {
 		this.fecha = fecha;
 	}
 
-	public String getHora() {
-		return hora;
-	}
 
-	public void setHora(String hora) {
-		this.hora = hora;
-	}
-
-	public double getDuracion() {
+	public String getDuracion() {
 		return duracion;
 	}
 
-	public void setDuracion(double duracion) {
+	public void setDuracion(String duracion) {
 		this.duracion = duracion;
 	}
 
@@ -95,6 +94,14 @@ public class Cita {
 
 	public void setNota(String nota) {
 		this.nota = nota;
+	}
+
+	public String getHora() {
+		return hora;
+	}
+
+	public void setHora(String hora) {
+		this.hora = hora;
 	}
 	
 	
