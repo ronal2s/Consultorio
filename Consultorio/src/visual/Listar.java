@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
+import logical.Cita;
 import logical.Consultorio;
 import logical.Empleado;
 import logical.Paciente;
@@ -22,12 +23,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Observer;
+import javax.swing.UIManager;
 
 public class Listar extends JDialog {
 
@@ -37,6 +42,12 @@ public class Listar extends JDialog {
 	private String CedulaBuscar;
 	private JTextField txtCedula;
 	private JTable table;
+	private JDateChooser dateChooser;
+	private String fechaBuscar="";
+	private JLabel labelPhoto;
+	private JButton botonBuscarFecha;
+	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private int posModificar=-1;
 
 	/**
 	 * Launch the application.
@@ -110,17 +121,53 @@ public class Listar extends JDialog {
 		panelPacientes.add(txtCedula);
 		txtCedula.setColumns(10);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Listar.class.getResource("/img/if_user-id_285641.png")));
-		label.setBounds(10, 25, 57, 34);
-		panelPacientes.add(label);
+		labelPhoto = new JLabel("");
+		labelPhoto.setIcon(new ImageIcon(Listar.class.getResource("/img/if_user-id_285641.png")));
+		labelPhoto.setBounds(10, 25, 57, 34);
+		panelPacientes.add(labelPhoto);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 70, 670, 312);
 		panelPacientes.add(scrollPane);
-		
+		dateChooser = new JDateChooser();
+		dateChooser.setVisible(false);
+		dateChooser.setBounds(413, 28, 172, 28);
+		dateChooser.setDateFormatString("dd/MM/yyyy");		
+		botonBuscarFecha = new JButton("Buscar");
+		botonBuscarFecha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Evento del boton
+				
+				try
+				{
+					fechaBuscar = df.format(dateChooser.getDate());
+					listarAgenda("Fecha");
+				}catch(Exception e2)
+				{
+					listarAgenda("Todos");
+				}
+			}
+		});
+		botonBuscarFecha.setVisible(false);
+		botonBuscarFecha.setBounds(255, 28, 89, 28);
 		table = new JTable();
-
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//Obtener index
+				int index;
+				if(table.getSelectedRow()>=0){
+					//btnEliminar.setEnabled(true);
+					//btnModificar.setEnabled(true);
+					index = table.getSelectedRow();
+					posModificar = (int)table.getModel().getValueAt(index, 0);
+					//posModificar = Integer.valueOf(n);
+				    System.out.println("Seleccionado la cita: " + posModificar);				
+				}
+			}
+		});
+		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		
 		//Manejar la tabla
 		String[] columnNames = {""};
 		switch(tipoLista)
@@ -137,6 +184,10 @@ public class Listar extends JDialog {
 			String[] empleados = {"Empleado", "Cargo", "Cedula", "Fecha Nacimiento", "Teléfono", "Móvil"};
 			columnNames = empleados;
 			break;
+		case "Agenda":
+			String[] citas = {"#","Fecha","Hora","Descripción","Profesional"};
+			columnNames = citas;
+			break;
 		}
 		model = new DefaultTableModel();
 		model.setColumnIdentifiers(columnNames);
@@ -151,31 +202,84 @@ public class Listar extends JDialog {
 		case "Empleados":
 			listarEmpleados("Todos");
 			break;
+		case "Agenda":
+			txtCedula.setVisible(false);
+			labelPhoto.setVisible(false);
+			dateChooser.setBounds(txtCedula.getBounds().x, txtCedula.getBounds().y, dateChooser.getBounds().width, dateChooser.getBounds().height);
+			dateChooser.setVisible(true);
+			botonBuscarFecha.setVisible(true);
+			listarAgenda("Todos");
+			break;
 		}
 		table.setModel(model);
 		scrollPane.setViewportView(table);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(508, 28, 172, 28);
-		dateChooser.setDateFormatString("dd/MM/yyyy");
+
 		panelPacientes.add(dateChooser);
+		
+		
+		panelPacientes.add(botonBuscarFecha);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				JButton okButton = new JButton("Modificar");
+				okButton.setBackground(UIManager.getColor("Button.background"));
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						RegCita cita = new RegCita(posModificar);
+						cita.setModal(true);
+						cita.setVisible(true);
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Eliminar");
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
 
+	}
+	public void listarAgenda(String tipo)
+	{
+		int n =0;
+		model.setRowCount(0);
+		fila = new Object[model.getColumnCount()];
+		ArrayList<Cita> citas = Consultorio.getInstance().getCitas();
+		System.out.println("Tamaño citas lista: " + citas.size());
+		switch(tipo)
+		{
+		case "Todos":
+			for (Cita cita : citas) {
+				fila[0] = n;
+				fila[1] =  cita.getFecha();
+				fila[2] =  cita.getHora();
+				fila[3] =  cita.getDescripcion();
+				fila[4] =  cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos();
+				n++;
+				model.addRow(fila);
+			}
+			break;
+		case "Fecha":
+			for (Cita cita : citas) {
+				if(cita.getFecha().equalsIgnoreCase(fechaBuscar))
+				{
+					fila[0] = n;
+					fila[1] =  cita.getFecha();
+					fila[2] =  cita.getHora();
+					fila[3] =  cita.getDescripcion();
+					fila[4] =  cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos();
+					n++;
+					model.addRow(fila);
+				}
+			}
+			break;
+		}
 	}
 	
 	public void listarProfesionales(String tipo) 

@@ -421,7 +421,7 @@ public class Registro extends JDialog {
 							Consultorio.getInstance().crearPaciente(cedula, nombre, apellidos, direccion, telefono, estadoCivil, movil,sexo, fechaNacimiento, 
 									tipoSangre,edad, alergias, antecedentes, observaciones);
 							JOptionPane.showMessageDialog(null, "Agregado correctamente");
-							//limpiarCampos();
+							limpiarCampos();
 							System.out.println("Hay " + Consultorio.getInstance().getPacientes().size() + " pacientes.");
 							break;
 						case "ModificarPaciente":

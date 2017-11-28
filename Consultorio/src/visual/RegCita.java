@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.Label;
@@ -50,11 +51,13 @@ public class RegCita extends JDialog {
 	private DefaultTableModel model;
 	private Object[] fila;
 	private JTextField txtHora;
+	private int posCita = -1;
+	private JButton okButton;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		try {
 			RegCita dialog = new RegCita();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -62,12 +65,14 @@ public class RegCita extends JDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 	/**
 	 * Create the dialog.
 	 */
-	public RegCita() {
+	public RegCita(int posCita) {
+		//PosCita será para llamar a esta ventana desde la ventana de Listar, para así saber la posición de la lista de citas a listar
+		this.posCita = posCita;
 		setBounds(100, 100, 931, 540);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -194,7 +199,7 @@ public class RegCita extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("OK");
+				okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						//Crear cita
@@ -202,7 +207,9 @@ public class RegCita extends JDialog {
 						String[] partes = comboProfesional.getSelectedItem().toString().split("-");
 						String cedula = partes[1]; System.out.println("Cedula doctor: " + cedula);
 						Profesional doctor = null;//En el combo box vamos a cargar los doctores con el formato [NOMBRE + APELLIDO - CEDULA]
-						int pos = Consultorio.getInstance().buscarProfesional(cedula);
+						Cita cita = null;
+						int pos = -1;
+						pos = Consultorio.getInstance().buscarProfesional(cedula);
 						doctor = Consultorio.getInstance().getProfesionales().get(pos); System.out.println("Doctor: " + doctor.getNombre());
 						descripcion = txtDescripcion.getText();
 						sala = comboSala.getSelectedItem().toString();
@@ -211,27 +218,56 @@ public class RegCita extends JDialog {
 						duracion = txtDuracion.getText();
 						hora = txtHora.getText();
 						nota = txtNota.getText();
-						Cita cita = new Cita(paciente, descripcion, sala, doctor, tipo, fecha, duracion, hora,nota);
-						ArrayList<Cita> citas = doctor.getCitas();
-						citas.add(cita);
-						doctor.setCitas(citas);
-						Consultorio.getInstance().sustituirProfesional(pos, doctor);
-						Consultorio.getInstance().getCitas().add(cita);
-						System.out.println("Consultorio tiene: " + Consultorio.getInstance().getCitas().size() + " citas");
+						if(posCita == -1)
+						{
+							
+							cita = new Cita(paciente, descripcion, sala, doctor, tipo, fecha, duracion, hora,nota);
+							ArrayList<Cita> citas = doctor.getCitas();
+							citas.add(cita);
+							doctor.setCitas(citas);
+							Consultorio.getInstance().sustituirProfesional(pos, doctor);
+							Consultorio.getInstance().getCitas().add(cita);
+							System.out.println("Consultorio tiene: " + Consultorio.getInstance().getCitas().size() + " citas");
+							listarCitas();
+							limpiarCampos();
+							JOptionPane.showMessageDialog(null, "Agregado correctamente");
+						}
+						else
+						{
+							//Para modificar
+							cita = new Cita(paciente, descripcion, sala, doctor, tipo, fecha, duracion, hora,nota);
+							Consultorio.getInstance().sustituirCita(posCita, cita);
+							listarCitas();
+							limpiarCampos();
+							JOptionPane.showMessageDialog(null, "Modificado correctamente");
+							dispose();
+							
+						}
 					}
+					
 				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
 		actualizarProfesionales();
 		listarCitas();
+		if(posCita != -1)
+		{
+			rellenarCita();
+			okButton.setText("Modificar");
+		}
 	}
 	
 	public void actualizarProfesionales()
@@ -241,7 +277,30 @@ public class RegCita extends JDialog {
 			comboProfesional.addItem(p.getNombre() + " " + p.getApellidos() + "-" + p.getCedula());
 		}
 	}
-	
+	private void rellenarCita()
+	{
+		Cita cita = Consultorio.getInstance().getCitas().get(posCita);
+		txtPaciente.setText(cita.getPaciente().getCedula());
+		txtPaciente.setEnabled(false);
+		lblNombrePaciente.setText(cita.getPaciente().getNombre() +" "+ cita.getPaciente().getApellidos());
+		txtDescripcion.setText(cita.getDescripcion());
+		txtDuracion.setText(cita.getDuracion());
+		txtHora.setText(cita.getHora());
+		txtNota.setText(cita.getNota());
+		txtTipoCita.setText(cita.getTipo());
+		comboProfesional.setSelectedItem(cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos() + "-" + cita.getDoctor().getCedula());
+	}
+	private void limpiarCampos() {
+		// TODO Auto-generated method stub
+		txtPaciente.setText("");
+		txtDuracion.setText("");
+		txtDescripcion.setText("");
+		txtHora.setText("");
+		txtNota.setText("");
+		txtTipoCita.setText("");
+		lblNombrePaciente.setText("");
+		txtPaciente.requestFocus();
+	}
 	public void listarCitas() 
 	{
 		int n =0;

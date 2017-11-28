@@ -349,9 +349,54 @@ public class Consultorio {
 		empleados.get(posEmpleadoDesactualizado).setEstadoCivil(empleadoActualizado.getEstadoCivil());
 		empleados.get(posEmpleadoDesactualizado).setTipoSangre(empleadoActualizado.getTipoSangre());
 		empleados.get(posEmpleadoDesactualizado).setCargo(empleadoActualizado.getCargo());
-		empleados.get(posEmpleadoDesactualizado).setClave(empleadoActualizado.getClave());
+		empleados.get(posEmpleadoDesactualizado).setClave(empleadoActualizado.getClave());	
+	}
+	
+	public void sustituirCita(int posCitaDesactualizado, Cita citaActualizado)
+	{
+		//Falta también sustituir la cita del Doctor
+				int n=0,m=0;
+				boolean modificado = true;
+				Profesional p = null;
+				while(n<profesionales.size() || !modificado)
+				{
+					p = profesionales.get(n);
+					while (m< p.getCitas().size()) {
+						if(p.getCitas().get(m).getDescripcion().equalsIgnoreCase(citas.get(posCitaDesactualizado).getDescripcion()))
+						{
+							if(p.getCitas().get(m).getHora().equalsIgnoreCase(citas.get(posCitaDesactualizado).getHora()))
+							{
+								//A ver, aquí pude solamente poner que si la CitaActual del doctor tiene la misma hora que la cita desactualizada 
+								//entonces esa es la cita, pero puede que haya querido modificar esa cita porque chocaba la hora con otra
+								//Así que mejor debería hacer más condiciones, pero eso se hará luego, por ahora así está bien
+								profesionales.get(n).getCitas().get(m).setDescripcion(citaActualizado.getDescripcion());
+								profesionales.get(n).getCitas().get(m).setDuracion(citaActualizado.getDuracion());
+								profesionales.get(n).getCitas().get(m).setFecha(citaActualizado.getFecha());
+								profesionales.get(n).getCitas().get(m).setHora(citaActualizado.getHora());
+								profesionales.get(n).getCitas().get(m).setNota(citaActualizado.getNota());
+								profesionales.get(n).getCitas().get(m).setPaciente(citaActualizado.getPaciente());
+								profesionales.get(n).getCitas().get(m).setSala(citaActualizado.getSala());
+								profesionales.get(n).getCitas().get(m).setTipo(citaActualizado.getTipo());
+								modificado = true;
+								break;
+							}
+						}
+						m++;
+					}
+					n++;
+				}
+		citas.get(posCitaDesactualizado).setDescripcion(citaActualizado.getDescripcion());
+		citas.get(posCitaDesactualizado).setDoctor(citaActualizado.getDoctor());
+		citas.get(posCitaDesactualizado).setDuracion(citaActualizado.getDuracion());
+		citas.get(posCitaDesactualizado).setFecha(citaActualizado.getFecha());
+		citas.get(posCitaDesactualizado).setHora(citaActualizado.getHora());
+		citas.get(posCitaDesactualizado).setNota(citaActualizado.getNota());
+		citas.get(posCitaDesactualizado).setPaciente(citaActualizado.getPaciente());
+		citas.get(posCitaDesactualizado).setSala(citaActualizado.getSala());
+		citas.get(posCitaDesactualizado).setTipo(citaActualizado.getTipo());
 		
 	}
+	
 	public ArrayList<Usuario> getUsuario() {
 		return usuario;
 	}

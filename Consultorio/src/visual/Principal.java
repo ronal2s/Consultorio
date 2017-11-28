@@ -173,6 +173,13 @@ public class Principal extends JFrame {
 		menuBar.add(mnAgenda);
 		
 		JMenuItem mntmListar_2 = new JMenuItem("Listar");
+		mntmListar_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Listar listar = new Listar("Agenda");
+				listar.setModal(true);
+				listar.setVisible(true);
+			}
+		});
 		mnAgenda.add(mntmListar_2);
 		
 		JMenu mnConsultas = new JMenu("Consultas");
@@ -190,7 +197,7 @@ public class Principal extends JFrame {
 		JMenuItem menuItem_3 = new JMenuItem("Crear");
 		menuItem_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegCita cita = new RegCita();
+				RegCita cita = new RegCita(-1);
 				cita.setModal(true);
 				cita.setVisible(true);
 			}
@@ -198,6 +205,7 @@ public class Principal extends JFrame {
 		mnCitas.add(menuItem_3);
 		
 		JMenuItem menuItem_4 = new JMenuItem("Modificar");
+		menuItem_4.setVisible(false);
 		mnCitas.add(menuItem_4);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
