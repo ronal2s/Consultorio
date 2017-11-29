@@ -80,15 +80,22 @@ public class Consultorio {
 	
 	public void cargarDatos() throws IOException, ClassNotFoundException
 	{
-
-			FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");
-			FileInputStream archivoProfesionales = new FileInputStream("Profesionales.dat");
-			FileInputStream archivoEmpleados = new FileInputStream("Empleados.dat");
-			FileInputStream archivoCitas = new FileInputStream("Citas.dat");
-			ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
-			ObjectInputStream profesionalObject = new ObjectInputStream(archivoProfesionales);
-			ObjectInputStream empleadoObject = new ObjectInputStream(archivoEmpleados);
-			ObjectInputStream citasObject = new ObjectInputStream(archivoCitas);
+		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null;
+		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null;
+			try
+			{
+				archivoPacientes = new FileInputStream("Pacientes.dat");
+				archivoProfesionales = new FileInputStream("Profesionales.dat");
+				archivoEmpleados = new FileInputStream("Empleados.dat");
+				archivoCitas = new FileInputStream("Citas.dat");
+				pacienteObject = new ObjectInputStream(archivoPacientes);
+				profesionalObject = new ObjectInputStream(archivoProfesionales);
+				empleadoObject = new ObjectInputStream(archivoEmpleados);
+				citasObject = new ObjectInputStream(archivoCitas);
+			}catch(IOException e)
+			{
+				System.out.println("Algun archivo no se encuentra: " + e.getMessage());
+			}
 			int n = -1;
 			try
 			{
