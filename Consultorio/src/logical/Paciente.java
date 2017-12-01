@@ -12,7 +12,7 @@ public class Paciente extends Persona implements Serializable{
 	private String alergias, antecedentes, observaciones;
 	private ArrayList<Vacuna> vacunas;
 	private ArrayList<Consulta> historiaClinica;
-	private ArrayList<Consulta> consultas;
+	private ArrayList<Cita> citas;
 	//private boolean estado; la quito porque el profe dijo que para la clinica un paciente nunca está de alta o de baja, algo así dijo
 	
 	public Paciente(String cedula, String nombre, String apellidos, String direccion,String estadoCivil, String telefono, String movil, char sexo,
@@ -22,10 +22,10 @@ public class Paciente extends Persona implements Serializable{
 		this.antecedentes = antecedentes;
 		this.vacunas = new ArrayList<Vacuna>();
 		this.historiaClinica = new ArrayList<Consulta>();
-		this.consultas = new ArrayList<Consulta>();
+		this.citas = new ArrayList<Cita>();
 		this.observaciones = observaciones;
 		// TODO Auto-generated constructor stub
-	}
+	} 
 	
 	
 
@@ -53,14 +53,16 @@ public class Paciente extends Persona implements Serializable{
 
 
 
-	public ArrayList<Consulta> getConsultas() {
-		return consultas;
+
+
+	public ArrayList<Cita> getCitas() {
+		return citas;
 	}
 
 
 
-	public void setConsultas(ArrayList<Consulta> consultas) {
-		this.consultas = consultas;
+	public void setCitas(ArrayList<Cita> citas) {
+		this.citas = citas;
 	}
 
 

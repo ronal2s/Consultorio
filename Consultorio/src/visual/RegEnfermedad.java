@@ -8,18 +8,40 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import logical.Consulta;
+import logical.Consultorio;
+import logical.Enfermedad;
+
 import javax.swing.JTextPane;
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import javax.swing.JTable;
+import javax.swing.DefaultComboBoxModel;
 
 public class RegEnfermedad extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNombre;
+	private JTextPane txtCaracteristicas;
+	private JComboBox cbxTipo;
+	private JButton btnGuardar;
+	private JButton btnSalir;
+	private JTable table;
+	private DefaultTableModel model;
+	private Object[] fila;
+
 
 	/**
 	 * Launch the application.
@@ -41,6 +63,7 @@ public class RegEnfermedad extends JDialog {
 		setForeground(new Color(176, 224, 230));
 		setTitle("Registrar Enfermedad");
 		setBounds(100, 100, 645, 497);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(176, 196, 222));
 		contentPanel.setForeground(new Color(176, 224, 230));
@@ -49,26 +72,38 @@ public class RegEnfermedad extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel label = new JLabel("Nombre:");
-			label.setBounds(12, 156, 56, 16);
+			label.setBounds(12, 161, 56, 16);
 			contentPanel.add(label);
 		}
 		{
 			txtNombre = new JTextField();
+			txtNombre.setEnabled(false);
 			txtNombre.setColumns(10);
-			txtNombre.setBounds(76, 153, 198, 22);
+			txtNombre.setBounds(76, 158, 176, 22);
 			contentPanel.add(txtNombre);
 		}
 		{
 			JScrollPane scrollPaneListadoEnfer = new JScrollPane();
 			scrollPaneListadoEnfer.setBounds(288, 153, 332, 249);
 			contentPanel.add(scrollPaneListadoEnfer);
+			{
+				table = new JTable();
+				String[] columnNames = {"Tipo","Nombre", "Características"};
+				model = new DefaultTableModel();
+				model.setColumnIdentifiers(columnNames);
+				table.setModel(model);
+
+				scrollPaneListadoEnfer.setViewportView(table);
+			}
 		}
 		{
-			JComboBox cbxTipo = new JComboBox();
+			cbxTipo = new JComboBox();
+			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Aguda", "Cr\u00F3nica", "Espor\u00E1dica", "End\u00E9mica", "Epid\u00E9mica", "Infecciosa", "No Infecciosa"}));
+			cbxTipo.setEnabled(false);
 			cbxTipo.setBounds(76, 193, 198, 22);
 			contentPanel.add(cbxTipo);
 		}
-		{
+		{ 
 			JLabel label = new JLabel("Tipo:");
 			label.setBounds(12, 193, 102, 16);
 			contentPanel.add(label);
@@ -80,7 +115,8 @@ public class RegEnfermedad extends JDialog {
 			panel.setBounds(12, 222, 264, 180);
 			contentPanel.add(panel);
 			{
-				JTextPane txtCaracteristicas = new JTextPane();
+				txtCaracteristicas = new JTextPane();
+				txtCaracteristicas.setEnabled(false);
 				txtCaracteristicas.setBounds(12, 24, 240, 143);
 				panel.add(txtCaracteristicas);
 			}
@@ -92,23 +128,80 @@ public class RegEnfermedad extends JDialog {
 			contentPanel.add(label);
 		}
 		{
+			JLabel label = new JLabel("");
+			label.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					txtCaracteristicas.setEnabled(true);
+					txtNombre.setEnabled(true);
+					cbxTipo.setEnabled(true);
+					btnGuardar.setEnabled(true);
+				}
+			});
+			label.setIcon(new ImageIcon(RegEnfermedad.class.getResource("/img/if_add_370092.png")));
+			label.setBounds(258, 155, 30, 22);
+			contentPanel.add(label);
+		}
+		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBackground(new Color(176, 196, 222));
 			buttonPane.setForeground(new Color(25, 25, 112));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton BtnGuardar = new JButton("Guardar");
-				BtnGuardar.setActionCommand("OK");
-				buttonPane.add(BtnGuardar);
-				getRootPane().setDefaultButton(BtnGuardar);
+				btnGuardar = new JButton("Guardar");
+				btnGuardar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String name = txtNombre.getText();
+						String tipo = String.valueOf(cbxTipo.getSelectedIndex());
+						String caracteristicas = txtCaracteristicas.getText();
+						
+						Consultorio.getInstance().crearEnfermedad(name, tipo, caracteristicas);
+						clean();
+						JOptionPane.showMessageDialog(null, "Agregado correctamente");
+						llenarTabla();
+					}
+
+					
+				});
+				btnGuardar.setEnabled(false);
+				btnGuardar.setActionCommand("OK");
+				buttonPane.add(btnGuardar);
+				getRootPane().setDefaultButton(btnGuardar);
 			}
 			{
-				JButton btnSalir = new JButton("Salir");
+				btnSalir = new JButton("Salir");
+				btnSalir.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnSalir.setActionCommand("Cancel");
 				buttonPane.add(btnSalir);
 			}
 		}
+		llenarTabla();
 	}
+	
+	public void llenarTabla()
+	{
 
+		model.setRowCount(0);
+		fila = new Object[model.getColumnCount()];
+		ArrayList<Enfermedad> enfermedades = Consultorio.getInstance().getEnfermedades();
+		System.out.println("Tamaño enfermedad lista: " + enfermedades.size());
+			for (Enfermedad c : enfermedades) {
+				fila[0] = c.getTipo();
+				fila[1] =  c.getNombre();
+				fila[2] = c.getCaracteristicas();
+				model.addRow(fila);
+			}
+		
+	}
+	
+	private void clean() {
+				
+	}
+	
+	
 }

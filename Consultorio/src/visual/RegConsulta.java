@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
@@ -14,16 +15,45 @@ import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import javax.swing.JTable;
+import javax.swing.DefaultComboBoxModel;
+import java.awt.Font;
+import java.awt.Color;
+import javax.swing.JTextField;
+import com.toedter.calendar.JDateChooser;
+
+import logical.Cita;
+import logical.Consulta;
+import logical.Consultorio;
+import logical.Enfermedad;
+import logical.Paciente;
+import logical.Profesional;
+
+import javax.swing.JCheckBox;
+import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
 
 public class RegConsulta extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
+	private JTextField txtCedula;
+	private Paciente paciente;
+	private JLabel lblNombre;
+	private JComboBox cbxProfesional;
+	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private JComboBox comboEnfermedad;
+	private boolean AHistorial = false;
+	private DefaultTableModel model;
+	private Object[] fila;
 	private JTable table;
 
+	
 	/**
 	 * Launch the application.
 	 */
@@ -51,8 +81,8 @@ public class RegConsulta extends JDialog {
 		tabbedPane.setBounds(12, 284, 616, 196);
 		contentPanel.add(tabbedPane);
 		
-		JTextArea txtAmnesis = new JTextArea();
-		tabbedPane.addTab("Amnesis", null, txtAmnesis, null);
+		JTextArea txtSintomas = new JTextArea();
+		tabbedPane.addTab("Sintomas", null, txtSintomas, null);
 		
 		JTextArea txtExploracion = new JTextArea();
 		tabbedPane.addTab("Exploracion", null, txtExploracion, null);
@@ -63,48 +93,27 @@ public class RegConsulta extends JDialog {
 		JTextArea txtTratamiento = new JTextArea();
 		tabbedPane.addTab("Tratamiento", null, txtTratamiento, null);
 		
-		JTextArea txtEnfermedad = new JTextArea();
-		tabbedPane.addTab("Enfermedad", null, txtEnfermedad, null);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 493, 616, 168);
-		contentPanel.add(scrollPane);
-		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		 comboEnfermedad = new JComboBox();
+		comboEnfermedad.setForeground(new Color(128, 128, 128));
+		comboEnfermedad.setFont(new Font("Tahoma", Font.PLAIN, 36));
+		comboEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar enfermedad"}));
+		tabbedPane.addTab("Enfermedad", null, comboEnfermedad, null);
 		
 		JLabel lblPaciente = new JLabel("Paciente:");
 		lblPaciente.setBounds(184, 143, 56, 16);
 		contentPanel.add(lblPaciente);
 		
-		JLabel lblApellidos = new JLabel("--1st 2nd Name--");
-		lblApellidos.setBounds(252, 143, 99, 16);
-		contentPanel.add(lblApellidos);
-		
-		JLabel lblNewLabel = new JLabel("Num:");
-		lblNewLabel.setBounds(184, 209, 56, 16);
-		contentPanel.add(lblNewLabel);
-		
-		JLabel lblNumPaciente = new JLabel("----");
-		lblNumPaciente.setBounds(252, 209, 56, 16);
-		contentPanel.add(lblNumPaciente);
-		
 		JLabel lblProfesional = new JLabel("Profesional:");
 		lblProfesional.setBounds(409, 143, 81, 16);
 		contentPanel.add(lblProfesional);
 		
-		JComboBox cbxProfesional = new JComboBox();
-		cbxProfesional.setBounds(409, 163, 219, 22);
+		cbxProfesional = new JComboBox();
+		cbxProfesional.setBounds(409, 163, 219, 28);
 		contentPanel.add(cbxProfesional);
 		
 		JLabel lblFecha = new JLabel("Fecha:");
 		lblFecha.setBounds(409, 198, 81, 16);
 		contentPanel.add(lblFecha);
-		
-		JSpinner spnFecha = new JSpinner();
-		spnFecha.setModel(new SpinnerDateModel(new Date(1511409600000L), null, null, Calendar.DAY_OF_YEAR));
-		spnFecha.setBounds(409, 218, 173, 22);
-		contentPanel.add(spnFecha);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(RegConsulta.class.getResource("/img/Banner.png")));
@@ -116,20 +125,95 @@ public class RegConsulta extends JDialog {
 		lblImageHere.setBounds(24, 120, 148, 151);
 		contentPanel.add(lblImageHere);
 		
-		JLabel lblNombre = new JLabel("--Name--");
-		lblNombre.setBounds(252, 172, 56, 16);
+		lblNombre = new JLabel("--Name--");
+		lblNombre.setBounds(184, 181, 184, 28);
 		contentPanel.add(lblNombre);
 		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(RegConsulta.class.getResource("/img/if_calendar-clock_299096.png")));
-		lblNewLabel_2.setBounds(594, 209, 31, 31);
-		contentPanel.add(lblNewLabel_2);
+		txtCedula = new JTextField();
+		txtCedula.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Evento al darle enter al textField
+				int posPaciente = Consultorio.getInstance().buscarPaciente(txtCedula.getText());
+				if(posPaciente != -1)
+				{
+					paciente = Consultorio.getInstance().getPacientes().get(posPaciente);
+				    lblNombre.setText(paciente.getNombre() + " " + paciente.getApellidos());
+				    llenarTabla();
+				}
+			}
+		});
+		txtCedula.setBounds(252, 140, 116, 28);
+		contentPanel.add(txtCedula);
+		txtCedula.setColumns(10);
+		
+		JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setBounds(409, 229, 219, 28);
+		contentPanel.add(dateChooser);
+		
+		JCheckBox checkBoxAHistorial = new JCheckBox("Pasar a historial clinico");
+		checkBoxAHistorial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Evento del checkbox
+				/*if(checkBoxAHistorial.isSelected())
+				{
+					AHistorial = true;
+				}
+				else
+				{
+					AHistorial = false;
+				}*/
+				
+				AHistorial = checkBoxAHistorial.isSelected()? true: false;
+			}
+		});
+		checkBoxAHistorial.setBounds(409, 259, 219, 28);
+		contentPanel.add(checkBoxAHistorial);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 493, 616, 168);
+		contentPanel.add(scrollPane);
+		
+		table = new JTable();
+		String[] columnNames = {"Fecha","Síntomas","Exploración", "Diagnóstico", "Tratamiento", "Enfermedad"};
+		model = new DefaultTableModel();
+		model.setColumnIdentifiers(columnNames);
+		table.setModel(model);
+		scrollPane.setViewportView(table);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("Guardar");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						String fecha = df.format(dateChooser.getDate());
+						Profesional doctor = null;
+						String sintomas="";
+						String anamnesis="";
+						String exploracion=""; 
+						String diagnostico="";
+						String tratamiento="";
+						String enfermedad="";
+						Cita cita = null;
+						
+						
+						String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
+						int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
+						doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
+						sintomas = txtSintomas.getText();
+						exploracion = txtExploracion.getText();
+						diagnostico = txtDiagnostico.getText();
+						tratamiento = txtTratamiento.getText();
+						enfermedad = comboEnfermedad.getSelectedItem().toString();
+						cita = paciente.getCitas().get(0);//OJO
+						Consultorio.getInstance().crearConsulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita, AHistorial);
+						//OJO
+						//RECORDAR IMPRIMIR ESTA VAINA y el historial
+						
+						
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -139,6 +223,44 @@ public class RegConsulta extends JDialog {
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
+		}
+		actualizarProfesionales();
+		llenarEnfermedades();
+		
+	}
+	//Debajo del constructor
+	
+	public void llenarTabla()
+	{
+
+		model.setRowCount(0);
+		fila = new Object[model.getColumnCount()];
+		ArrayList<Consulta> consultas = paciente.getHistoriaClinica();
+		System.out.println("Tamaño consulta lista: " + consultas.size());
+			for (Consulta c : consultas) {
+				fila[0] = c.getFecha();
+				fila[1] =  c.getSintomas();
+				fila[2] =  c.getExploracion();
+				fila[3] =  c.getDiagnostico();
+				fila[4] =  c.getTratamiento();
+				fila[5] =  c.getEnfermedad();
+				model.addRow(fila);
+			}
+		
+	}
+	
+	public void actualizarProfesionales()
+	{
+		cbxProfesional.addItem("Seleccionar");
+		for (Profesional p : Consultorio.getInstance().getProfesionales()) {
+			cbxProfesional.addItem(p.getNombre() + " " + p.getApellidos() + "-" + p.getCedula());
+		}
+	}
+	
+	public void llenarEnfermedades()
+	{
+		for (Enfermedad e : Consultorio.getInstance().getEnfermedades()) {
+			comboEnfermedad.addItem(e.getNombre());
 		}
 	}
 }

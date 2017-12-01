@@ -7,7 +7,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
+
 import logical.Consultorio;
+import logical.Paciente;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -16,11 +22,16 @@ import javax.swing.JOptionPane;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowEvent;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
+    JPanel panel;
+
 
 	/**
 	 * Launch the application.
@@ -30,6 +41,7 @@ public class Principal extends JFrame {
 			public void run() {
 				try {
 					Principal frame = new Principal();
+					
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 					frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -62,8 +74,17 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+		addWindowFocusListener(new WindowFocusListener() {
+			public void windowGainedFocus(WindowEvent arg0) {
+				//RECORDAR ARREGLAR ESTO
+				init();
+				System.out.println("Entraste a la ventana de nuevo");
+			}
+			public void windowLostFocus(WindowEvent arg0) {
+			}
+		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 816, 435);
+		setBounds(100, 100, 1088, 510);
 		setLocationRelativeTo(null);
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -186,10 +207,15 @@ public class Principal extends JFrame {
 		menuBar.add(mnConsultas);
 		
 		JMenuItem mntmCrear = new JMenuItem("Crear");
+		mntmCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//Registrar consulta
+				RegConsulta consulta = new RegConsulta();
+				consulta.setModal(true);
+				consulta.setVisible(true);
+			}
+		});
 		mnConsultas.add(mntmCrear);
-		
-		JMenuItem mntmModificar_2 = new JMenuItem("Modificar");
-		mnConsultas.add(mntmModificar_2);
 		
 		JMenu mnCitas = new JMenu("Citas");
 		menuBar.add(mnCitas);
@@ -207,6 +233,39 @@ public class Principal extends JFrame {
 		JMenuItem menuItem_4 = new JMenuItem("Modificar");
 		menuItem_4.setVisible(false);
 		mnCitas.add(menuItem_4);
+		
+		JMenu mnOpciones = new JMenu("Opciones");
+		menuBar.add(mnOpciones);
+		
+		JMenuItem mntmRegistrarEnfermedad = new JMenuItem("Enfermedades");
+		mntmRegistrarEnfermedad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegEnfermedad f = new RegEnfermedad();
+				f.setModal(true);
+				f.setVisible(true);
+			}
+		});
+		mnOpciones.add(mntmRegistrarEnfermedad);
+		
+		JMenuItem mntmRegistrarVacuna = new JMenuItem("Vacunas");
+		mntmRegistrarVacuna.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegVacuna vacuna = new RegVacuna();
+				vacuna.setModal(true);
+				vacuna.setVisible(true);
+			}
+		});
+		mnOpciones.add(mntmRegistrarVacuna);
+		
+		JMenuItem mntmAsignarVacunasdosis = new JMenuItem("Asignar Vacunas/D\u00F3sis");
+		mntmAsignarVacunasdosis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AgregarVacuna vacuna = new AgregarVacuna();
+				vacuna.setModal(true);
+				vacuna.setVisible(true);
+			}
+		});
+		mnOpciones.add(mntmAsignarVacunasdosis);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -217,7 +276,49 @@ public class Principal extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-
+		init();
 	}
+	
+    private void init() {
+        panel = new JPanel();
+        getContentPane().add(panel);
+        // Fuente de Datos
+        DefaultPieDataset data = new DefaultPieDataset();
+        /*data.setValue("C", 40);
+        data.setValue("Java", 45);*/
+        ArrayList<Paciente> pacientes = Consultorio.getInstance().getPacientes();
+        int h=0, m=0;
+        
+        for (int i = 0; i < pacientes.size(); i++) {
+        	System.out.print("BUCLE");
+			if(pacientes.get(i).getSexo() == 'M')
+			{
+				h++;
+				data.setValue("Hombres", h);
+			}
+			else
+			{
+				m++;
+				data.setValue("Mujeres", m);
+			}
+		}
+        //data.setValue("Python", 15);
+ 
+        // Creando el Grafico
+        JFreeChart chart = ChartFactory.createPieChart(
+         "Población", 
+         data, 
+         true, 
+         true, 
+         false);
+        panel.setLayout(null);
+ 
+        // Crear el Panel del Grafico con ChartPanel
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setBounds(0, 5, 788, 347);
+        chartPanel.setMaximumDrawHeight(500);
+        panel.add(chartPanel);
+    }
+    
 
 }

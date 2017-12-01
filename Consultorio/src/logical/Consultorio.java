@@ -29,6 +29,7 @@ public class Consultorio {
 		empleados = new ArrayList<Empleado>();
 		enfermedades = new ArrayList<Enfermedad>();
 		citas = new ArrayList<Cita>();
+		vacuna = new ArrayList<Vacuna>();
 	}
 	
 	public static Consultorio getInstance()
@@ -46,11 +47,16 @@ public class Consultorio {
 		FileOutputStream archivoProfesional = new FileOutputStream("Profesionales.dat");
 		FileOutputStream archivoEmpleado = new FileOutputStream("Empleados.dat");
 		FileOutputStream archivoCitas = new FileOutputStream("Citas.dat");
+		FileOutputStream archivoVacunas = new FileOutputStream("Vacunas.dat");
+		FileOutputStream archivoEnfermedades = new FileOutputStream("Enfermedades.dat");
+
 		ObjectOutputStream pacienteObject = new ObjectOutputStream(archivoPaciente);
 		ObjectOutputStream profesionalObject = new ObjectOutputStream(archivoProfesional);
 		ObjectOutputStream empleadoObject = new ObjectOutputStream(archivoEmpleado);
 		ObjectOutputStream citasObject = new ObjectOutputStream(archivoCitas);
-
+		ObjectOutputStream vacunasObject = new ObjectOutputStream(archivoVacunas);
+		ObjectOutputStream enfermedadesObject = new ObjectOutputStream(archivoEnfermedades);
+		
 		//Guardando pacientes
 		pacienteObject.writeInt(pacientes.size());
 		for (Paciente p : pacientes) {
@@ -71,6 +77,19 @@ public class Consultorio {
 		for (Cita c : citas) {
 			citasObject.writeObject(c);
 		}
+		
+		//Guardando vacunas
+		vacunasObject.writeInt(vacuna.size());
+		for (Vacuna v : vacuna) {
+			vacunasObject.writeObject(v);
+		}
+		//Guardando enfermedades
+		enfermedadesObject.writeInt(enfermedades.size());
+		for (Enfermedad e : enfermedades) {
+			enfermedadesObject.writeObject(e);
+		}
+		archivoEnfermedades.close();
+		archivoVacunas.close();
 		archivoCitas.close();
 		archivoEmpleado.close();
 		archivoPaciente.close();
@@ -79,24 +98,102 @@ public class Consultorio {
 	}
 	
 	public void cargarDatos() throws IOException, ClassNotFoundException
-	{
-		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null;
-		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null;
-			try
-			{
+	{//RECORDAR ARREGLAR QUE EN EL PRIMER INICIO EL PROGRAMA SE VA A LA VERGA
+		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null,archivoVacunas=null, archivoEnfermedades=null;
+		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null, vacunasObject=null, enfermedadesObject=null;
+
+				try
+				{
 				archivoPacientes = new FileInputStream("Pacientes.dat");
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Pacientes.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA6");
+
+				}
+				
+				try
+				{
 				archivoProfesionales = new FileInputStream("Profesionales.dat");
-				archivoEmpleados = new FileInputStream("Empleados.dat");
-				archivoCitas = new FileInputStream("Citas.dat");
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Profesionales.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA5");
+
+				}
+				
+				try
+				{
+					archivoEmpleados = new FileInputStream("Empleados.dat");
+
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Empleados.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA4");
+
+				}
+				
+				try
+				{
+					archivoCitas = new FileInputStream("Citas.dat");
+
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Citas.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA3");
+
+				}
+				
+				try
+				{
+					archivoVacunas = new FileInputStream("Vacunas.dat");
+
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Vacunas.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA2");
+
+				}
+				
+				try
+				{
+					archivoEnfermedades = new FileInputStream("Enfermedades.dat");
+
+				}catch(IOException es)
+				{
+					FileOutputStream archivo  = new FileOutputStream("Enfermedades.dat");
+					ObjectOutputStream objeto = new ObjectOutputStream(archivo);
+					archivo.close();
+					System.out.print("ENTRA1");
+
+				}
+				
+				
+				try
+				{
 				pacienteObject = new ObjectInputStream(archivoPacientes);
 				profesionalObject = new ObjectInputStream(archivoProfesionales);
 				empleadoObject = new ObjectInputStream(archivoEmpleados);
 				citasObject = new ObjectInputStream(archivoCitas);
-			}catch(IOException e)
-			{
-				System.out.println("Algun archivo no se encuentra: " + e.getMessage());
-			}
+				vacunasObject = new ObjectInputStream(archivoVacunas);
+				enfermedadesObject = new ObjectInputStream(archivoEnfermedades);
+				}catch(IOException e)
+				{
+					System.out.print("ENTRA");
+					cargarDatos();
+				}
 			int n = -1;
+			//RECORDAR QUITAR TODOS ESTOS TRY CATCH DE ABAJO
 			try
 			{
 				//Cargando pacientes
@@ -108,7 +205,9 @@ public class Consultorio {
 				System.out.println("Hay " + pacientes.size() + " pacientes.");
 			}catch(IOException e)
 			{
+			
 				System.out.println(e.getMessage());
+				
 			}
 			try
 			{
@@ -146,6 +245,20 @@ public class Consultorio {
 			{
 				System.out.println(e.getMessage());
 			}
+			
+			try
+			{
+				//Cargando vacunas
+				n = vacunasObject.readInt();
+				for (int i = 0; i < n; i++) {
+					vacuna.add((Vacuna) vacunasObject.readObject());
+				}
+				System.out.println("Hay " + vacuna.size() + " vacunas.");
+				}catch(IOException e)
+			{
+				System.out.println(e.getMessage());
+			}
+			archivoVacunas.close();
 			archivoCitas.close();
 			archivoEmpleados.close();
 			archivoPacientes.close();
@@ -206,15 +319,15 @@ public class Consultorio {
 
 	}
 	//Agregar enfermedad
-	public void crearEnfermedad(String nombre, String tipo, ArrayList<String> caracteristicas)
+	public void crearEnfermedad(String nombre, String tipo, /*ArrayList<String>*/String caracteristicas)
 	{
 		Enfermedad enfermedad = new Enfermedad(nombre, tipo, caracteristicas);
 		enfermedades.add(enfermedad);
 	}
 	
 	//Crear nueva vacuna
-	public void crearVacuna ( String tipo, ArrayList<String> lista) {
-		Vacuna vacuna = new Vacuna ( tipo, lista );
+	public void crearVacuna ( String name, String tipo/*String dosis*/) {
+		Vacuna vacuna = new Vacuna ( name, tipo );
 		this.vacuna.add(vacuna);
 	}
 	
@@ -223,18 +336,44 @@ public class Consultorio {
 		pacientes.get(ind).setVacunas(v);
 	}
 	
-	//Crear consulta para el paciente
-	public void crearConsulta(String fecha, Paciente paciente, Profesional doctor, ArrayList<String> sintomas, String anamnesis,
-			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita)
+	public int buscarVacuna(String nombre)
 	{
-		Consulta consulta = new Consulta(fecha, paciente, doctor, sintomas, anamnesis, exploracion, diagnostico, tratamiento, enfermedad, cita);
+		int posicion = -1, n=0;
+		boolean encontrado = false;
+		
+		while(n < vacuna.size() || !encontrado)
+		{
+			if(vacuna.get(n).getName().equalsIgnoreCase(nombre))
+			{
+				encontrado = true;
+				posicion = n;
+			}
+			n++;
+		}
+		
+		return posicion;
+	}
+	
+	//Crear consulta para el paciente
+	public void crearConsulta(String fecha, Paciente paciente, Profesional doctor, String sintomas,
+			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita, boolean AHistorial)
+	{
+		Consulta consulta = new Consulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita);
 		//Buscar el paciente en nuestra lista
 		int posPaciente = buscarPaciente(paciente.getCedula());
 		if(posPaciente != -1)
 		{
-			ArrayList<Consulta> consultasPaciente = pacientes.get(posPaciente).getConsultas();
-			consultasPaciente.add(consulta);
-			pacientes.get(posPaciente).setConsultas(consultasPaciente);
+			if(AHistorial)
+			{
+				ArrayList<Consulta> consultasPaciente = pacientes.get(posPaciente).getHistoriaClinica();
+				consultasPaciente.add(consulta);
+				pacientes.get(posPaciente).setHistoriaClinica(consultasPaciente);
+				System.out.print("Copnsulta agregado al historial del paciente, tamaño de cintas: " + consultasPaciente.size());
+			}
+			
+			String texto = String.format("Fecha:%s              Diagnostico:%s ", fecha, diagnostico);
+			System.out.println(texto);
+			
 		}
 		else
 		{

@@ -160,7 +160,7 @@ public class Listar extends JDialog {
 					//btnEliminar.setEnabled(true);
 					//btnModificar.setEnabled(true);
 					index = table.getSelectedRow();
-					posModificar = (int)table.getModel().getValueAt(index, 0);
+					posModificar = (int)table.getModel().getValueAt(index, 1);
 					//posModificar = Integer.valueOf(n);
 				    System.out.println("Seleccionado la cita: " + posModificar);				
 				}
@@ -244,7 +244,7 @@ public class Listar extends JDialog {
 			}
 		}
 
-	}
+	} 
 	public void listarAgenda(String tipo)
 	{
 		int n =0;

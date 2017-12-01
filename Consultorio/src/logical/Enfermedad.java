@@ -4,16 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Enfermedad implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String nombre;
 	private String tipo;
-	private ArrayList<String> caracteristicas;
+	private String caracteristicas;
+	//private ArrayList<String> caracteristicas;
 	//Faltan más datos de la enfermedad supongo
-	public Enfermedad(String nombre, String tipo, ArrayList<String> caracteristicas) {
-		super();
+	public Enfermedad(String nombre, String tipo, /*ArrayList<String>*/ String caracteristicas) {
+		super(); 
 		this.nombre = nombre;
 		this.tipo = tipo;
 		this.caracteristicas = caracteristicas;
@@ -35,13 +33,21 @@ public class Enfermedad implements Serializable {
 		this.tipo = tipo;
 	}
 
-	public ArrayList<String> getCaracteristicas() {
+	public String getCaracteristicas() {
+		return caracteristicas;
+	}
+
+	public void setCaracteristicas(String caracteristicas) {
+		this.caracteristicas = caracteristicas;
+	}
+
+	/*public ArrayList<String> getCaracteristicas() {
 		return caracteristicas;
 	}
 
 	public void setCaracteristicas(ArrayList<String> caracteristicas) {
 		this.caracteristicas = caracteristicas;
-	}
+	}*/
 	
 	
 	

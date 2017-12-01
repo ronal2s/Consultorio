@@ -227,6 +227,12 @@ public class RegCita extends JDialog {
 							doctor.setCitas(citas);
 							Consultorio.getInstance().sustituirProfesional(pos, doctor);
 							Consultorio.getInstance().getCitas().add(cita);
+							//Agregarle la cita al paciuente
+							citas = paciente.getCitas();
+							citas.add(cita);
+							paciente.setCitas(citas);
+							Consultorio.getInstance().sustituirPaciente(pos, paciente);
+							
 							System.out.println("Consultorio tiene: " + Consultorio.getInstance().getCitas().size() + " citas");
 							listarCitas();
 							limpiarCampos();

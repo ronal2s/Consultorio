@@ -11,31 +11,27 @@ public class Consulta implements Serializable {
 	private String fecha;
 	private Paciente paciente;
 	private Profesional doctor;
-	private ArrayList<String> sintomas;
-	private String anamnesis;
+	private String sintomas;
+	//private String anamnesis;
 	private String exploracion;
 	private String diagnostico;
 	private String tratamiento;
 	private String enfermedad;
 	private Cita cita;
 	
-	public Consulta(String fecha, Paciente paciente, Profesional doctor, ArrayList<String> sintomas, String anamnesis,
+	public Consulta(String fecha, Paciente paciente, Profesional doctor, String sintomas,
 			String exploracion, String diagnostico, String tratamiento, String enfermedad, Cita cita) {
 		super();
 		this.fecha = fecha;
 		this.paciente = paciente;
 		this.doctor = doctor;
 		this.sintomas = sintomas;
-		this.anamnesis = anamnesis;
+		//this.anamnesis = anamnesis;
 		this.exploracion = exploracion;
 		this.diagnostico = diagnostico;
 		this.tratamiento = tratamiento;
 		this.enfermedad = enfermedad;
 		this.cita = cita;
-	}
-	
-	public void addSintoma(String s) {
-		sintomas.add(s);
 	}
 
 	public String getFecha() {
@@ -62,21 +58,15 @@ public class Consulta implements Serializable {
 		this.doctor = doctor;
 	}
 
-	public ArrayList<String> getSintomas() {
+	public String getSintomas() {
 		return sintomas;
 	}
 
-	public void setSintomas(ArrayList<String> sintomas) {
+	public void setSintomas(String sintomas) {
 		this.sintomas = sintomas;
 	}
 
-	public String getAnamnesis() {
-		return anamnesis;
-	}
 
-	public void setAnamnesis(String anamnesis) {
-		this.anamnesis = anamnesis;
-	}
 
 	public String getExploracion() {
 		return exploracion;
