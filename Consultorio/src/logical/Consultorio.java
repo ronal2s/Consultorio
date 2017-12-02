@@ -1,9 +1,11 @@
 package logical;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -148,6 +150,27 @@ public class Consultorio implements Serializable{
 			
 		}
 		return tipo;
+	}
+	
+	public void imprimirHistorial(int posPaciente) throws IOException
+	{
+		File archivo = new File("Historial Paciente " + pacientes.get(posPaciente).getNombre() + " " + pacientes.get(posPaciente).getApellidos() + ".txt");
+		FileWriter escritor = new FileWriter(archivo);
+		escritor.close();
+		escritor = new FileWriter(archivo,true);
+		ArrayList<Consulta> c = pacientes.get(posPaciente).getHistoriaClinica();
+		String texto = "";
+		for (Consulta consulta : c) {
+			texto = "Fecha: " + consulta.getFecha() + System.lineSeparator() +System.lineSeparator()+
+					"Profesional: " + consulta.getDoctor().getNombre() + " " + consulta.getDoctor().getApellidos() + System.lineSeparator() + 
+					"Sintomas:"+System.lineSeparator() + consulta.getSintomas() + System.lineSeparator() + System.lineSeparator()+"Exploración:"+System.lineSeparator() + consulta.getExploracion() + System.lineSeparator() + System.lineSeparator()+"Diagnósico:"+System.lineSeparator() + consulta.getDiagnostico() + System.lineSeparator() +
+					System.lineSeparator()+"Enfermedad:"+System.lineSeparator() + consulta.getEnfermedad() + System.lineSeparator() +
+					System.lineSeparator()+"Tratamiento:"+System.lineSeparator() + consulta.getTratamiento() + System.lineSeparator()+System.lineSeparator();
+			escritor.write(texto);
+					
+					
+		}
+		escritor.close();
 	}
 	
 	

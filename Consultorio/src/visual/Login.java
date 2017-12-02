@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import com.apple.dnssd.TXTRecord;
 
 import logical.Consultorio;
+import logical.print;
 
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -38,6 +39,12 @@ public class Login extends JDialog {
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 			Consultorio.getInstance().loadMe();
+			
+			
+			
+			logical.print.texto = "asd";
+			print imprimirSetup = new print();
+			imprimirSetup.imprimir();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -73,7 +80,8 @@ public class Login extends JDialog {
 			contentPanel.add(lblContrasea);
 		}
 		{
-			JButton btnAcceder = new JButton("Acceder");
+			JButton btnAcceder = new JButton("Entrar");
+			btnAcceder.setBackground(new Color(102, 205, 170));
 			btnAcceder.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					boolean acceso = Consultorio.getInstance().login(txtCedula.getText(), txtClave.getText());
@@ -90,14 +98,15 @@ public class Login extends JDialog {
 					}
 				}
 			});
-			btnAcceder.setBounds(334, 251, 79, 25);
+			btnAcceder.setBounds(358, 251, 81, 25);
 			contentPanel.add(btnAcceder);
 			btnAcceder.setActionCommand("OK");
 			getRootPane().setDefaultButton(btnAcceder);
 		}
 		{
 			JButton btnSalir = new JButton("  Salir  ");
-			btnSalir.setBounds(439, 251, 79, 25);
+			btnSalir.setBackground(new Color(205, 92, 92));
+			btnSalir.setBounds(439, 251, 97, 25);
 			contentPanel.add(btnSalir);
 			btnSalir.setActionCommand("Cancel");
 		}

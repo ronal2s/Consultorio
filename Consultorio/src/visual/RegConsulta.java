@@ -33,9 +33,11 @@ import logical.Consultorio;
 import logical.Enfermedad;
 import logical.Paciente;
 import logical.Profesional;
+import logical.print;
 
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
@@ -54,7 +56,7 @@ public class RegConsulta extends JDialog {
 	private DefaultTableModel model;
 	private Object[] fila;
 	private JTable table;
-
+	private int posPaciente;
 	
 	/**
 	 * Launch the application.
@@ -139,7 +141,7 @@ public class RegConsulta extends JDialog {
 		txtCedula.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Evento al darle enter al textField
-				int posPaciente = Consultorio.getInstance().buscarPaciente(txtCedula.getText());
+				posPaciente = Consultorio.getInstance().buscarPaciente(txtCedula.getText());
 				if(posPaciente != -1)
 				{
 					paciente = Consultorio.getInstance().getPacientes().get(posPaciente);
@@ -196,7 +198,6 @@ public class RegConsulta extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						String fecha = df.format(dateChooser.getDate());
 						Profesional doctor = null;
 						String sintomas="";
 						String anamnesis="";
@@ -208,6 +209,8 @@ public class RegConsulta extends JDialog {
 						
 						try
 						{
+							String fecha = df.format(dateChooser.getDate());
+
 						String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
 						int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
 						doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
@@ -218,10 +221,23 @@ public class RegConsulta extends JDialog {
 						enfermedad = comboEnfermedad.getSelectedItem().toString();
 						cita = paciente.getCitas().get(0);//OJO
 						Consultorio.getInstance().crearConsulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita, AHistorial);
+						paciente.getCitas().remove(0);
+						Consultorio.getInstance().sustituirPaciente(posPaciente, paciente);
+						
 						//OJO
 						//RECORDAR IMPRIMIR ESTA VAINA y el historial
 						JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
 						JOptionPane.showMessageDialog(null, "Imprimiendo consulta");
+						String texto = "Fecha: " + fecha + "\n" +
+										"\nPaciente:\n" + paciente.getNombre() + " " + paciente.getApellidos() + "\n"+
+										"\nProfesional encargado:\n" + doctor.getNombre() + " " + doctor.getApellidos() + "\n" +
+										"Sintomas:\n" + sintomas + "\n" + "\nExploración:\n" + exploracion + "\n" + "\nDiagnósico:\n" + diagnostico + "\n" +
+										"\nEnfermedad:\n" + enfermedad + "\n" +
+										"\nTratamiento:\n" + tratamiento;
+						print.texto = texto;
+						print imprimir = new print();
+						imprimir.imprimir();
+								
 					}catch(Exception es)
 					{
 						
@@ -229,6 +245,27 @@ public class RegConsulta extends JDialog {
 					}
 					}
 				});
+				
+				JButton btnImprimirHistorial = new JButton("Imprimir historial");
+				btnImprimirHistorial.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						if(posPaciente != -1)
+						{
+						try {
+							Consultorio.getInstance().imprimirHistorial(posPaciente);
+							JOptionPane.showMessageDialog(null, "Se generó un archivo de texto en la carpeta de su programa");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						catch(Exception es)
+						{
+							JOptionPane.showMessageDialog(null, "Necesita buscar un paciente primero");
+						}
+					}
+					}
+				});
+				buttonPane.add(btnImprimirHistorial);
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
