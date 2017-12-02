@@ -40,11 +40,6 @@ public class Login extends JDialog {
 			dialog.setVisible(true);
 			Consultorio.getInstance().loadMe();
 			
-			
-			
-			logical.print.texto = "asd";
-			print imprimirSetup = new print();
-			imprimirSetup.imprimir();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

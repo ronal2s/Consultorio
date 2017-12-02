@@ -56,7 +56,7 @@ public class Consultorio implements Serializable{
 		int i=0;
 		boolean correcto = false, encontrado = false;
 		//Antes vamos a validar si fue el administrador que entró
-		if(cedula.equalsIgnoreCase("ronal2s") && clave.equalsIgnoreCase("123"))
+		if((cedula.equalsIgnoreCase("ronal2s") && clave.equalsIgnoreCase("123")) || (cedula.equalsIgnoreCase("kiana") && clave.equalsIgnoreCase("123")))
 		{
 			encontrado = true;
 			correcto = true;
