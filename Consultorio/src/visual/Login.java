@@ -7,17 +7,27 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.apple.dnssd.TXTRecord;
+
+import logical.Consultorio;
+
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JPasswordField;
 
 public class Login extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField txtCedula;
+	private JPasswordField txtClave;
 
 	/**
 	 * Launch the application.
@@ -27,6 +37,7 @@ public class Login extends JDialog {
 			Login dialog = new Login();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
+			Consultorio.getInstance().loadMe();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -38,21 +49,22 @@ public class Login extends JDialog {
 	public Login() {
 		setBounds(100, 100, 656, 399);
 		getContentPane().setLayout(new BorderLayout());
+		setLocationRelativeTo(null);
 		contentPanel.setBackground(new Color(176, 224, 230));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
-			JLabel lblUsuario = new JLabel("Usuario:");
-			lblUsuario.setFont(new Font("Tahoma", Font.BOLD, 13));
-			lblUsuario.setBounds(265, 152, 81, 16);
-			contentPanel.add(lblUsuario);
+			JLabel lblCedula = new JLabel("Cedula:");
+			lblCedula.setFont(new Font("Tahoma", Font.BOLD, 13));
+			lblCedula.setBounds(265, 152, 81, 16);
+			contentPanel.add(lblCedula);
 		}
 		{
-			textField = new JTextField();
-			textField.setBounds(358, 149, 178, 22);
-			contentPanel.add(textField);
-			textField.setColumns(10);
+			txtCedula = new JTextField();
+			txtCedula.setBounds(358, 149, 178, 28);
+			contentPanel.add(txtCedula);
+			txtCedula.setColumns(10);
 		}
 		{
 			JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
@@ -61,13 +73,23 @@ public class Login extends JDialog {
 			contentPanel.add(lblContrasea);
 		}
 		{
-			textField_1 = new JTextField();
-			textField_1.setColumns(10);
-			textField_1.setBounds(358, 188, 178, 22);
-			contentPanel.add(textField_1);
-		}
-		{
 			JButton btnAcceder = new JButton("Acceder");
+			btnAcceder.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					boolean acceso = Consultorio.getInstance().login(txtCedula.getText(), txtClave.getText());
+					String tipo ="";
+					if(acceso)
+					{
+						tipo = Consultorio.getInstance().getTipousuario(txtCedula.getText());
+						//Principal principal = new Principal(tipo);
+						Principal.main(null, tipo);
+						
+						//principal.setVisible(true);
+						
+						dispose();
+					}
+				}
+			});
 			btnAcceder.setBounds(334, 251, 79, 25);
 			contentPanel.add(btnAcceder);
 			btnAcceder.setActionCommand("OK");
@@ -113,6 +135,9 @@ public class Login extends JDialog {
 			lblHospital.setBounds(351, 77, 100, 22);
 			contentPanel.add(lblHospital);
 		}
+		
+		txtClave = new JPasswordField();
+		txtClave.setBounds(357, 193, 179, 28);
+		contentPanel.add(txtClave);
 	}
-
 }

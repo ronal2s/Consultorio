@@ -416,6 +416,7 @@ public class Registro extends JDialog {
 						tipoSangre = comboGrupoSanguineo.getSelectedItem().toString();
 						edad = (int) spinnerEdad.getValue();
 						estadoCivil = (String) comboEstadoCivil.getSelectedItem();
+						//Recordar que hay que validar la cedula y todas esas vainas que no lo dejen vacío 
 						switch(tipo)
 						{
 						case "RegistrarPaciente":
@@ -461,12 +462,33 @@ public class Registro extends JDialog {
 						case "RegistrarEmpleado":
 							cargo = comboCargo.getSelectedItem().toString();
 							clave = txtClave.getText();
-							if(validarClave(clave))
+							if(comboCargo.getSelectedIndex()==1)
 							{
-								Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
-								JOptionPane.showMessageDialog(null, "Agregado correctamente");
-								limpiarCampos();
+								if(!Principal.getTipo().equalsIgnoreCase("Administrador"))
+									{
+										JOptionPane.showMessageDialog(null, "No tienes los suficientes permisos para crear un administrador nuevo.");
+									}
+								else
+								{
+									if(validarClave(clave))
+									{
+										Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
+										JOptionPane.showMessageDialog(null, "Agregado correctamente");
+										limpiarCampos();
+									}
+								}
 							}
+							else
+							{
+								if(validarClave(clave))
+								{
+									Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
+									JOptionPane.showMessageDialog(null, "Agregado correctamente");
+									limpiarCampos();
+								}
+							}
+
+
 							break;
 						case "ModificarEmpleado":
 							clave = txtClave.getText();

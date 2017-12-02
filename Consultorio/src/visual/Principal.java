@@ -44,15 +44,33 @@ public class Principal extends JFrame {
     JPanel panel = new JPanel();;
 	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	private JSplitPane splitPane;
+	private static String tipo ="";
+	private JMenu mnEmpleados_1;
+	private JMenu mnProfesionales;
+	private JMenu mnPacientes;
+	private JMenu mnAgenda;
+	private JMenu mnConsultas;
+	private JMenu mnCitas;
+	private JMenu mnOpciones;
+	
+	
+	public static String getTipo() {
+		return tipo;
+	}
+
+	public static void setTipo(String tipo) {
+		Principal.tipo = tipo;
+	}
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args, String tipoU) {
+		tipo = tipoU;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Principal frame = new Principal();
+					Principal frame = new Principal(tipo);
 					
 					frame.setVisible(true);
 					frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -65,7 +83,7 @@ public class Principal extends JFrame {
 					            JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
 					        	try {
 								//System.out.print("ss");
-					        			Consultorio.getInstance().guardarDatos();
+					        			Consultorio.getInstance().SaveMe();
 					        		//	Banco.getInstance().imprimirRevision("402");
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
@@ -84,9 +102,12 @@ public class Principal extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @param tipo 
 	 */
-	public Principal() {
-
+	public Principal(String tipo) {
+		setTitle("Consultorio");
+		this.tipo = tipo;
+		System.out.println("Tipo: " + tipo);
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent arg0) {
 				//RECORDAR ARREGLAR ESTO
@@ -105,7 +126,7 @@ public class Principal extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
 		
-		JMenu mnPacientes = new JMenu("Pacientes");
+		mnPacientes = new JMenu("Pacientes");
 		menuBar.add(mnPacientes);
 		
 		JMenuItem mntmListar = new JMenuItem("Listar");
@@ -138,7 +159,7 @@ public class Principal extends JFrame {
 		});
 		mnPacientes.add(mntmModificar);
 		
-		JMenu mnProfesionales = new JMenu("Profesionales");
+		mnProfesionales = new JMenu("Profesionales");
 		menuBar.add(mnProfesionales);
 		
 		JMenuItem mntmListar_1 = new JMenuItem("Listar");
@@ -172,7 +193,7 @@ public class Principal extends JFrame {
 		});
 		mnProfesionales.add(mntmModificar_1);
 		
-		JMenu mnEmpleados_1 = new JMenu("Empleados");
+		mnEmpleados_1 = new JMenu("Empleados");
 		menuBar.add(mnEmpleados_1);
 		
 		JMenuItem menuItem_5 = new JMenuItem("Listar");
@@ -206,7 +227,7 @@ public class Principal extends JFrame {
 		});
 		mnEmpleados_1.add(menuItem_7);
 		
-		JMenu mnAgenda = new JMenu("Agenda");
+		mnAgenda = new JMenu("Agenda");
 		menuBar.add(mnAgenda);
 		
 		JMenuItem mntmListar_2 = new JMenuItem("Listar");
@@ -219,7 +240,7 @@ public class Principal extends JFrame {
 		});
 		mnAgenda.add(mntmListar_2);
 		
-		JMenu mnConsultas = new JMenu("Consultas");
+		mnConsultas = new JMenu("Consultas");
 		menuBar.add(mnConsultas);
 		
 		JMenuItem mntmCrear = new JMenuItem("Crear");
@@ -233,7 +254,7 @@ public class Principal extends JFrame {
 		});
 		mnConsultas.add(mntmCrear);
 		
-		JMenu mnCitas = new JMenu("Citas");
+		mnCitas = new JMenu("Citas");
 		menuBar.add(mnCitas);
 		
 		JMenuItem menuItem_3 = new JMenuItem("Crear");
@@ -250,7 +271,7 @@ public class Principal extends JFrame {
 		menuItem_4.setVisible(false);
 		mnCitas.add(menuItem_4);
 		
-		JMenu mnOpciones = new JMenu("Opciones");
+		mnOpciones = new JMenu("Opciones");
 		menuBar.add(mnOpciones);
 		
 		JMenuItem mntmRegistrarEnfermedad = new JMenuItem("Enfermedades");
@@ -296,13 +317,44 @@ public class Principal extends JFrame {
 		ChartPanel chartPanel_1 = new ChartPanel((JFreeChart) null);
 		splitPane.setLeftComponent(chartPanel_1);
 		try {
-			Consultorio.getInstance().cargarDatos();
+			Consultorio.getInstance().loadMe();
 		} catch (ClassNotFoundException | IOException e1) {
 			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			e1.printStackTrace();
 		}
-grafica1();
-grafica2();
+		manejarPermisos();	
+		grafica1();
+		grafica2();
+	}
+	
+	public void manejarPermisos()
+	{
+		if(tipo.equalsIgnoreCase("Profesional"))
+		{
+			mnPacientes.setVisible(false);
+			mnCitas.setVisible(false);
+			mnProfesionales.setVisible(false);
+			mnEmpleados_1.setVisible(false);
+		}
+		if(tipo.equalsIgnoreCase("Secretaria"))
+		{
+			mnPacientes.setVisible(true);
+			mnCitas.setVisible(true);
+			mnProfesionales.setVisible(true);
+			mnEmpleados_1.setVisible(true);
+			mnOpciones.setVisible(false);
+			mnConsultas.setVisible(false);
+		}
+		if(tipo.equalsIgnoreCase("Administrador"))
+		{
+			mnPacientes.setVisible(true);
+			mnCitas.setVisible(true);
+			mnProfesionales.setVisible(true);
+			mnEmpleados_1.setVisible(true);
+			mnOpciones.setVisible(true);
+			mnConsultas.setVisible(true);
+
+		}
 	}
 	
     private void grafica1() {

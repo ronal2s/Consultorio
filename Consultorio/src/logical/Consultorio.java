@@ -8,11 +8,19 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-public class Consultorio {
+public class Consultorio implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3805513106190494313L;
+	/**
+	 * 
+	 */
 	private ArrayList<Paciente> pacientes;
 	private ArrayList<Profesional> profesionales;
 	private ArrayList<Empleado> empleados;
@@ -39,6 +47,125 @@ public class Consultorio {
 			consultorio = new Consultorio();
 		}
 		return consultorio;
+	}
+	
+	public boolean login(String cedula, String clave)
+	{
+		int i=0;
+		boolean correcto = false, encontrado = false;
+		//Antes vamos a validar si fue el administrador que entró
+		if(cedula.equalsIgnoreCase("ronal2s") && clave.equalsIgnoreCase("123"))
+		{
+			encontrado = true;
+			correcto = true;
+		}
+		try
+		{
+		while(i<empleados.size() || !encontrado) {
+			if(empleados.get(i).getCedula().equalsIgnoreCase(cedula))
+			{
+				//Si encontramos al empleado con la cedula...
+				if(empleados.get(i).getClave().equals(clave))
+				{
+					correcto = true;
+				}
+				encontrado = true;
+				
+			}
+			i++;
+		}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		i=0;
+		try
+		{
+		while(i<profesionales.size() || !encontrado) {
+			if(profesionales.get(i).getCedula().equalsIgnoreCase(cedula))
+			{
+				//Si encontramos al empleado con la cedula...
+				if(profesionales.get(i).getClave().equals(clave))
+				{
+					correcto = true;
+				}
+				encontrado = true;
+				
+			}
+			i++;
+		}
+		}
+		catch(Exception e)
+		{
+			
+		}
+		return correcto;
+	}
+	
+	public String getTipousuario(String cedula)
+	{
+		String tipo ="";
+		boolean encontrado = false;
+		int i=0;
+		
+		if(cedula.equalsIgnoreCase("ronal2s"))
+		{
+			tipo = "Administrador";
+			encontrado = true;
+		}
+		
+		try
+		{
+		while(i<empleados.size() || !encontrado)
+		{
+			if(empleados.get(i).getCedula().equalsIgnoreCase(cedula))
+			{
+				tipo = empleados.get(i).getCargo();
+				encontrado = true;
+			}
+			i++;
+		}
+		}catch(Exception e)
+		{
+			
+		}
+		
+		try
+		{
+			i=0;
+			while(i<profesionales.size() || !encontrado)
+			{
+				if(profesionales.get(i).getCedula().equalsIgnoreCase(cedula))
+				{
+					tipo = "Profesional";
+					encontrado = true;
+				}
+				i++;
+			}	
+		}catch(Exception e)
+		{
+			
+		}
+		return tipo;
+	}
+	
+	
+	
+	public void SaveMe() throws IOException
+	{
+		FileOutputStream archivo = new FileOutputStream("data.dat");
+		ObjectOutputStream object = new ObjectOutputStream(archivo);
+		object.writeObject(consultorio);
+		archivo.close();
+	}
+	
+	public void loadMe() throws IOException, ClassNotFoundException
+	{
+		FileInputStream archivo = new FileInputStream("data.dat");
+		ObjectInputStream object = new ObjectInputStream(archivo);
+		consultorio = (Consultorio) object.readObject();
+		object.close();
 	}
 	
 	public void guardarDatos() throws IOException
@@ -99,74 +226,103 @@ public class Consultorio {
 	
 	public void cargarDatos() throws IOException, ClassNotFoundException
 	{//RECORDAR ARREGLAR QUE EN EL PRIMER INICIO EL PROGRAMA SE VA A LA VERGA
-		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null,archivoVacunas=null, archivoEnfermedades=null;
-		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null, vacunasObject=null, enfermedadesObject=null;
-					archivoPacientes = new FileInputStream("Pacientes.dat");					
-					archivoProfesionales = new FileInputStream("Profesionales.dat");
-					archivoEmpleados = new FileInputStream("Empleados.dat");
-					archivoCitas = new FileInputStream("Citas.dat");
-					archivoVacunas = new FileInputStream("Vacunas.dat");
-					archivoEnfermedades = new FileInputStream("Enfermedades.dat");
+		/*FileInputStream archivoVacunas=null, archivoEnfermedades=null;
+		ObjectInputStream  enfermedadesObject=null;
+										
+					
+		archivoEnfermedades = new FileInputStream("Enfermedades.dat");
+		enfermedadesObject = new ObjectInputStream(archivoEnfermedades);*/
 
-					pacienteObject = new ObjectInputStream(archivoPacientes);
-					profesionalObject = new ObjectInputStream(archivoProfesionales);
-					empleadoObject = new ObjectInputStream(archivoEmpleados);
-					citasObject = new ObjectInputStream(archivoCitas);
-					vacunasObject = new ObjectInputStream(archivoVacunas);
-					enfermedadesObject = new ObjectInputStream(archivoEnfermedades);
+		/*cargarPacientes();
+		cargarCitas();
+		cargarDatos();
+		cargarEmpleados();
+		cargarProfesionales();
+		cargarVacunas();*/
 				
-			int n = -1;
-			//RECORDAR QUITAR TODOS ESTOS TRY CATCH DE ABAJO
-			//Cargando pacientes
-				n = pacienteObject.readInt();
-				for (int i = 0; i < n; i++) 
-				{
-					pacientes.add((Paciente) pacienteObject.readObject());
-				}
-				System.out.println("Hay " + pacientes.size() + " pacientes.");
-
-			
-				
-
-				//Cargando profesionales
-				n = profesionalObject.readInt();
-				for (int i = 0; i < n; i++) {
-					profesionales.add((Profesional) profesionalObject.readObject());
-				}
-				System.out.println("Hay " + pacientes.size() + " profesionales.");
-
-
-			//Cargando empleados
-			n = empleadoObject.readInt();
-			for (int i = 0; i < n; i++) {
-				empleados.add((Empleado) empleadoObject.readObject());
-			}
-			System.out.println("Hay " + empleados.size() + " empleados.");
-	
-
-				//Cargando citas
-				n = citasObject.readInt();
-				for (int i = 0; i < n; i++) {
-					citas.add((Cita) citasObject.readObject());
-				}
-				System.out.println("Hay " + citas.size() + " citas.");
-
-			
-
-				//Cargando vacunas
-				n = vacunasObject.readInt();
-				for (int i = 0; i < n; i++) {
-					vacuna.add((Vacuna) vacunasObject.readObject());
-				}
-				System.out.println("Hay " + vacuna.size() + " vacunas.");
-
-			archivoVacunas.close();
-			archivoCitas.close();
-			archivoEmpleados.close();
-			archivoPacientes.close();
-			archivoProfesionales.close();
 }
 
+	public void cargarVacunas() throws ClassNotFoundException, IOException
+	{
+		FileInputStream archivoVacunas = new FileInputStream("Vacunas.dat");
+		ObjectInputStream vacunasObject = new ObjectInputStream(archivoVacunas);
+
+		//Cargando vacunas
+		int n = vacunasObject.readInt();
+		for (int i = 0; i < n; i++) {
+			vacuna.add((Vacuna) vacunasObject.readObject());
+		}
+		System.out.println("Hay " + vacuna.size() + " vacunas.");
+
+		archivoVacunas.close();
+
+	}
+	
+	public void cargarCitas() throws ClassNotFoundException, IOException
+	{
+		FileInputStream archivoCitas = new FileInputStream("Citas.dat");
+
+		ObjectInputStream citasObject = new ObjectInputStream(archivoCitas);
+
+		//Cargando citas
+		int n = citasObject.readInt();
+		for (int i = 0; i < n; i++) {
+			citas.add((Cita) citasObject.readObject());
+		}
+		System.out.println("Hay " + citas.size() + " citas.");
+
+		archivoCitas.close();
+	}
+	
+	public void cargarEmpleados() throws IOException, ClassNotFoundException
+	{
+		FileInputStream archivoEmpleados = new FileInputStream("Empleados.dat");
+		ObjectInputStream empleadoObject = new ObjectInputStream(archivoEmpleados);
+
+		//Cargando empleados
+		int n = empleadoObject.readInt();
+		for (int i = 0; i < n; i++) {
+			empleados.add((Empleado) empleadoObject.readObject());
+		}
+		System.out.println("Hay " + empleados.size() + " empleados.");
+
+
+		archivoEmpleados.close();
+	}
+	
+	public void cargarPacientes() throws IOException, ClassNotFoundException
+	{
+	
+		FileInputStream archivoPacientes = new FileInputStream("Pacientes.dat");;
+		ObjectInputStream pacienteObject = new ObjectInputStream(archivoPacientes);
+
+		int n = -1;
+		//RECORDAR QUITAR TODOS ESTOS TRY CATCH DE ABAJO
+		//Cargando pacientes
+			n = pacienteObject.readInt();
+			for (int i = 0; i < n; i++) 
+			{
+				pacientes.add((Paciente) pacienteObject.readObject());
+			}
+			System.out.println("Hay " + pacientes.size() + " pacientes.");
+		
+
+		archivoPacientes.close();
+	}
+	
+	public void cargarProfesionales() throws IOException, ClassNotFoundException
+	{
+		FileInputStream archivoProfesionales = new FileInputStream("Profesionales.dat");
+		ObjectInputStream profesionalObject = new ObjectInputStream(archivoProfesionales);		
+		//Cargando profesionales
+		int n = profesionalObject.readInt();
+		for (int i = 0; i < n; i++) {
+			profesionales.add((Profesional) profesionalObject.readObject());
+		}
+		System.out.println("Hay " + pacientes.size() + " profesionales.");
+
+		archivoProfesionales.close();
+	}
 
 	
 	

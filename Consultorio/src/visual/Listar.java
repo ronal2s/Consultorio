@@ -49,6 +49,7 @@ public class Listar extends JDialog {
 	private JButton botonBuscarFecha;
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private int posModificar=-1;
+	private JButton okButton;
 
 	/**
 	 * Launch the application.
@@ -164,9 +165,12 @@ public class Listar extends JDialog {
 					//btnEliminar.setEnabled(true);
 					//btnModificar.setEnabled(true);
 					index = table.getSelectedRow();
-					posModificar = (int)table.getModel().getValueAt(index, 1);
+		
+					posModificar = (int) table.getModel().getValueAt(index, 0);
+	
 					//posModificar = Integer.valueOf(n);
-				    System.out.println("Seleccionado la cita: " + posModificar);				
+				    System.out.println("Seleccionado la cedula: " + CedulaBuscar);		
+				    //posModificar = Consultorio.getInstance().buscarPaciente(CedulaBuscar);
 				}
 			}
 		});
@@ -230,7 +234,8 @@ public class Listar extends JDialog {
 
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton okButton = new JButton("Modificar");
+				okButton = new JButton("Modificar");
+				okButton.setVisible(false);
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -250,7 +255,10 @@ public class Listar extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
-
+		if(tipoLista.equalsIgnoreCase("Agenda"))
+		{
+			okButton.setVisible(true);
+		}
 	} 
 	public void listarAgenda(String tipo)
 	{
