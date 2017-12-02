@@ -151,7 +151,7 @@ public class RegVacuna extends JDialog {
 				btnGuardar.setEnabled(false);
 				btnGuardar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(cbxTipo.getSelectedIndex() != 0)
+						if(cbxTipo.getSelectedIndex() != 0 || txtNombre.getText().equalsIgnoreCase(""))
 						{
 						String name = txtNombre.getText();
 						String tipo = cbxTipo.getSelectedItem().toString();
@@ -164,7 +164,7 @@ public class RegVacuna extends JDialog {
 						}
 						else
 						{
-							JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo");
+							JOptionPane.showMessageDialog(null, "Debe seleccionar un nombre y un tipo");
 						}
 					}
 

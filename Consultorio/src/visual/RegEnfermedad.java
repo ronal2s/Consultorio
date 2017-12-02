@@ -157,9 +157,10 @@ public class RegEnfermedad extends JDialog {
 						String name = txtNombre.getText();
 						String tipo = String.valueOf(cbxTipo.getSelectedIndex());
 						String caracteristicas = txtCaracteristicas.getText();
-						if(name =="" || tipo.equals("Seleccionar"))
+						if(name.equalsIgnoreCase("") || tipo.equalsIgnoreCase("Seleccionar"))
 						{
 							JOptionPane.showMessageDialog(null, "Debe escribir un nombre y seleccionar un tipo");
+							txtNombre.requestFocus();
 						}
 						else
 						{

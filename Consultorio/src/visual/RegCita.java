@@ -208,6 +208,8 @@ public class RegCita extends JDialog {
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						try
+						{
 						//Crear cita
 						String descripcion = "", sala="", tipo="", fecha="", duracion="", hora="",nota="";
 						String[] partes = comboProfesional.getSelectedItem().toString().split("-");
@@ -254,6 +256,10 @@ public class RegCita extends JDialog {
 							JOptionPane.showMessageDialog(null, "Modificado correctamente");
 							dispose();
 							
+						}
+					}catch(Exception e2)
+						{
+						JOptionPane.showMessageDialog(null, "Ha ocurrido un error, revise los datos");
 						}
 					}
 					

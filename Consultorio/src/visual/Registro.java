@@ -325,7 +325,7 @@ public class Registro extends JDialog {
 		panelRegistro.add(lblGrupoSanguineo);
 		
 		comboGrupoSanguineo = new JComboBox();
-		comboGrupoSanguineo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "...", "...", "..."}));
+		comboGrupoSanguineo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Tipo A", "Tipo B", "Tipo AB", "Tipo O"}));
 		comboGrupoSanguineo.setBounds(459, 182, 89, 28);
 		panelRegistro.add(comboGrupoSanguineo);
 		

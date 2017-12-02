@@ -35,14 +35,15 @@ import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
+import javax.swing.JTabbedPane;
+import javax.swing.JSplitPane;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
     JPanel panel = new JPanel();;
 	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	 
-
+	private JSplitPane splitPane;
 
 	/**
 	 * Launch the application.
@@ -91,8 +92,7 @@ public class Principal extends JFrame {
 				//RECORDAR ARREGLAR ESTO
 				//init();
 				System.out.println("Entraste a la ventana de nuevo");
-				grafica1();
-				grafica2();
+
 			}
 			public void windowLostFocus(WindowEvent arg0) {
 			}
@@ -285,14 +285,24 @@ public class Principal extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		splitPane = new JSplitPane();
+		contentPane.add(splitPane, BorderLayout.CENTER);
+		
+		ChartPanel chartPanel = new ChartPanel((JFreeChart) null);
+		splitPane.setRightComponent(chartPanel);
+		
+		ChartPanel chartPanel_1 = new ChartPanel((JFreeChart) null);
+		splitPane.setLeftComponent(chartPanel_1);
 		try {
 			Consultorio.getInstance().cargarDatos();
 		} catch (ClassNotFoundException | IOException e1) {
 			// TODO Auto-generated catch block
 			//e1.printStackTrace();
 		}
-		grafica1();
-		grafica2();
+grafica1();
+grafica2();
 	}
 	
     private void grafica1() {
@@ -325,15 +335,11 @@ public class Principal extends JFrame {
          true, 
          true, 
          false);
-        panel.setLayout(null);
-        contentPane.setLayout(new BorderLayout(0, 0));
-        chart.setBackgroundPaint(Color.gray);
-
-        // Crear el Panel del Grafico con ChartPanel
+        //panel.setLayout(null);
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(900, 47, screenSize.width/2, screenSize.height/2);
-        chartPanel.setMaximumDrawHeight(500);
-        getContentPane().add(chartPanel, BorderLayout.EAST);
+        splitPane.setRightComponent(chartPanel);
+        chart.setBackgroundPaint(Color.gray);
+        
     }
     
     private void grafica2() {
@@ -352,11 +358,9 @@ public class Principal extends JFrame {
         chart.getTitle().setPaint(Color.black); 
         CategoryPlot p = chart.getCategoryPlot(); 
         p.setRangeGridlinePaint(Color.red);
-        panel.setLayout(null);
-        // Mostrar Grafico
-        ChartPanel chartPanel2 = new ChartPanel(chart);
-        chartPanel2.setBackground(Color.RED);
-       getContentPane().add(chartPanel2, BorderLayout.WEST);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        splitPane.setLeftComponent(chartPanel);
+
         //panel.add(chartPanel2);
     }
 

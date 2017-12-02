@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JTabbedPane;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -101,7 +102,7 @@ public class RegConsulta extends JDialog {
 		 comboEnfermedad = new JComboBox();
 		comboEnfermedad.setForeground(new Color(128, 128, 128));
 		comboEnfermedad.setFont(new Font("Tahoma", Font.PLAIN, 36));
-		comboEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar enfermedad"}));
+		comboEnfermedad.setModel(new DefaultComboBoxModel(new String[] {"Ninguna"}));
 		tabbedPane.addTab("Enfermedad", null, comboEnfermedad, null);
 		
 		JLabel lblPaciente = new JLabel("Paciente:");
@@ -194,6 +195,7 @@ public class RegConsulta extends JDialog {
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
 						String fecha = df.format(dateChooser.getDate());
 						Profesional doctor = null;
 						String sintomas="";
@@ -204,7 +206,8 @@ public class RegConsulta extends JDialog {
 						String enfermedad="";
 						Cita cita = null;
 						
-						
+						try
+						{
 						String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
 						int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
 						doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
@@ -217,8 +220,13 @@ public class RegConsulta extends JDialog {
 						Consultorio.getInstance().crearConsulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita, AHistorial);
 						//OJO
 						//RECORDAR IMPRIMIR ESTA VAINA y el historial
+						JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
+						JOptionPane.showMessageDialog(null, "Imprimiendo consulta");
+					}catch(Exception es)
+					{
 						
-						
+					JOptionPane.showMessageDialog(null, "Este paciente no tiene cita");
+					}
 					}
 				});
 				okButton.setActionCommand("OK");
