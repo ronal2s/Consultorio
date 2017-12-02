@@ -1,7 +1,10 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -10,10 +13,14 @@ import javax.swing.border.EmptyBorder;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 import logical.Consultorio;
 import logical.Paciente;
+import logical.Profesional;
 
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
@@ -26,11 +33,15 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowEvent;
+import java.awt.FlowLayout;
+import java.awt.event.WindowAdapter;
 
 public class Principal extends JFrame {
 
 	private JPanel contentPane;
-    JPanel panel;
+    JPanel panel = new JPanel();;
+	private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	 
 
 
 	/**
@@ -74,17 +85,22 @@ public class Principal extends JFrame {
 	 * Create the frame.
 	 */
 	public Principal() {
+
 		addWindowFocusListener(new WindowFocusListener() {
 			public void windowGainedFocus(WindowEvent arg0) {
 				//RECORDAR ARREGLAR ESTO
-				init();
+				//init();
 				System.out.println("Entraste a la ventana de nuevo");
+				grafica1();
+				grafica2();
 			}
 			public void windowLostFocus(WindowEvent arg0) {
 			}
 		});
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1088, 510);
+		setSize(screenSize.width, screenSize.height - 30);
+
 		setLocationRelativeTo(null);
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -268,20 +284,19 @@ public class Principal extends JFrame {
 		mnOpciones.add(mntmAsignarVacunasdosis);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		try {
 			Consultorio.getInstance().cargarDatos();
 		} catch (ClassNotFoundException | IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			//e1.printStackTrace();
 		}
-		init();
+		grafica1();
+		grafica2();
 	}
 	
-    private void init() {
-        panel = new JPanel();
-        getContentPane().add(panel);
+    private void grafica1() {
+        //getContentPane().add(panel);
         // Fuente de Datos
         DefaultPieDataset data = new DefaultPieDataset();
         /*data.setValue("C", 40);
@@ -290,7 +305,6 @@ public class Principal extends JFrame {
         int h=0, m=0;
         
         for (int i = 0; i < pacientes.size(); i++) {
-        	System.out.print("BUCLE");
 			if(pacientes.get(i).getSexo() == 'M')
 			{
 				h++;
@@ -312,13 +326,38 @@ public class Principal extends JFrame {
          true, 
          false);
         panel.setLayout(null);
- 
+        contentPane.setLayout(new BorderLayout(0, 0));
+        chart.setBackgroundPaint(Color.gray);
+
         // Crear el Panel del Grafico con ChartPanel
         ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setBounds(0, 5, 788, 347);
+        chartPanel.setBounds(900, 47, screenSize.width/2, screenSize.height/2);
         chartPanel.setMaximumDrawHeight(500);
-        panel.add(chartPanel);
+        getContentPane().add(chartPanel, BorderLayout.EAST);
     }
     
+    private void grafica2() {
+       // getContentPane().add(panel);
+        // Fuente de Datos
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (Profesional p : Consultorio.getInstance().getProfesionales()) {
+			dataset.setValue(p.getEdad(),"Cargo", p.getEspecialidad());
+		}
+        // Creando el Grafico
+        JFreeChart chart = ChartFactory.createBarChart3D
+        ("Tipo de Profesionales","Profesiones", "Edad", 
+        dataset, PlotOrientation.VERTICAL, true,true, false);
+        chart.setBackgroundPaint(Color.gray);
+        chart.getTitle().setPaint(Color.black); 
+        CategoryPlot p = chart.getCategoryPlot(); 
+        p.setRangeGridlinePaint(Color.red);
+        panel.setLayout(null);
+        // Mostrar Grafico
+        ChartPanel chartPanel2 = new ChartPanel(chart);
+        chartPanel2.setBackground(Color.RED);
+       getContentPane().add(chartPanel2, BorderLayout.WEST);
+        //panel.add(chartPanel2);
+    }
 
 }

@@ -38,6 +38,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
+import java.awt.SystemColor;
 
 public class RegConsulta extends JDialog {
 
@@ -71,12 +72,16 @@ public class RegConsulta extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegConsulta() {
-		setBounds(100, 100, 658, 756);
+		setTitle("Crear Consulta");
+		setResizable(false);
+		setBounds(100, 100, 658, 736);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBackground(new Color(176, 196, 222));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(12, 284, 616, 196);
 		contentPanel.add(tabbedPane);
@@ -117,7 +122,7 @@ public class RegConsulta extends JDialog {
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setIcon(new ImageIcon(RegConsulta.class.getResource("/img/Banner.png")));
-		lblNewLabel_1.setBounds(0, 0, 665, 123);
+		lblNewLabel_1.setBounds(0, 0, 652, 123);
 		contentPanel.add(lblNewLabel_1);
 		
 		JLabel lblImageHere = new JLabel("");
@@ -181,10 +186,12 @@ public class RegConsulta extends JDialog {
 		scrollPane.setViewportView(table);
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBackground(new Color(176, 196, 222));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("Guardar");
+				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String fecha = df.format(dateChooser.getDate());
@@ -220,10 +227,12 @@ public class RegConsulta extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Salir");
+				cancelButton.setBackground(new Color(205, 92, 92));
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
 		}
+		setBackground(new Color(176, 196, 222));
 		actualizarProfesionales();
 		llenarEnfermedades();
 		

@@ -88,6 +88,7 @@ public class Registro extends JDialog {
 	 * Create the dialog.
 	 */
 	public Registro(String tipo) {
+		setResizable(false);
 		this.tipo = tipo;
 		setTitle("Registro");
 		setBounds(w, h, 880, 653);
@@ -95,9 +96,10 @@ public class Registro extends JDialog {
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
-		
+		contentPanel.setBackground(new Color(176, 196, 222));
 		panelRegistro = new JPanel();
 		panelRegistro.setBounds(0, 0, 858, 334);
+		panelRegistro.setBackground(new Color(176, 196, 222));
 		setLocationRelativeTo(null);
 		contentPanel.add(panelRegistro);
 		panelRegistro.setLayout(null);
@@ -333,7 +335,6 @@ public class Registro extends JDialog {
 		panelRegistro.add(lblFechaNacimiento);
 		
 		txtEspecialidad = new JTextField();
-		txtEspecialidad.setText("Este campo es del tipo Profesional y ya");
 		txtEspecialidad.setBackground(SystemColor.info);
 		txtEspecialidad.setBounds(329, 259, 463, 28);
 		panelRegistro.add(txtEspecialidad);
@@ -374,7 +375,7 @@ public class Registro extends JDialog {
 		panelPaciente.setBounds(0, 335, 858, 251);
 		contentPanel.add(panelPaciente);
 		panelPaciente.setLayout(null);
-		
+		panelPaciente.setBackground(new Color(176, 196, 222));
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(15, 16, 828, 219);
 		panelPaciente.add(tabbedPane);
@@ -389,12 +390,15 @@ public class Registro extends JDialog {
 		tabbedPane.addTab("Alergias", null, txtAlergias, null);
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBackground(new Color(176, 196, 222));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				okButton = new JButton(nombreBoton);
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						try
+						{
 						String cedula, nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",
 								antecedentes="",observaciones="", cargo="",clave="";
 						char sexo;
@@ -477,8 +481,14 @@ public class Registro extends JDialog {
 							}
 							break;
 						}
+						}
+						catch(Exception e1)
+						{
+							JOptionPane.showMessageDialog(null, "Ha ocurrido un error, compruebe sus datos");
+						}
 						
 					}
+
 				});
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.setActionCommand("OK");
@@ -487,6 +497,11 @@ public class Registro extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						dispose();
+					}
+				});
 				cancelButton.setBackground(new Color(205, 92, 92));
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);

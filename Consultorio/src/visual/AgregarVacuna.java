@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -63,15 +64,18 @@ public class AgregarVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public AgregarVacuna() {
-		setBounds(100, 100, 555, 571);
+		setResizable(false);
+		setBounds(100, 100, 555, 586);
 		setLocationRelativeTo(null);
 		
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBackground(new Color(176, 196, 222));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			JPanel panelVacuna = new JPanel();
+			panelVacuna.setBackground(new Color(176, 196, 222));
 			panelVacuna.setBounds(0, 0, 537, 489);
 			contentPanel.add(panelVacuna);
 			panelVacuna.setLayout(null);
@@ -178,10 +182,12 @@ public class AgregarVacuna extends JDialog {
 		}
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBackground(new Color(176, 196, 222));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				botonAgregarvacuna = new JButton("Asignar vacuna");
+				botonAgregarvacuna.setBackground(new Color(102, 205, 170));
 				botonAgregarvacuna.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						//Evento de asignarle vacuna al paciente
@@ -204,6 +210,7 @@ public class AgregarVacuna extends JDialog {
 			}
 			{
 				botonAgregarDosis = new JButton("Asignar dosis");
+				botonAgregarDosis.setBackground(new Color(205, 92, 92));
 				botonAgregarDosis.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						paciente.getVacunas().get(index).getLista().add(fecha);

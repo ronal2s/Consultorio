@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
+import java.awt.Color;
 
 public class RegCita extends JDialog {
 
@@ -71,16 +72,19 @@ public class RegCita extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegCita(int posCita) {
+		setResizable(false);
 		//PosCita será para llamar a esta ventana desde la ventana de Listar, para así saber la posición de la lista de citas a listar
 		this.posCita = posCita;
-		setBounds(100, 100, 931, 540);
+		setBounds(100, 100, 931, 592);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		contentPanel.setBackground(new Color(176, 196, 222));
 		{
 			JPanel panel = new JPanel();
+			panel.setBackground(new Color(176, 196, 222));
 			panel.setBounds(0, 0, 915, 468);
 			contentPanel.add(panel);
 			panel.setLayout(null);
@@ -196,10 +200,12 @@ public class RegCita extends JDialog {
 		}
 		{
 			JPanel buttonPane = new JPanel();
+			buttonPane.setBackground(new Color(176, 196, 222));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				okButton = new JButton("OK");
+				okButton = new JButton("Registrar");
+				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						//Crear cita
@@ -258,6 +264,7 @@ public class RegCita extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.setBackground(new Color(205, 92, 92));
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();

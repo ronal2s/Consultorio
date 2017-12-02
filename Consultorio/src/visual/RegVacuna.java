@@ -62,6 +62,7 @@ public class RegVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegVacuna() {
+		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegVacuna.class.getResource("/img/if_7_375260.png")));
 		setTitle("Registrar Vacuna");
 		setBounds(100, 100, 391, 584);
@@ -69,6 +70,7 @@ public class RegVacuna extends JDialog {
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(176, 196, 222));
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPanel.setBackground(new Color(176, 196, 222));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
@@ -86,8 +88,7 @@ public class RegVacuna extends JDialog {
 		{
 			cbxTipo = new JComboBox();
 			cbxTipo.setEnabled(false);
-			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "VIVA ATENUADA", 
-					"INACTIVADA", "SUBUNIDAD", "TOXOIDE", "COMBINADA", "ADN", "VECTOR RECOMBINANTES"}));
+			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "VIVA ATENUADA", "INACTIVADA", "SUBUNIDAD", "TOXOIDE", "COMBINADA", "ADN", "VECTOR RECOMBINANTES"}));
 			cbxTipo.setBounds(120, 429, 198, 22);
 			contentPanel.add(cbxTipo);
 		}
@@ -146,9 +147,12 @@ public class RegVacuna extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				btnGuardar = new JButton("Guardar");
+				btnGuardar.setBackground(new Color(102, 205, 170));
 				btnGuardar.setEnabled(false);
 				btnGuardar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						if(cbxTipo.getSelectedIndex() != 0)
+						{
 						String name = txtNombre.getText();
 						String tipo = cbxTipo.getSelectedItem().toString();
 						
@@ -157,6 +161,11 @@ public class RegVacuna extends JDialog {
 						listarVacunas();
 						
 						clean();
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo");
+						}
 					}
 
 					
@@ -167,6 +176,7 @@ public class RegVacuna extends JDialog {
 			}
 			{
 				btnSalir = new JButton("Salir");
+				btnSalir.setBackground(new Color(205, 92, 92));
 				btnSalir.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						dispose();

@@ -101,6 +101,81 @@ public class Consultorio {
 	{//RECORDAR ARREGLAR QUE EN EL PRIMER INICIO EL PROGRAMA SE VA A LA VERGA
 		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null,archivoVacunas=null, archivoEnfermedades=null;
 		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null, vacunasObject=null, enfermedadesObject=null;
+					archivoPacientes = new FileInputStream("Pacientes.dat");					
+					archivoProfesionales = new FileInputStream("Profesionales.dat");
+					archivoEmpleados = new FileInputStream("Empleados.dat");
+					archivoCitas = new FileInputStream("Citas.dat");
+					archivoVacunas = new FileInputStream("Vacunas.dat");
+					archivoEnfermedades = new FileInputStream("Enfermedades.dat");
+
+					pacienteObject = new ObjectInputStream(archivoPacientes);
+					profesionalObject = new ObjectInputStream(archivoProfesionales);
+					empleadoObject = new ObjectInputStream(archivoEmpleados);
+					citasObject = new ObjectInputStream(archivoCitas);
+					vacunasObject = new ObjectInputStream(archivoVacunas);
+					enfermedadesObject = new ObjectInputStream(archivoEnfermedades);
+				
+			int n = -1;
+			//RECORDAR QUITAR TODOS ESTOS TRY CATCH DE ABAJO
+			//Cargando pacientes
+				n = pacienteObject.readInt();
+				for (int i = 0; i < n; i++) 
+				{
+					pacientes.add((Paciente) pacienteObject.readObject());
+				}
+				System.out.println("Hay " + pacientes.size() + " pacientes.");
+
+			
+				
+
+				//Cargando profesionales
+				n = profesionalObject.readInt();
+				for (int i = 0; i < n; i++) {
+					profesionales.add((Profesional) profesionalObject.readObject());
+				}
+				System.out.println("Hay " + pacientes.size() + " profesionales.");
+
+
+			//Cargando empleados
+			n = empleadoObject.readInt();
+			for (int i = 0; i < n; i++) {
+				empleados.add((Empleado) empleadoObject.readObject());
+			}
+			System.out.println("Hay " + empleados.size() + " empleados.");
+	
+
+				//Cargando citas
+				n = citasObject.readInt();
+				for (int i = 0; i < n; i++) {
+					citas.add((Cita) citasObject.readObject());
+				}
+				System.out.println("Hay " + citas.size() + " citas.");
+
+			
+
+				//Cargando vacunas
+				n = vacunasObject.readInt();
+				for (int i = 0; i < n; i++) {
+					vacuna.add((Vacuna) vacunasObject.readObject());
+				}
+				System.out.println("Hay " + vacuna.size() + " vacunas.");
+
+			archivoVacunas.close();
+			archivoCitas.close();
+			archivoEmpleados.close();
+			archivoPacientes.close();
+			archivoProfesionales.close();
+}
+
+
+	
+	
+	/*
+	 * 
+	public void cargarDatos() throws IOException, ClassNotFoundException
+	{//RECORDAR ARREGLAR QUE EN EL PRIMER INICIO EL PROGRAMA SE VA A LA VERGA
+		FileInputStream archivoPacientes=null,archivoProfesionales=null,archivoEmpleados=null,archivoCitas=null,archivoVacunas=null, archivoEnfermedades=null;
+		ObjectInputStream pacienteObject = null, profesionalObject=null,empleadoObject=null,citasObject=null, vacunasObject=null, enfermedadesObject=null;
 
 				try
 				{
@@ -264,8 +339,8 @@ public class Consultorio {
 			archivoPacientes.close();
 			archivoProfesionales.close();
 
-	}
-	
+	}*/
+	 
 	//Crear paciente
 	public void crearPaciente(String cedula, String nombre, String apellidos, String direccion, String telefono, String estadoCivil,String movil, char sexo,
 			String fechaNacimiento, String tipoSangre, int edad, String alergias, String antecedentes, String observaciones)

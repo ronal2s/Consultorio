@@ -60,6 +60,7 @@ public class RegEnfermedad extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegEnfermedad() {
+		setResizable(false);
 		setForeground(new Color(176, 224, 230));
 		setTitle("Registrar Enfermedad");
 		setBounds(100, 100, 645, 497);
@@ -150,16 +151,23 @@ public class RegEnfermedad extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				btnGuardar = new JButton("Guardar");
+				btnGuardar.setBackground(new Color(102, 205, 170));
 				btnGuardar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String name = txtNombre.getText();
 						String tipo = String.valueOf(cbxTipo.getSelectedIndex());
 						String caracteristicas = txtCaracteristicas.getText();
-						
+						if(name =="" || tipo.equals("Seleccionar"))
+						{
+							JOptionPane.showMessageDialog(null, "Debe escribir un nombre y seleccionar un tipo");
+						}
+						else
+						{
 						Consultorio.getInstance().crearEnfermedad(name, tipo, caracteristicas);
 						clean();
 						JOptionPane.showMessageDialog(null, "Agregado correctamente");
 						llenarTabla();
+						}
 					}
 
 					
@@ -171,6 +179,7 @@ public class RegEnfermedad extends JDialog {
 			}
 			{
 				btnSalir = new JButton("Salir");
+				btnSalir.setBackground(new Color(205, 92, 92));
 				btnSalir.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();

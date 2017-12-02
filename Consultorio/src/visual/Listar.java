@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,15 +67,18 @@ public class Listar extends JDialog {
 	 * Create the dialog.
 	 */
 	public Listar(String tipoLista) {
+		setResizable(false);
 		setBounds(100, 100, 706, 490);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		contentPanel.setBackground(new Color(176, 196, 222));
 		
 		JPanel panelPacientes = new JPanel();
-		panelPacientes.setBounds(0, 0, 690, 533);
+		panelPacientes.setBounds(0, 0, 690, 430);
+		panelPacientes.setBackground(new Color(176, 196, 222));
 		contentPanel.add(panelPacientes);
 		panelPacientes.setLayout(null);
 
@@ -222,10 +226,12 @@ public class Listar extends JDialog {
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			buttonPane.setBackground(new Color(176, 196, 222));
+
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("Modificar");
-				okButton.setBackground(UIManager.getColor("Button.background"));
+				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						RegCita cita = new RegCita(posModificar);
@@ -239,6 +245,7 @@ public class Listar extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Eliminar");
+				cancelButton.setBackground(new Color(205, 92, 92));
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
