@@ -23,6 +23,7 @@ import logical.Profesional;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.ImageIcon;
@@ -48,7 +49,7 @@ public class Listar extends JDialog {
 	private JLabel labelPhoto;
 	private JButton botonBuscarFecha;
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-	private int posModificar=-1;
+	private int posModificar=-1, posEliminar=-1;
 	private JButton okButton;
 
 	/**
@@ -162,11 +163,13 @@ public class Listar extends JDialog {
 				//Obtener index
 				int index;
 				if(table.getSelectedRow()>=0){
-					//btnEliminar.setEnabled(true);
-					//btnModificar.setEnabled(true);
 					index = table.getSelectedRow();
-		
-					posModificar = (int) table.getModel().getValueAt(index, 0);
+					if(tipoLista.equalsIgnoreCase("Agenda"))
+						posModificar = (int) table.getModel().getValueAt(index, 0);
+					else if(tipoLista.equalsIgnoreCase("Profesionales") || tipoLista.equalsIgnoreCase("Empleados"))
+						CedulaBuscar = (String) table.getModel().getValueAt(index, 2);
+					else
+						CedulaBuscar = (String) table.getModel().getValueAt(index, 1);
 	
 					//posModificar = Integer.valueOf(n);
 				    System.out.println("Seleccionado la cedula: " + CedulaBuscar);		
@@ -250,6 +253,29 @@ public class Listar extends JDialog {
 			}
 			{
 				JButton cancelButton = new JButton("Eliminar");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						switch(tipoLista)
+						{
+						case "Pacientes":
+							posEliminar = Consultorio.getInstance().buscarPaciente(CedulaBuscar);
+							Consultorio.getInstance().getPacientes().remove(posEliminar);
+							listarPacientes("Todos");
+							break;
+						case "Profesionales":
+							posEliminar = Consultorio.getInstance().buscarProfesional(CedulaBuscar);
+							Consultorio.getInstance().getProfesionales().remove(posEliminar);
+							listarProfesionales("Todos");
+							break;
+						case "Empleados":
+							posEliminar = Consultorio.getInstance().buscarEmpleado(CedulaBuscar);
+							Consultorio.getInstance().getEmpleados().remove(posEliminar);
+							listarEmpleados("Todos");
+							break;
+						}
+						JOptionPane.showMessageDialog(null, "Eliminado correctamente");
+					}
+				});
 				cancelButton.setBackground(new Color(205, 92, 92));
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);

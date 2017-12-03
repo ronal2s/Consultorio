@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
+import javax.swing.SwingConstants;
 
 public class Login extends JDialog {
 
@@ -49,6 +50,7 @@ public class Login extends JDialog {
 	 * Create the dialog.
 	 */
 	public Login() {
+		setTitle("Iniciar sesi\u00F3n");
 		setBounds(100, 100, 656, 399);
 		getContentPane().setLayout(new BorderLayout());
 		setLocationRelativeTo(null);
@@ -58,6 +60,7 @@ public class Login extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblCedula = new JLabel("Cedula:");
+			lblCedula.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblCedula.setFont(new Font("Tahoma", Font.BOLD, 13));
 			lblCedula.setBounds(265, 152, 81, 16);
 			contentPanel.add(lblCedula);
@@ -70,8 +73,9 @@ public class Login extends JDialog {
 		}
 		{
 			JLabel lblContrasea = new JLabel("Contrase\u00F1a:");
+			lblContrasea.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblContrasea.setFont(new Font("Tahoma", Font.BOLD, 13));
-			lblContrasea.setBounds(265, 191, 81, 16);
+			lblContrasea.setBounds(265, 205, 81, 16);
 			contentPanel.add(lblContrasea);
 		}
 		{
@@ -93,7 +97,7 @@ public class Login extends JDialog {
 					}
 				}
 			});
-			btnAcceder.setBounds(358, 251, 81, 25);
+			btnAcceder.setBounds(358, 237, 81, 25);
 			contentPanel.add(btnAcceder);
 			btnAcceder.setActionCommand("OK");
 			getRootPane().setDefaultButton(btnAcceder);
@@ -101,7 +105,7 @@ public class Login extends JDialog {
 		{
 			JButton btnSalir = new JButton("  Salir  ");
 			btnSalir.setBackground(new Color(205, 92, 92));
-			btnSalir.setBounds(439, 251, 97, 25);
+			btnSalir.setBounds(439, 237, 97, 25);
 			contentPanel.add(btnSalir);
 			btnSalir.setActionCommand("Cancel");
 		}
