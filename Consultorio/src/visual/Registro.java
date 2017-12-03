@@ -2,9 +2,11 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Image;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
@@ -13,6 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import logical.Consultorio;
 import logical.Empleado;
@@ -37,6 +40,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Registro extends JDialog {
 
@@ -71,6 +81,10 @@ public class Registro extends JDialog {
 	private String tipo;
 	private JDateChooser txtFechaNacimiento;
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private boolean getPhoto;
+	private JLabel labelPhoto;
+	private String ruta, cedula;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -104,10 +118,20 @@ public class Registro extends JDialog {
 		contentPanel.add(panelRegistro);
 		panelRegistro.setLayout(null);
 		
-		JLabel label = new JLabel("");
-		label.setIcon(new ImageIcon(Registro.class.getResource("/img/photo.png")));
-		label.setBounds(15, 16, 151, 128);
-		panelRegistro.add(label);
+		labelPhoto = new JLabel("");
+		labelPhoto.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				//Seleccionar foto
+					seleccionarPhoto();
+		
+			}
+
+
+		});
+		labelPhoto.setIcon(new ImageIcon(Registro.class.getResource("/img/photo.png")));
+		labelPhoto.setBounds(15, 16, 151, 150);
+		panelRegistro.add(labelPhoto);
 		
 		JLabel lblCdula = new JLabel("C\u00E9dula: ");
 		lblCdula.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -123,7 +147,8 @@ public class Registro extends JDialog {
 				String nombre = "", apellidos= "", direccion= "", telefono= "", movil= "", fechaNacimiento= "", tipoSangre= "", estadoCivil= "";
 				int edad=0;
 				boolean sexoM = false,sexoF = false;
-				
+				try
+				{
 				if(posModificar != -1)
 				{
 
@@ -200,6 +225,11 @@ public class Registro extends JDialog {
 					comboEstadoCivil.setSelectedItem(estadoCivil);
 
 				}
+				}catch(Exception e1)
+				{
+					JOptionPane.showMessageDialog(null, "Error. Puede que la persona a buscar no exista");
+				}
+				cargarFoto(txtCedula.getText()+".jpg");
 			}
 
 
@@ -399,7 +429,7 @@ public class Registro extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						try
 						{
-						String cedula, nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",
+						String nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",
 								antecedentes="",observaciones="", cargo="",clave="";
 						char sexo;
 						int edad;
@@ -503,10 +533,15 @@ public class Registro extends JDialog {
 							}
 							break;
 						}
+						if(getPhoto)
+						{
+							copiarFoto(ruta);
+						}
 						}
 						catch(Exception e1)
 						{
 							JOptionPane.showMessageDialog(null, "Ha ocurrido un error, compruebe sus datos");
+							System.out.println("Error: " + e1.getMessage());
 						}
 						
 					}
@@ -576,7 +611,81 @@ public class Registro extends JDialog {
 
 		}
 
+	
+	public void seleccionarPhoto()
+	{
+		JFileChooser file = new JFileChooser();
+		file.setCurrentDirectory(new File(System.getProperty("user.home")));
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
+		file.addChoosableFileFilter(filter);
+		int result = file.showSaveDialog(null);
+		if(result == JFileChooser.APPROVE_OPTION){
+			File selectedFile = file.getSelectedFile();
+			ruta = selectedFile.getAbsolutePath();
 
+			
+			
+			labelPhoto.setIcon(redimensionarImagen(ruta));
+			getPhoto = true;
+		}
+	}
+	
+	
+	public void cargarFoto(String ruta)
+	{
+		File file = new File(ruta);
+		if(file.exists())
+		{
+			labelPhoto.setIcon(redimensionarImagen(ruta));
+		}
+		else
+		{
+			labelPhoto.setIcon(new ImageIcon(Registro.class.getResource("/img/photo.png")));
+
+			
+			System.out.println("Este paciente no tiene foto");
+		}
+		
+		
+	}
+	public void copiarFoto(String ruta) throws FileNotFoundException
+	{
+		String nuevaRuta = cedula+".jpg";
+		//Copiando la imagen
+		File archivoEntrada = new File(ruta);
+		
+		File archivoSalida = new File(nuevaRuta);
+		
+		FileInputStream lector = new FileInputStream(archivoEntrada);
+		FileOutputStream escritor = new FileOutputStream(archivoSalida);
+		
+		int unByte;
+		try
+		{
+	        try {
+				while ((unByte = lector.read()) != -1)
+				   escritor.write(unByte);
+				
+			    lector.close();
+		        escritor.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
+		}catch(Exception e)
+		{
+			System.out.println("Error copiando el archivo: " + e.getMessage());
+		}
+	}
+	
+	public ImageIcon redimensionarImagen(String ruta)
+	{
+		ImageIcon MyImage = new ImageIcon(ruta);
+		Image img = MyImage.getImage();
+		Image newImg = img.getScaledInstance(labelPhoto.getWidth(), labelPhoto.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon image = new ImageIcon(newImg);
+		return image;
+	}
 	
 	public void limpiarCampos()
 	{
@@ -627,7 +736,7 @@ public class Registro extends JDialog {
 	
 	public void modoModificar(boolean enabled)
 	{
-		txtCedula.requestFocus();
+		/*txtCedula.requestFocus();
 		txtApellidos.setEnabled(!enabled);
 		txtClave.setEnabled(!enabled);
 		txtConfirmarClave.setEnabled(!enabled);
@@ -640,7 +749,10 @@ public class Registro extends JDialog {
 		spinnerEdad.setEnabled(!enabled);
 		txtAlergias.setEnabled(!enabled);
 		txtObservaciones.setEnabled(!enabled);
-		txtAntecedentes.setEnabled(!enabled);
+		txtAntecedentes.setEnabled(!enabled);*/
+		lblEspecialidad.setVisible(false);
+		txtEspecialidad.setVisible(false);
+
 		if(!tipo.equalsIgnoreCase("ModificarPaciente"))
 		{
 			enabled = true;
