@@ -38,6 +38,7 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import com.toedter.calendar.JDateChooser;
 import java.awt.event.MouseAdapter;
@@ -79,6 +80,8 @@ public class Registro extends JDialog {
 	private String nombreBoton;
 	private JButton okButton;
 	private String tipo;
+	private Calendar c = Calendar.getInstance();
+	//c.add(Calendar.YEAR, -10);
 	private JDateChooser txtFechaNacimiento;
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private boolean getPhoto;
@@ -119,6 +122,7 @@ public class Registro extends JDialog {
 		panelRegistro.setLayout(null);
 		
 		labelPhoto = new JLabel("");
+		labelPhoto.setHorizontalAlignment(SwingConstants.CENTER);
 		labelPhoto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -171,6 +175,7 @@ public class Registro extends JDialog {
 						tipoSangre = paciente.getTipoSangre();
 						estadoCivil = paciente.getEstadoCivil();
 						modoModificar(false);
+						cargarFoto(txtCedula.getText()+".jpg");
 
 					}
 					if(tipo.equalsIgnoreCase("ModificarProfesional"))
@@ -190,6 +195,8 @@ public class Registro extends JDialog {
 						estadoCivil = profesional.getEstadoCivil();
 						txtEspecialidad.setText(profesional.getEspecialidad());
 						modoModificar(false);
+						cargarFoto(txtCedula.getText()+".jpg");
+
 					}
 					if(tipo.equalsIgnoreCase("ModificarEmpleado"))
 					{
@@ -208,6 +215,7 @@ public class Registro extends JDialog {
 						estadoCivil = empleado.getEstadoCivil();
 						comboCargo.setSelectedItem(empleado.getCargo());
 						modoModificar(false);
+						cargarFoto(txtCedula.getText()+".jpg");
 					}
 					//Rellenando los valores globales de persona
 					txtNombre.setText(nombre);
@@ -228,8 +236,10 @@ public class Registro extends JDialog {
 				}catch(Exception e1)
 				{
 					JOptionPane.showMessageDialog(null, "Error. Puede que la persona a buscar no exista");
+					//limpiarCampos();
+					dispose();//Hago esto porque luego de que sale un catch no puedo volver a usar el evento ENTER
+					//System.out.println("Error buscando: " + e1.getMessage());
 				}
-				cargarFoto(txtCedula.getText()+".jpg");
 			}
 
 
@@ -393,7 +403,7 @@ public class Registro extends JDialog {
 		lblConfirmarClave.setBounds(495, 299, 134, 20);
 		panelRegistro.add(lblConfirmarClave);
 		
-		txtFechaNacimiento = new JDateChooser();
+		txtFechaNacimiento = new JDateChooser(c.getTime());
 		txtFechaNacimiento.setBounds(326, 220, 222, 28);
 		txtFechaNacimiento.setDateFormatString("dd/MM/yyyy");
 
@@ -655,6 +665,7 @@ public class Registro extends JDialog {
 		File archivoEntrada = new File(ruta);
 		
 		File archivoSalida = new File(nuevaRuta);
+		//archivoSalida.mkdirs();
 		
 		FileInputStream lector = new FileInputStream(archivoEntrada);
 		FileOutputStream escritor = new FileOutputStream(archivoSalida);
@@ -689,31 +700,34 @@ public class Registro extends JDialog {
 	
 	public void limpiarCampos()
 	{
+		cargarFoto("");
+
 		try
 		{
+			txtNombre.setText("");
 			txtCedula.requestFocus();
 			txtApellidos.setText("");
 			txtCedula.setText("");
 			txtClave.setText("");
 			txtConfirmarClave.setText("");
 			txtDireccion.setText("");
-			txtEspecialidad.setText("");
 			//Limpiar la fecha
-			//txtFechaNacimiento.setText("");
+			txtFechaNacimiento = new JDateChooser(c.getTime());
 			txtMovil.setText("");
-			txtNombre.setText("");
 			txtTelefono.setText("");
-			comboCargo.setSelectedIndex(0);
 			comboGrupoSanguineo.setSelectedIndex(0);
 			spinnerEdad.setValue(0);
 			txtAlergias.setText("");
 			txtObservaciones.setText("");
 			txtAntecedentes.setText("");
+			txtEspecialidad.setText("");
+			comboCargo.setSelectedIndex(0);
+
 			//txtVacunas.setText("");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Hay campos que no estan visibles y no pueden limpiarse");
+			System.out.println("Hay campos que no estan visibles y no pueden limpiarse: " + e.getMessage());
 		}
 	}
 	

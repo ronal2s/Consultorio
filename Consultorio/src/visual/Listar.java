@@ -51,6 +51,7 @@ public class Listar extends JDialog {
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private int posModificar=-1, posEliminar=-1;
 	private JButton okButton;
+	private Calendar c = Calendar.getInstance();
 
 	/**
 	 * Launch the application.
@@ -135,7 +136,7 @@ public class Listar extends JDialog {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 70, 670, 312);
 		panelPacientes.add(scrollPane);
-		dateChooser = new JDateChooser();
+		dateChooser = new JDateChooser(c.getTime());
 		dateChooser.setVisible(false);
 		dateChooser.setBounds(413, 28, 172, 28);
 		dateChooser.setDateFormatString("dd/MM/yyyy");		

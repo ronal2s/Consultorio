@@ -105,6 +105,7 @@ public class Principal extends JFrame {
 	 * @param tipo 
 	 */
 	public Principal(String tipo) {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/img/icono.png")));
 		setTitle("Consultorio");
 		this.tipo = tipo;
 		System.out.println("Tipo: " + tipo);

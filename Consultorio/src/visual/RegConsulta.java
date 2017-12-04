@@ -23,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTable;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
@@ -37,11 +38,13 @@ import logical.print;
 
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import java.awt.SystemColor;
+import javax.swing.SwingConstants;
 
 public class RegConsulta extends JDialog {
 
@@ -57,6 +60,9 @@ public class RegConsulta extends JDialog {
 	private Object[] fila;
 	private JTable table;
 	private int posPaciente;
+	private JLabel lblImageHere;
+	private Calendar c = Calendar.getInstance();
+
 	
 	/**
 	 * Launch the application.
@@ -77,7 +83,7 @@ public class RegConsulta extends JDialog {
 	public RegConsulta() {
 		setTitle("Crear Consulta");
 		setResizable(false);
-		setBounds(100, 100, 658, 736);
+		setBounds(100, 100, 658, 688);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(176, 196, 222));
@@ -86,14 +92,14 @@ public class RegConsulta extends JDialog {
 		contentPanel.setLayout(null);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(12, 284, 616, 196);
+		tabbedPane.setBounds(12, 200, 616, 196);
 		contentPanel.add(tabbedPane);
-		
-		JTextArea txtSintomas = new JTextArea();
-		tabbedPane.addTab("Sintomas", null, txtSintomas, null);
 		
 		JTextArea txtExploracion = new JTextArea();
 		tabbedPane.addTab("Exploracion", null, txtExploracion, null);
+		
+		JTextArea txtSintomas = new JTextArea();
+		tabbedPane.addTab("Sintomas", null, txtSintomas, null);
 		
 		JTextArea txtDiagnostico = new JTextArea();
 		tabbedPane.addTab("Diagn\u00F3stico", null, txtDiagnostico, null);
@@ -108,33 +114,31 @@ public class RegConsulta extends JDialog {
 		tabbedPane.addTab("Enfermedad", null, comboEnfermedad, null);
 		
 		JLabel lblPaciente = new JLabel("Paciente:");
-		lblPaciente.setBounds(184, 143, 56, 16);
+		lblPaciente.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPaciente.setBounds(210, 35, 184, 16);
 		contentPanel.add(lblPaciente);
 		
 		JLabel lblProfesional = new JLabel("Profesional:");
-		lblProfesional.setBounds(409, 143, 81, 16);
+		lblProfesional.setBounds(409, 35, 219, 16);
 		contentPanel.add(lblProfesional);
 		
 		cbxProfesional = new JComboBox();
-		cbxProfesional.setBounds(409, 163, 219, 28);
+		cbxProfesional.setBounds(409, 55, 219, 28);
 		contentPanel.add(cbxProfesional);
 		
 		JLabel lblFecha = new JLabel("Fecha:");
-		lblFecha.setBounds(409, 198, 81, 16);
+		lblFecha.setBounds(409, 99, 81, 16);
 		contentPanel.add(lblFecha);
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setIcon(new ImageIcon(RegConsulta.class.getResource("/img/Banner.png")));
-		lblNewLabel_1.setBounds(0, 0, 652, 123);
-		contentPanel.add(lblNewLabel_1);
-		
-		JLabel lblImageHere = new JLabel("");
+		lblImageHere = new JLabel("");
+		lblImageHere.setHorizontalAlignment(SwingConstants.CENTER);
 		lblImageHere.setIcon(new ImageIcon(RegConsulta.class.getResource("/img/if_user_285655.png")));
-		lblImageHere.setBounds(24, 120, 148, 151);
+		lblImageHere.setBounds(15, 29, 151, 150);
 		contentPanel.add(lblImageHere);
 		
 		lblNombre = new JLabel("--Name--");
-		lblNombre.setBounds(184, 181, 184, 28);
+		lblNombre.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNombre.setBounds(210, 93, 184, 28);
 		contentPanel.add(lblNombre);
 		
 		txtCedula = new JTextField();
@@ -147,15 +151,17 @@ public class RegConsulta extends JDialog {
 					paciente = Consultorio.getInstance().getPacientes().get(posPaciente);
 				    lblNombre.setText(paciente.getNombre() + " " + paciente.getApellidos());
 				    llenarTabla();
+				    cargarFoto(txtCedula.getText()+".jpg");
+				    
 				}
 			}
 		});
-		txtCedula.setBounds(252, 140, 116, 28);
+		txtCedula.setBounds(210, 55, 183, 28);
 		contentPanel.add(txtCedula);
 		txtCedula.setColumns(10);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(409, 229, 219, 28);
+		JDateChooser dateChooser = new JDateChooser(c.getTime());
+		dateChooser.setBounds(409, 130, 219, 28);
 		contentPanel.add(dateChooser);
 		
 		JCheckBox checkBoxAHistorial = new JCheckBox("Pasar a historial clinico");
@@ -174,11 +180,11 @@ public class RegConsulta extends JDialog {
 				AHistorial = checkBoxAHistorial.isSelected()? true: false;
 			}
 		});
-		checkBoxAHistorial.setBounds(409, 259, 219, 28);
+		checkBoxAHistorial.setBounds(409, 170, 219, 28);
 		contentPanel.add(checkBoxAHistorial);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(12, 493, 616, 168);
+		scrollPane.setBounds(12, 412, 616, 168);
 		contentPanel.add(scrollPane);
 		
 		table = new JTable();
@@ -283,7 +289,31 @@ public class RegConsulta extends JDialog {
 		
 	}
 	//Debajo del constructor
-	
+	public void cargarFoto(String ruta)
+	{
+		File file = new File(ruta);
+		if(file.exists())
+		{
+			lblImageHere.setIcon(redimensionarImagen(ruta));
+		}
+		else
+		{
+			lblImageHere.setIcon(new ImageIcon(Registro.class.getResource("/img/if_user_285655.png")));
+
+			
+			//System.out.println("Este paciente no tiene foto");
+		}
+		
+		
+	}
+	public ImageIcon redimensionarImagen(String ruta)
+	{
+		ImageIcon MyImage = new ImageIcon(ruta);
+		Image img = MyImage.getImage();
+		Image newImg = img.getScaledInstance(lblImageHere.getWidth(), lblImageHere.getHeight(), Image.SCALE_SMOOTH);
+		ImageIcon image = new ImageIcon(newImg);
+		return image;
+	}
 	public void llenarTabla()
 	{
 
