@@ -29,6 +29,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.awt.event.ActionEvent;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.SwingConstants;
@@ -39,7 +40,6 @@ public class RegCita extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtPaciente;
 	private JTextField txtDescripcion;
-	private JTextField txtTipoCita;
 	private JTable table;
 	private JTextField txtDuracion;
 	private JLabel lblNombrePaciente;
@@ -54,6 +54,9 @@ public class RegCita extends JDialog {
 	private JTextField txtHora;
 	private int posCita = -1;
 	private JButton okButton;
+	private Calendar c = Calendar.getInstance();
+	private JComboBox comboTipoCita;
+
 
 	/**
 	 * Launch the application.
@@ -140,20 +143,16 @@ public class RegCita extends JDialog {
 			lblTipoDeCita.setBounds(217, 123, 116, 14);
 			panel.add(lblTipoDeCita);
 			
-			txtTipoCita = new JTextField();
-			txtTipoCita.setColumns(10);
-			txtTipoCita.setBounds(217, 148, 187, 28);
-			panel.add(txtTipoCita);
-			
 			Label label = new Label("Fecha:");
 			label.setBounds(10, 180, 62, 22);
 			panel.add(label);
 			
-			dateFecha = new JDateChooser();
+			dateFecha = new JDateChooser(c.getTime());
 			dateFecha.setBounds(10, 205, 192, 28);
 			panel.add(dateFecha);
 			dateFecha.setDate(dateFecha.getDate());
 			Label label_1 = new Label("Duraci\u00F3n:");
+			label_1.setVisible(false);
 			label_1.setBounds(217, 180, 88, 14);
 			panel.add(label_1);
 			
@@ -176,6 +175,7 @@ public class RegCita extends JDialog {
 			model.setColumnIdentifiers(columnNames);
 			table.setModel(model);
 			txtDuracion = new JTextField();
+			txtDuracion.setVisible(false);
 			txtDuracion.setColumns(10);
 			txtDuracion.setBounds(217, 205, 77, 28);
 			panel.add(txtDuracion);
@@ -186,17 +186,22 @@ public class RegCita extends JDialog {
 			
 			txtHora = new JTextField();
 			txtHora.setColumns(10);
-			txtHora.setBounds(308, 205, 77, 28);
+			txtHora.setBounds(217, 205, 77, 28);
 			panel.add(txtHora);
 			
 			Label label_3 = new Label("Hora:");
-			label_3.setBounds(308, 180, 88, 14);
+			label_3.setBounds(217, 180, 88, 14);
 			panel.add(label_3);
 			
 			JLabel lblCitasRegistradasPor = new JLabel("Citas registradas por el momento");
 			lblCitasRegistradasPor.setHorizontalAlignment(SwingConstants.CENTER);
 			lblCitasRegistradasPor.setBounds(414, 58, 491, 14);
 			panel.add(lblCitasRegistradasPor);
+			
+			comboTipoCita = new JComboBox();
+			comboTipoCita.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Revisi\u00F3n", "Seguimiento"}));
+			comboTipoCita.setBounds(217, 151, 187, 28);
+			panel.add(comboTipoCita);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -221,7 +226,7 @@ public class RegCita extends JDialog {
 						doctor = Consultorio.getInstance().getProfesionales().get(pos); System.out.println("Doctor: " + doctor.getNombre());
 						descripcion = txtDescripcion.getText();
 						sala = comboSala.getSelectedItem().toString();
-						tipo = txtTipoCita.getText();
+						tipo = comboTipoCita.getSelectedItem().toString();
 						fecha = df.format(dateFecha.getDate());
 						duracion = txtDuracion.getText();
 						hora = txtHora.getText();
@@ -306,7 +311,7 @@ public class RegCita extends JDialog {
 		txtDuracion.setText(cita.getDuracion());
 		txtHora.setText(cita.getHora());
 		txtNota.setText(cita.getNota());
-		txtTipoCita.setText(cita.getTipo());
+		comboTipoCita.setSelectedItem(cita.getTipo());
 		comboProfesional.setSelectedItem(cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos() + "-" + cita.getDoctor().getCedula());
 	}
 	private void limpiarCampos() {
@@ -316,7 +321,7 @@ public class RegCita extends JDialog {
 		txtDescripcion.setText("");
 		txtHora.setText("");
 		txtNota.setText("");
-		txtTipoCita.setText("");
+		comboTipoCita.setSelectedIndex(0);;
 		lblNombrePaciente.setText("");
 		txtPaciente.requestFocus();
 	}
@@ -329,7 +334,7 @@ public class RegCita extends JDialog {
 		
 		System.out.println("Tamaño citas lista: " + citas.size());
 			for (Cita cita : citas) {
-				fila[0] = n;
+				fila[0] = n+1;
 				fila[1] =  cita.getFecha();
 				fila[2] =  cita.getHora();
 				fila[3] =  cita.getDescripcion();

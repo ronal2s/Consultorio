@@ -24,16 +24,17 @@ public class Consultorio implements Serializable{
 	 * 
 	 */
 	private ArrayList<Paciente> pacientes;
-	private ArrayList<Profesional> profesionales;
+	private ArrayList<Profesional> profesionales; 
 	private ArrayList<Empleado> empleados;
 	private ArrayList<Enfermedad> enfermedades;
 	private ArrayList<Cita> citas;
 	private static Consultorio consultorio;
 	private ArrayList<Vacuna> vacuna;
 	private ArrayList<Usuario> usuario;
+	public static int posProfesional =-1;
 	
-	private Consultorio()
-	{
+	private Consultorio(){
+		
 		pacientes = new ArrayList<Paciente>();
 		profesionales = new ArrayList<Profesional>();
 		empleados = new ArrayList<Empleado>();
@@ -91,6 +92,8 @@ public class Consultorio implements Serializable{
 				if(profesionales.get(i).getClave().equals(clave))
 				{
 					correcto = true;
+					//nombreProfesional = profesionales.get(i).getNombre()+" "+profesionales.get(i).getApellidos();
+					posProfesional = i;
 				}
 				encontrado = true;
 				
@@ -346,6 +349,8 @@ public class Consultorio implements Serializable{
 
 		archivoProfesionales.close();
 	}
+	
+	
 
 	
 	

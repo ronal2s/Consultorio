@@ -60,9 +60,9 @@ public class RegConsulta extends JDialog {
 	private Object[] fila;
 	private JTable table;
 	private int posPaciente;
-	private JLabel lblImageHere;
+	private JLabel lblImageHere; 
 	private Calendar c = Calendar.getInstance();
-
+	private JLabel NombreProfesional;
 	
 	/**
 	 * Launch the application.
@@ -123,7 +123,8 @@ public class RegConsulta extends JDialog {
 		contentPanel.add(lblProfesional);
 		
 		cbxProfesional = new JComboBox();
-		cbxProfesional.setBounds(409, 55, 219, 28);
+		cbxProfesional.setVisible(false);
+		cbxProfesional.setBounds(612, 29, 28, 28);
 		contentPanel.add(cbxProfesional);
 		
 		JLabel lblFecha = new JLabel("Fecha:");
@@ -193,6 +194,11 @@ public class RegConsulta extends JDialog {
 		model.setColumnIdentifiers(columnNames);
 		table.setModel(model);
 		scrollPane.setViewportView(table);
+		
+		NombreProfesional = new JLabel("....");
+		NombreProfesional.setHorizontalAlignment(SwingConstants.LEFT);
+		NombreProfesional.setBounds(409, 55, 194, 28);
+		contentPanel.add(NombreProfesional);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBackground(new Color(176, 196, 222));
@@ -284,8 +290,14 @@ public class RegConsulta extends JDialog {
 			}
 		}
 		setBackground(new Color(176, 196, 222));
-		actualizarProfesionales();
+		//actualizarProfesionales();
 		llenarEnfermedades();
+		if ( Consultorio.posProfesional != -1 ) {
+			Profesional p = Consultorio.getInstance().getProfesionales().get(Consultorio.posProfesional);
+		NombreProfesional.setText(p.getNombre()+" "+p.getApellidos());
+		}
+		
+		
 		
 	}
 	//Debajo del constructor

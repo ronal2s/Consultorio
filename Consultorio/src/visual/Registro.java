@@ -154,7 +154,7 @@ public class Registro extends JDialog {
 				try
 				{
 				if(posModificar != -1)
-				{
+				{ 
 
 					if(tipo.equalsIgnoreCase("ModificarPaciente"))
 					{

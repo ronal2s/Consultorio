@@ -47,7 +47,7 @@ public class Listar extends JDialog {
 	private JDateChooser dateChooser;
 	private String fechaBuscar="";
 	private JLabel labelPhoto;
-	private JButton botonBuscarFecha;
+	private JButton botonBuscarFecha; 
 	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 	private int posModificar=-1, posEliminar=-1;
 	private JButton okButton;
@@ -243,7 +243,8 @@ public class Listar extends JDialog {
 				okButton.setBackground(new Color(102, 205, 170));
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						RegCita cita = new RegCita(posModificar);
+						System.out.println("n error: " + posModificar);
+						RegCita cita = new RegCita(posModificar-1);
 						cita.setModal(true);
 						cita.setVisible(true);
 					}
@@ -289,16 +290,25 @@ public class Listar extends JDialog {
 	} 
 	public void listarAgenda(String tipo)
 	{
-		int n =0;
+		int n = 0;
 		model.setRowCount(0);
 		fila = new Object[model.getColumnCount()];
 		ArrayList<Cita> citas = Consultorio.getInstance().getCitas();
 		System.out.println("Tamaño citas lista: " + citas.size());
+		Profesional d = null;
+		if ( Consultorio.posProfesional != -1 ) {
+			d = Consultorio.getInstance().getProfesionales().get(Consultorio.posProfesional);
+		}
 		switch(tipo)
-		{
+		{ 
 		case "Todos":
 			for (Cita cita : citas) {
-				fila[0] = n;
+				if ( Consultorio.posProfesional != -1) {
+					if (!cita.getDoctor().getCedula().equals(d.getCedula())) {
+						continue;
+					}
+				}
+				fila[0] =  n+1;
 				fila[1] =  cita.getFecha();
 				fila[2] =  cita.getHora();
 				fila[3] =  cita.getDescripcion();
@@ -311,7 +321,12 @@ public class Listar extends JDialog {
 			for (Cita cita : citas) {
 				if(cita.getFecha().equalsIgnoreCase(fechaBuscar))
 				{
-					fila[0] = n;
+					if ( Consultorio.posProfesional != -1) {
+						if (!cita.getDoctor().getCedula().equals(d.getCedula())) {
+							continue;
+						}
+					}
+					fila[0] = String.format("%d", n+1);
 					fila[1] =  cita.getFecha();
 					fila[2] =  cita.getHora();
 					fila[3] =  cita.getDescripcion();

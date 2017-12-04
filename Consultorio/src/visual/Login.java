@@ -8,7 +8,6 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.apple.dnssd.TXTRecord;
 
 import logical.Consultorio;
 import logical.print;
