@@ -39,7 +39,6 @@ public class RegVacuna extends JDialog {
 	private JTextField txtNombre;
 	private JTable table;
 	private JComboBox cbxTipo;
-	private JSpinner spnDosis;
 	private JButton btnGuardar;
 	private JButton btnSalir;
 	private DefaultTableModel model;
@@ -65,7 +64,7 @@ public class RegVacuna extends JDialog {
 		setResizable(false);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegVacuna.class.getResource("/img/if_7_375260.png")));
 		setTitle("Registrar Vacuna");
-		setBounds(100, 100, 391, 584);
+		setBounds(100, 100, 411, 456);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(176, 196, 222));
@@ -75,7 +74,7 @@ public class RegVacuna extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JScrollPane scrollPane = new JScrollPane();
-			scrollPane.setBounds(0, 137, 373, 244);
+			scrollPane.setBounds(15, 16, 373, 244);
 			contentPanel.add(scrollPane);
 			
 			table = new JTable();
@@ -88,37 +87,23 @@ public class RegVacuna extends JDialog {
 		{
 			cbxTipo = new JComboBox();
 			cbxTipo.setEnabled(false);
-			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "VIVA ATENUADA", "INACTIVADA", "SUBUNIDAD", "TOXOIDE", "COMBINADA", "ADN", "VECTOR RECOMBINANTES"}));
-			cbxTipo.setBounds(120, 429, 198, 22);
+			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Varicela ", "Fiebre amarilla", "Polio oral", "Sarampi\u00F3n", "Rub\u00E9ola", "Parotiditis", "Rabia", "Hepatitis A", "Hepatitis B"}));
+			cbxTipo.setBounds(93, 314, 202, 28);
 			contentPanel.add(cbxTipo);
 		}
 		{
-			JLabel label = new JLabel("Tipo de Vacuna:");
-			label.setBounds(12, 429, 102, 16);
-			contentPanel.add(label);
-		}
-		{
-			JLabel label = new JLabel("Dosis:");
-			label.setVisible(false);
-			label.setBounds(12, 470, 102, 16);
-			contentPanel.add(label);
-		}
-		{
-			spnDosis = new JSpinner();
-			spnDosis.setVisible(false);
-			spnDosis.setEnabled(false);
-			spnDosis.setModel(new SpinnerDateModel(new Date(1511409600000L), null, null, Calendar.DAY_OF_YEAR));
-			spnDosis.setBounds(120, 467, 155, 22);
-			contentPanel.add(spnDosis);
+			JLabel lblTipo = new JLabel("Tipo:");
+			lblTipo.setBounds(15, 320, 63, 16);
+			contentPanel.add(lblTipo);
 		}
 		
 		JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(12, 392, 56, 16);
+		lblNombre.setBounds(15, 276, 86, 16);
 		contentPanel.add(lblNombre);
 		
 		txtNombre = new JTextField();
 		txtNombre.setEnabled(false);
-		txtNombre.setBounds(118, 394, 200, 22);
+		txtNombre.setBounds(95, 276, 200, 28);
 		contentPanel.add(txtNombre);
 		txtNombre.setColumns(10);
 		
@@ -128,18 +113,13 @@ public class RegVacuna extends JDialog {
 			public void mouseClicked(MouseEvent arg0) {
 				txtNombre.setEnabled(true);
 				cbxTipo.setEnabled(true);
-				spnDosis.setEnabled(true);
+				//spnDosis.setEnabled(true);
 				btnGuardar.setEnabled(true);
 			}
 		});
 		lblAgregarVacuna.setIcon(new ImageIcon(RegVacuna.class.getResource("/img/if_add_370092.png")));
-		lblAgregarVacuna.setBounds(333, 392, 28, 24);
+		lblAgregarVacuna.setBounds(310, 280, 28, 24);
 		contentPanel.add(lblAgregarVacuna);
-		
-		JLabel label_1 = new JLabel("");
-		label_1.setIcon(new ImageIcon(RegVacuna.class.getResource("/img/Banner.png")));
-		label_1.setBounds(0, 0, 373, 137);
-		contentPanel.add(label_1);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBackground(new Color(176, 196, 222));
@@ -151,16 +131,18 @@ public class RegVacuna extends JDialog {
 				btnGuardar.setEnabled(false);
 				btnGuardar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(cbxTipo.getSelectedIndex() != 0 || txtNombre.getText().equalsIgnoreCase(""))
+						if(cbxTipo.getSelectedIndex() != 0)
 						{
-						String name = txtNombre.getText();
-						String tipo = cbxTipo.getSelectedItem().toString();
-						
-						Consultorio.getInstance().crearVacuna(name, tipo);
-						JOptionPane.showMessageDialog(null, "Agregado correctamente");
-						listarVacunas();
-						
-						clean();
+							if(txtNombre.getText().length() >0){
+								String name = txtNombre.getText();
+								String tipo = cbxTipo.getSelectedItem().toString();
+								
+								Consultorio.getInstance().crearVacuna(name, tipo);
+								JOptionPane.showMessageDialog(null, "Agregado correctamente");
+								listarVacunas();
+								
+								clean();
+							}
 						}
 						else
 						{

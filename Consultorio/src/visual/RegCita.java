@@ -170,7 +170,7 @@ public class RegCita extends JDialog {
 			
 			table = new JTable();
 			scrollPane.setViewportView(table);
-			String[] columnNames = {"#","Fecha","Hora","Descripción","Profesional"};
+			String[] columnNames = {"#","Fecha","Hora","Descripción","Profesional", "Paciente"};
 			model = new DefaultTableModel();
 			model.setColumnIdentifiers(columnNames);
 			table.setModel(model);
@@ -339,6 +339,7 @@ public class RegCita extends JDialog {
 				fila[2] =  cita.getHora();
 				fila[3] =  cita.getDescripcion();
 				fila[4] =  cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos();
+				fila[5] =  cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellidos();
 				n++;
 				model.addRow(fila);
 			}

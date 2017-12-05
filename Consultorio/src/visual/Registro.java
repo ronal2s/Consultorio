@@ -17,6 +17,10 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.joda.time.LocalDate;
+import org.joda.time.ReadablePartial;
+import org.joda.time.Years;
+
 import logical.Consultorio;
 import logical.Empleado;
 import logical.Paciente;
@@ -83,7 +87,7 @@ public class Registro extends JDialog {
 	private Calendar c = Calendar.getInstance();
 	//c.add(Calendar.YEAR, -10);
 	private JDateChooser txtFechaNacimiento;
-	private DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	private DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 	private boolean getPhoto;
 	private JLabel labelPhoto;
 	private String ruta, cedula;
@@ -340,12 +344,14 @@ public class Registro extends JDialog {
 		panel.setLayout(gl_panel);
 		
 		JLabel lblEdad = new JLabel("Edad:");
+		lblEdad.setVisible(false);
 		lblEdad.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblEdad.setBounds(179, 186, 71, 20);
+		lblEdad.setBounds(635, 20, 71, 20);
 		panelRegistro.add(lblEdad);
 		
 		spinnerEdad = new JSpinner();
-		spinnerEdad.setBounds(259, 182, 77, 28);
+		spinnerEdad.setVisible(false);
+		spinnerEdad.setBounds(715, 16, 77, 28);
 		panelRegistro.add(spinnerEdad);
 		spinnerEdad.setModel(new SpinnerNumberModel(1, 1, 150, 1));
 		
@@ -361,12 +367,12 @@ public class Registro extends JDialog {
 		
 		JLabel lblGrupoSanguineo = new JLabel("Grupo Sanguineo");
 		lblGrupoSanguineo.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblGrupoSanguineo.setBounds(351, 186, 103, 20);
+		lblGrupoSanguineo.setBounds(180, 182, 137, 20);
 		panelRegistro.add(lblGrupoSanguineo);
 		
 		comboGrupoSanguineo = new JComboBox();
 		comboGrupoSanguineo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Tipo A", "Tipo B", "Tipo AB", "Tipo O"}));
-		comboGrupoSanguineo.setBounds(459, 182, 89, 28);
+		comboGrupoSanguineo.setBounds(329, 182, 219, 28);
 		panelRegistro.add(comboGrupoSanguineo);
 		
 		JLabel lblFechaNacimiento = new JLabel("Fecha Nacimiento:");
@@ -404,7 +410,7 @@ public class Registro extends JDialog {
 		panelRegistro.add(lblConfirmarClave);
 		
 		txtFechaNacimiento = new JDateChooser(c.getTime());
-		txtFechaNacimiento.setBounds(326, 220, 222, 28);
+		txtFechaNacimiento.setBounds(329, 220, 222, 28);
 		txtFechaNacimiento.setDateFormatString("dd/MM/yyyy");
 
 
@@ -454,7 +460,13 @@ public class Registro extends JDialog {
 						fechaNacimiento = df.format(txtFechaNacimiento.getDate()) == ""? "No agregado":df.format(txtFechaNacimiento.getDate()) ;
 						//fechaNacimiento = txtFechaNacimiento.getText();
 						tipoSangre = comboGrupoSanguineo.getSelectedItem().toString();
-						edad = (int) spinnerEdad.getValue();
+						String [] partesFecha = df.format(txtFechaNacimiento.getDate()).split("/");
+						System.out.print("Fecha: " + partesFecha[2] + "/" + partesFecha[1] + "/" + partesFecha[0]);
+						LocalDate birthdate = new LocalDate (Integer.valueOf(partesFecha[0]), Integer.valueOf(partesFecha[1]), Integer.valueOf(partesFecha[2]));
+						LocalDate now = new LocalDate();
+						Years age = Years.yearsBetween(birthdate, now);
+						edad =  age.getYears();//(int) spinnerEdad.getValue();
+						System.out.println("Edad: " + edad);
 						estadoCivil = (String) comboEstadoCivil.getSelectedItem();
 						//Recordar que hay que validar la cedula y todas esas vainas que no lo dejen vacío 
 						switch(tipo)

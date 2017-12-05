@@ -304,6 +304,25 @@ public class Principal extends JFrame {
 			}
 		});
 		mnOpciones.add(mntmAsignarVacunasdosis);
+		
+		JMenu mnSesin = new JMenu("Sesi\u00F3n");
+		menuBar.add(mnSesin);
+		
+		JMenuItem mntmCerrarSesin = new JMenuItem("Cerrar sesi\u00F3n");
+		mntmCerrarSesin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Consultorio.getInstance().SaveMe();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Login.main(null);
+				dispose();
+				
+			}
+		});
+		mnSesin.add(mntmCerrarSesin);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -366,9 +385,10 @@ public class Principal extends JFrame {
         data.setValue("Java", 45);*/
         ArrayList<Paciente> pacientes = Consultorio.getInstance().getPacientes();
         int h=0, m=0;
+        int a=0,b=0,ab=0,o=0;
         
         for (int i = 0; i < pacientes.size(); i++) {
-			if(pacientes.get(i).getSexo() == 'M')
+			/*if(pacientes.get(i).getSexo() == 'M')
 			{
 				h++;
 				data.setValue("Hombres", h);
@@ -377,13 +397,33 @@ public class Principal extends JFrame {
 			{
 				m++;
 				data.setValue("Mujeres", m);
+			}*/
+			if(pacientes.get(i).getTipoSangre().equals("Tipo A"))
+			{
+				a++;
+				data.setValue("Tipo A", a);
+			}
+			else if(pacientes.get(i).getTipoSangre().equals("Tipo B"))
+			{
+				b++;
+				data.setValue("Tipo B", b);
+			}
+			else if(pacientes.get(i).getTipoSangre().equals("Tipo AB"))
+			{
+				ab++;
+				data.setValue("Tipo AB", ab);
+			}
+			else
+			{
+				o++;
+				data.setValue("Tipo O", o);
 			}
 		}
         //data.setValue("Python", 15);
  
         // Creando el Grafico
         JFreeChart chart = ChartFactory.createPieChart(
-         "Población", 
+         "Tipo de sangre de pacientes registrados", 
          data, 
          true, 
          true, 
@@ -400,12 +440,18 @@ public class Principal extends JFrame {
         // Fuente de Datos
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-        for (Profesional p : Consultorio.getInstance().getProfesionales()) {
-			dataset.setValue(p.getEdad(),"Cargo", p.getEspecialidad());
+        int n=0;
+        for (Paciente p : Consultorio.getInstance().getPacientes()) {
+			//dataset.setValue(p.getEdad(),"Cargo", p.getEspecialidad());
+        	if(p.getVacunas().size()>0)
+        	{
+        		
+        		dataset.setValue(p.getVacunas().get(0).getLista().size(), "Vacuna", p.getVacunas().get(0).getTipo());
+        	}
 		}
         // Creando el Grafico
         JFreeChart chart = ChartFactory.createBarChart3D
-        ("Tipo de Profesionales","Profesiones", "Edad", 
+        ("Pacientes con vacunas","Vacunas", "Dósis", 
         dataset, PlotOrientation.VERTICAL, true,true, false);
         chart.setBackgroundPaint(Color.gray);
         chart.getTitle().setPaint(Color.black); 

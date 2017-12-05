@@ -197,7 +197,7 @@ public class Listar extends JDialog {
 			columnNames = empleados;
 			break;
 		case "Agenda":
-			String[] citas = {"#","Fecha","Hora","Descripción","Profesional"};
+			String[] citas = {"#","Fecha","Hora","Descripción","Profesional", "Paciente"};
 			columnNames = citas;
 			break;
 		}
@@ -313,6 +313,7 @@ public class Listar extends JDialog {
 				fila[2] =  cita.getHora();
 				fila[3] =  cita.getDescripcion();
 				fila[4] =  cita.getDoctor().getNombre() + " " + cita.getDoctor().getApellidos();
+				fila[5] =  cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellidos();
 				n++;
 				model.addRow(fila);
 			}

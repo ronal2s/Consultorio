@@ -8,6 +8,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Years;
 
 import logical.Consultorio;
 import logical.print;
@@ -47,7 +49,6 @@ public class Login extends JDialog {
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 			Consultorio.getInstance().loadMe();
-			
 		} catch (Exception e) {
 			//e.printStackTrace();
 		}

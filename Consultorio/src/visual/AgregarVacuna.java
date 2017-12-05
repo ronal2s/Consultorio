@@ -45,7 +45,7 @@ public class AgregarVacuna extends JDialog {
 	private String fecha = (DateTimeFormatter.ofPattern("dd/MM/yyyy").format(localdate));
 	private JLabel lblNombre;
 	private String vacunaAasignarDosis="";
-	private int index;
+	private int index=-1;
 	
 	/**
 	 * Launch the application.
@@ -64,6 +64,7 @@ public class AgregarVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public AgregarVacuna() {
+		setTitle("Agregar vacuna y d\u00F3sis");
 		setResizable(false);
 		setBounds(100, 100, 555, 586);
 		setLocationRelativeTo(null);
@@ -191,16 +192,23 @@ public class AgregarVacuna extends JDialog {
 				botonAgregarvacuna.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						//Evento de asignarle vacuna al paciente
-						String nombreVacuna = comboBox.getSelectedItem().toString();
-						Vacuna vacuna = Consultorio.getInstance().getVacunas().get(Consultorio.getInstance().buscarVacuna(nombreVacuna));
-						ArrayList<Vacuna> vacunas = paciente.getVacunas();
-						vacunas.add(vacuna);
-						paciente.setVacunas(vacunas);
-						System.out.println("Posicion a modificar: " + posModificar);
-						Consultorio.getInstance().sustituirPaciente(posModificar, paciente);
-						JOptionPane.showMessageDialog(null, "Vacuna agregada correctamente");
-						listarVacunas();
-						
+						if(paciente != null)
+						{
+							String nombreVacuna = comboBox.getSelectedItem().toString();
+							Vacuna vacuna = Consultorio.getInstance().getVacunas().get(Consultorio.getInstance().buscarVacuna(nombreVacuna));
+							vacuna.setLista(new ArrayList<String>());//Limpiando la dosis que podría tener esta vacuna para no ponersela al paciente
+							ArrayList<Vacuna> vacunas = paciente.getVacunas();
+							vacunas.add(vacuna);
+							paciente.setVacunas(vacunas);
+							System.out.println("Posicion a modificar: " + posModificar);
+							Consultorio.getInstance().sustituirPaciente(posModificar, paciente);
+							JOptionPane.showMessageDialog(null, "Vacuna agregada correctamente");
+							listarVacunas();
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Debe buscar un paciente primero");
+						}
 					}
 				});
 				botonAgregarvacuna.setEnabled(false);
@@ -213,10 +221,27 @@ public class AgregarVacuna extends JDialog {
 				botonAgregarDosis.setBackground(new Color(205, 92, 92));
 				botonAgregarDosis.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						paciente.getVacunas().get(index).getLista().add(fecha);
-						//Consultorio.getInstance().sustituirPaciente(posModificar, paciente);
-						JOptionPane.showMessageDialog(null, "Dosis administrada correctamente. Tamano dosis: " + paciente.getVacunas().get(index).getLista().size() + "PosModificar es: " + posModificar);
-						listarVacunas();
+						if(index != -1)
+						{
+							paciente.getVacunas().get(index).getLista().add(fecha);
+							Consultorio.getInstance().sustituirPaciente(posModificar, paciente);
+							JOptionPane.showMessageDialog(null, "Dosis administrada correctamente");
+							System.out.println("Paciente de la vacuna: " + paciente.getNombre());
+							txtCedula.setText("");
+							lblNombre.setText("");
+							posModificar=-1;
+							paciente = null;
+							txtCedula.requestFocus();
+							//listarVacunas();
+							model = (DefaultTableModel) table.getModel();
+							model.setRowCount(0);
+							table.setModel(model);
+						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Debe buscar un paciente y elegir una vacuna");
+						}
+						
 					}
 				});
 				botonAgregarDosis.setEnabled(false);
@@ -238,6 +263,8 @@ public class AgregarVacuna extends JDialog {
 	private void listarVacunas() {
 		model.setRowCount(0);
 		fila = new Object[model.getColumnCount()];
+		if(paciente != null)
+		{
 			for (Vacuna v : paciente.getVacunas()) {
 				fila[0] = v.getName();
 				fila[1] = v.getTipo();
@@ -246,6 +273,7 @@ public class AgregarVacuna extends JDialog {
 				fila[3] = v.getLista().size() > 0? v.getLista().get(0): "Nunca";
 				model.addRow(fila);
 		}
+	}
 	}
 	
 }

@@ -153,7 +153,35 @@ public class RegConsulta extends JDialog {
 				    lblNombre.setText(paciente.getNombre() + " " + paciente.getApellidos());
 				    llenarTabla();
 				    cargarFoto(txtCedula.getText()+".jpg");
+				    Profesional p = Consultorio.getInstance().getProfesionales().get(Consultorio.posProfesional);
+				    if(paciente.getCitas().size()>0)
+				    {
+					    if(!paciente.getCitas().get(0).getDoctor().getCedula().equals(p.getCedula()))
+					    {
+					    	JOptionPane.showMessageDialog(null, "La cita de este paciente no es contigo. Lo lamento");
+					    	paciente = null;
+					    	cargarFoto("");
+					    	lblNombre.setText("");
+					    	txtCedula.setText("");
+					    	txtCedula.requestFocus();
+					    }
+				    }
+				    else
+				    {
+						JOptionPane.showMessageDialog(null, "Este paciente no tiene cita");
+				    	paciente = null;
+				    	cargarFoto("");
+				    	lblNombre.setText("");
+				    	txtCedula.setText("");
+				    	txtCedula.requestFocus();
+
+				    }
+
 				    
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "Esta cedula no está registrada");
 				}
 			}
 		});
@@ -221,37 +249,44 @@ public class RegConsulta extends JDialog {
 						
 						try
 						{
-							String fecha = df.format(dateChooser.getDate());
-
-						String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
-						int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
-						doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
-						sintomas = txtSintomas.getText();
-						exploracion = txtExploracion.getText();
-						diagnostico = txtDiagnostico.getText();
-						tratamiento = txtTratamiento.getText();
-						enfermedad = comboEnfermedad.getSelectedItem().toString();
-						cita = paciente.getCitas().get(0);//OJO
-						Consultorio.getInstance().crearConsulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita, AHistorial);
-						paciente.getCitas().remove(0);
-						Consultorio.getInstance().sustituirPaciente(posPaciente, paciente);
-						
-						//OJO
-						//RECORDAR IMPRIMIR ESTA VAINA y el historial
-						JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
-						JOptionPane.showMessageDialog(null, "Imprimiendo consulta");
-						String texto = "Fecha: " + fecha + "\n" +
-										"\nPaciente:\n" + paciente.getNombre() + " " + paciente.getApellidos() + "\n"+
-										"\nProfesional encargado:\n" + doctor.getNombre() + " " + doctor.getApellidos() + "\n" +
-										"Sintomas:\n" + sintomas + "\n" + "\nExploración:\n" + exploracion + "\n" + "\nDiagnósico:\n" + diagnostico + "\n" +
-										"\nEnfermedad:\n" + enfermedad + "\n" +
-										"\nTratamiento:\n" + tratamiento;
-						print.texto = texto;
-						print imprimir = new print();
-						imprimir.imprimir();
+							if(txtCedula.getText().length()>0)
+							{
+									String fecha = df.format(dateChooser.getDate());
+		
+								String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
+								int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
+								doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
+								sintomas = txtSintomas.getText();
+								exploracion = txtExploracion.getText();
+								diagnostico = txtDiagnostico.getText();
+								tratamiento = txtTratamiento.getText();
+								enfermedad = comboEnfermedad.getSelectedItem().toString();
+								cita = paciente.getCitas().get(0);//OJO
+								Consultorio.getInstance().crearConsulta(fecha, paciente, doctor, sintomas, exploracion, diagnostico, tratamiento, enfermedad, cita, AHistorial);
+								paciente.getCitas().remove(0);
+								Consultorio.getInstance().sustituirPaciente(posPaciente, paciente);
 								
+								//OJO
+								//RECORDAR IMPRIMIR ESTA VAINA y el historial
+								JOptionPane.showMessageDialog(null, "Operación realizada correctamente");
+								JOptionPane.showMessageDialog(null, "Imprimiendo consulta");
+								String texto = "Fecha: " + fecha + "\n" +
+												"\nPaciente:\n" + paciente.getNombre() + " " + paciente.getApellidos() + "\n"+
+												"\nProfesional encargado:\n" + doctor.getNombre() + " " + doctor.getApellidos() + "\n" +
+												"Sintomas:\n" + sintomas + "\n" + "\nExploración:\n" + exploracion + "\n" + "\nDiagnósico:\n" + diagnostico + "\n" +
+												"\nEnfermedad:\n" + enfermedad + "\n" +
+												"\nTratamiento:\n" + tratamiento;
+								print.texto = texto;
+								print imprimir = new print();
+								imprimir.imprimir();
+							}else
+							{
+								JOptionPane.showMessageDialog(null, "Necesita buscar un paciente primero");
+								txtCedula.requestFocus();
+							}
 					}catch(Exception es)
 					{
+						
 						
 					JOptionPane.showMessageDialog(null, "Este paciente no tiene cita");
 					}

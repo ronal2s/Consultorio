@@ -63,7 +63,7 @@ public class RegEnfermedad extends JDialog {
 		setResizable(false);
 		setForeground(new Color(176, 224, 230));
 		setTitle("Registrar Enfermedad");
-		setBounds(100, 100, 645, 497);
+		setBounds(100, 100, 645, 417);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(new Color(176, 196, 222));
@@ -73,19 +73,19 @@ public class RegEnfermedad extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel label = new JLabel("Nombre:");
-			label.setBounds(12, 161, 56, 16);
+			label.setBounds(12, 19, 84, 16);
 			contentPanel.add(label);
 		}
 		{
 			txtNombre = new JTextField();
 			txtNombre.setEnabled(false);
 			txtNombre.setColumns(10);
-			txtNombre.setBounds(76, 158, 176, 22);
+			txtNombre.setBounds(98, 13, 176, 28);
 			contentPanel.add(txtNombre);
 		}
 		{
 			JScrollPane scrollPaneListadoEnfer = new JScrollPane();
-			scrollPaneListadoEnfer.setBounds(288, 153, 332, 249);
+			scrollPaneListadoEnfer.setBounds(296, 57, 332, 249);
 			contentPanel.add(scrollPaneListadoEnfer);
 			{
 				table = new JTable();
@@ -101,19 +101,19 @@ public class RegEnfermedad extends JDialog {
 			cbxTipo = new JComboBox();
 			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Aguda", "Cr\u00F3nica", "Espor\u00E1dica", "End\u00E9mica", "Epid\u00E9mica", "Infecciosa", "No Infecciosa"}));
 			cbxTipo.setEnabled(false);
-			cbxTipo.setBounds(76, 193, 198, 22);
+			cbxTipo.setBounds(98, 51, 176, 28);
 			contentPanel.add(cbxTipo);
 		}
 		{ 
 			JLabel label = new JLabel("Tipo:");
-			label.setBounds(12, 193, 102, 16);
+			label.setBounds(12, 57, 84, 16);
 			contentPanel.add(label);
 		}
 		{
 			JPanel panel = new JPanel();
 			panel.setLayout(null);
 			panel.setBorder(new TitledBorder(null, "Caracter\u00EDsticas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel.setBounds(12, 222, 264, 180);
+			panel.setBounds(12, 125, 264, 180);
 			contentPanel.add(panel);
 			{
 				txtCaracteristicas = new JTextPane();
@@ -121,12 +121,6 @@ public class RegEnfermedad extends JDialog {
 				txtCaracteristicas.setBounds(12, 24, 240, 143);
 				panel.add(txtCaracteristicas);
 			}
-		}
-		{
-			JLabel label = new JLabel("");
-			label.setIcon(new ImageIcon(RegEnfermedad.class.getResource("/img/Banner.png")));
-			label.setBounds(0, 0, 627, 143);
-			contentPanel.add(label);
 		}
 		{
 			JLabel label = new JLabel("");
@@ -140,7 +134,7 @@ public class RegEnfermedad extends JDialog {
 				}
 			});
 			label.setIcon(new ImageIcon(RegEnfermedad.class.getResource("/img/if_add_370092.png")));
-			label.setBounds(258, 155, 30, 22);
+			label.setBounds(286, 19, 30, 22);
 			contentPanel.add(label);
 		}
 		{
@@ -155,7 +149,7 @@ public class RegEnfermedad extends JDialog {
 				btnGuardar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						String name = txtNombre.getText();
-						String tipo = String.valueOf(cbxTipo.getSelectedIndex());
+						String tipo = String.valueOf(cbxTipo.getSelectedItem());
 						String caracteristicas = txtCaracteristicas.getText();
 						if(name.equalsIgnoreCase("") || tipo.equalsIgnoreCase("Seleccionar"))
 						{
