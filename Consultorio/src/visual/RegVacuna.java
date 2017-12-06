@@ -140,7 +140,7 @@ public class RegVacuna extends JDialog {
 								Consultorio.getInstance().crearVacuna(name, tipo);
 								JOptionPane.showMessageDialog(null, "Agregado correctamente");
 								listarVacunas();
-								
+								txtNombre.requestFocus();
 								clean();
 							}
 						}

@@ -162,6 +162,8 @@ public class RegEnfermedad extends JDialog {
 						clean();
 						JOptionPane.showMessageDialog(null, "Agregado correctamente");
 						llenarTabla();
+						txtNombre.setText("");
+						txtNombre.requestFocus();
 						}
 					}
 

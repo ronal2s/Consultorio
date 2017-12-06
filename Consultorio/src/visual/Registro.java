@@ -62,7 +62,6 @@ public class Registro extends JDialog {
 	private JTextField txtDireccion;
 	private JTextField txtTelefono;
 	private JTextField txtMovil;
-	private JTextField txtEspecialidad;
 	private JPanel panelPaciente;
 	private JLabel lblEspecialidad;
 	private JComboBox comboCargo = new JComboBox();
@@ -91,6 +90,7 @@ public class Registro extends JDialog {
 	private boolean getPhoto;
 	private JLabel labelPhoto;
 	private String ruta, cedula;
+	private JComboBox txtEspecialidad;
 	
 	/**
 	 * Launch the application.
@@ -141,7 +141,7 @@ public class Registro extends JDialog {
 		labelPhoto.setBounds(15, 16, 151, 150);
 		panelRegistro.add(labelPhoto);
 		
-		JLabel lblCdula = new JLabel("C\u00E9dula: ");
+		JLabel lblCdula = new JLabel("*C\u00E9dula: ");
 		lblCdula.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblCdula.setBounds(180, 16, 71, 20);
 		panelRegistro.add(lblCdula);
@@ -197,7 +197,7 @@ public class Registro extends JDialog {
 						sexoF = profesional.getSexo() == 'F'? true: false;
 						tipoSangre = profesional.getTipoSangre();
 						estadoCivil = profesional.getEstadoCivil();
-						txtEspecialidad.setText(profesional.getEspecialidad());
+						txtEspecialidad.setSelectedItem(profesional.getEspecialidad());
 						modoModificar(false);
 						cargarFoto(txtCedula.getText()+".jpg");
 
@@ -252,9 +252,9 @@ public class Registro extends JDialog {
 		panelRegistro.add(txtCedula);
 		txtCedula.setColumns(10);
 		
-		JLabel lblNombre = new JLabel("Nombre:");
+		JLabel lblNombre = new JLabel("*Nombre:");
 		lblNombre.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNombre.setBounds(180, 60, 71, 20);
+		lblNombre.setBounds(148, 60, 103, 20);
 		panelRegistro.add(lblNombre);
 		
 		txtNombre = new JTextField();
@@ -267,13 +267,13 @@ public class Registro extends JDialog {
 		txtApellidos.setBounds(565, 56, 227, 28);
 		panelRegistro.add(txtApellidos);
 		
-		JLabel lblApellido = new JLabel("Apellido/s:");
+		JLabel lblApellido = new JLabel("*Apellido/s:");
 		lblApellido.setBounds(477, 60, 89, 20);
 		panelRegistro.add(lblApellido);
 		
-		JLabel lblDireccin = new JLabel("Direcci\u00F3n:");
+		JLabel lblDireccin = new JLabel("*Direcci\u00F3n:");
 		lblDireccin.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDireccin.setBounds(180, 106, 71, 20);
+		lblDireccin.setBounds(158, 106, 93, 20);
 		panelRegistro.add(lblDireccin);
 		
 		txtDireccion = new JTextField();
@@ -375,23 +375,17 @@ public class Registro extends JDialog {
 		comboGrupoSanguineo.setBounds(329, 182, 219, 28);
 		panelRegistro.add(comboGrupoSanguineo);
 		
-		JLabel lblFechaNacimiento = new JLabel("Fecha Nacimiento:");
+		JLabel lblFechaNacimiento = new JLabel("*Fecha Nacimiento:");
 		lblFechaNacimiento.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblFechaNacimiento.setBounds(180, 226, 137, 20);
+		lblFechaNacimiento.setBounds(158, 226, 159, 20);
 		panelRegistro.add(lblFechaNacimiento);
 		
-		txtEspecialidad = new JTextField();
-		txtEspecialidad.setBackground(SystemColor.info);
-		txtEspecialidad.setBounds(329, 259, 463, 28);
-		panelRegistro.add(txtEspecialidad);
-		txtEspecialidad.setColumns(10);
-		
-		lblEspecialidad = new JLabel("Especialidad:");
+		lblEspecialidad = new JLabel("*Especialidad:");
 		lblEspecialidad.setBounds(214, 263, 103, 20);
 		panelRegistro.add(lblEspecialidad);
 		lblEspecialidad.setHorizontalAlignment(SwingConstants.RIGHT);
 		
-		lblClave = new JLabel("Clave:");
+		lblClave = new JLabel("*Clave:");
 		lblClave.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblClave.setBounds(248, 299, 69, 20);
 		panelRegistro.add(lblClave);
@@ -404,7 +398,7 @@ public class Registro extends JDialog {
 		txtConfirmarClave.setBounds(641, 296, 151, 28);
 		panelRegistro.add(txtConfirmarClave);
 		
-		lblConfirmarClave = new JLabel("Confirmar clave:");
+		lblConfirmarClave = new JLabel("*Confirmar clave:");
 		lblConfirmarClave.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblConfirmarClave.setBounds(495, 299, 134, 20);
 		panelRegistro.add(lblConfirmarClave);
@@ -415,6 +409,11 @@ public class Registro extends JDialog {
 
 
 		panelRegistro.add(txtFechaNacimiento);
+		
+		txtEspecialidad = new JComboBox();
+		txtEspecialidad.setModel(new DefaultComboBoxModel(new String[] {"Seleccionar", "Cardi\u00F3logo", "Pediatra", "Ginec\u00F3logo", "Ur\u00F3logo", "Dermat\u00F3logo"}));
+		txtEspecialidad.setBounds(329, 260, 463, 28);
+		panelRegistro.add(txtEspecialidad);
 		
 		panelPaciente = new JPanel();
 		panelPaciente.setBorder(new TitledBorder(null, "Campos espec\u00EDficos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -441,8 +440,15 @@ public class Registro extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				okButton = new JButton(nombreBoton);
-				okButton.addActionListener(new ActionListener() {
+				okButton.addActionListener(new ActionListener() {					
 					public void actionPerformed(ActionEvent e) {
+						if(!(txtCedula.getText().length() >0) || !(txtNombre.getText().length()>0) || !(txtApellidos.getText().length()>0) || comboEstadoCivil.getSelectedIndex()==0 || !(txtDireccion.getText().length()>0))
+						{
+							JOptionPane.showMessageDialog(null, "Debe los datos importantes para continuar");
+							txtCedula.requestFocus();
+						}
+						else
+						{
 						try
 						{
 						String nombre,apellidos,direccion,telefono,movil, fechaNacimiento,tipoSangre, estadoCivil,alergias="",
@@ -489,8 +495,10 @@ public class Registro extends JDialog {
 							limpiarCampos();
 							break;
 						case "RegistrarProfesional":
-							String especialidad = txtEspecialidad.getText();
+							String especialidad = txtEspecialidad.getSelectedItem().toString();
 							clave = txtClave.getText();
+							if(txtEspecialidad.getSelectedIndex() != 0)
+							{
 							if(validarClave(clave))
 							{
 								Consultorio.getInstance().crearProfesional(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,especialidad, clave);
@@ -498,10 +506,19 @@ public class Registro extends JDialog {
 								limpiarCampos();
 
 							}
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Debe los datos importantes para continuar");
+								txtCedula.requestFocus();
+
+							}
 							break;
 						case "ModificarProfesional":
 							clave = txtClave.getText();
-							cargo = txtEspecialidad.getText();
+							cargo = txtEspecialidad.getSelectedItem().toString();
+							if(txtEspecialidad.getSelectedIndex() != 0)
+							{
 							if(validarClave(clave))
 							{
 								Profesional profesionalModificado = new Profesional(cedula, nombre, apellidos, direccion, estadoCivil, 
@@ -510,13 +527,22 @@ public class Registro extends JDialog {
 								JOptionPane.showMessageDialog(null, "Modificado correctamente");
 								limpiarCampos();
 							}
+							}
+							else
+							{
+								JOptionPane.showMessageDialog(null, "Debe los datos importantes para continuar");
+								txtCedula.requestFocus();
+
+							}
 							break;
 						case "RegistrarEmpleado":
 							cargo = comboCargo.getSelectedItem().toString();
 							clave = txtClave.getText();
-							if(comboCargo.getSelectedIndex()==1)
+							if(comboCargo.getSelectedIndex()!=0)
 							{
-								if(!Principal.getTipo().equalsIgnoreCase("Administrador"))
+								if(comboCargo.getSelectedIndex()==1)
+								{
+									if(!Principal.getTipo().equalsIgnoreCase("Administrador"))
 									{
 										JOptionPane.showMessageDialog(null, "No tienes los suficientes permisos para crear un administrador nuevo.");
 									}
@@ -529,15 +555,23 @@ public class Registro extends JDialog {
 										limpiarCampos();
 									}
 								}
+								}
+								else
+								{
+									if(validarClave(clave))
+									{
+										Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
+										JOptionPane.showMessageDialog(null, "Agregado correctamente");
+										limpiarCampos();
+									}
+								}
+
 							}
 							else
 							{
-								if(validarClave(clave))
-								{
-									Consultorio.getInstance().crearEmpleado(cedula, nombre, apellidos, direccion, estadoCivil,telefono, movil, sexo, fechaNacimiento, tipoSangre, edad,cargo, clave);
-									JOptionPane.showMessageDialog(null, "Agregado correctamente");
-									limpiarCampos();
-								}
+								JOptionPane.showMessageDialog(null, "Debe los datos importantes para continuar");
+								txtCedula.requestFocus();
+
 							}
 
 
@@ -565,7 +599,7 @@ public class Registro extends JDialog {
 							JOptionPane.showMessageDialog(null, "Ha ocurrido un error, compruebe sus datos");
 							System.out.println("Error: " + e1.getMessage());
 						}
-						
+						}
 					}
 
 				});
@@ -732,7 +766,7 @@ public class Registro extends JDialog {
 			txtAlergias.setText("");
 			txtObservaciones.setText("");
 			txtAntecedentes.setText("");
-			txtEspecialidad.setText("");
+			txtEspecialidad.setSelectedIndex(0);;
 			comboCargo.setSelectedIndex(0);
 
 			//txtVacunas.setText("");
@@ -746,15 +780,23 @@ public class Registro extends JDialog {
 	public boolean validarClave(String clave)
 	{
 		boolean correcto = false;
-		if(clave.equalsIgnoreCase(txtConfirmarClave.getText()))
+		if(txtClave.getText().length()>0)
 		{
-			correcto = true;
+			if(clave.equalsIgnoreCase(txtConfirmarClave.getText()))
+			{
+				correcto = true;
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "La confirmación de la clave no coincide");
+				txtClave.setText("");
+				txtConfirmarClave.setText("");
+				txtClave.requestFocus();
+			}
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "La confirmación de la clave no coincide");
-			txtClave.setText("");
-			txtConfirmarClave.setText("");
+			JOptionPane.showMessageDialog(null, "Debe escribir una clave que pueda recordar");
 			txtClave.requestFocus();
 		}
 		return correcto;
@@ -845,7 +887,7 @@ public class Registro extends JDialog {
 		lblClave.setVisible(enabled);
 		txtConfirmarClave.setVisible(enabled);
 		lblConfirmarClave.setVisible(enabled);
-		lblEspecialidad.setText("Cargo:");
+		lblEspecialidad.setText("*Cargo:");
 		//comboCargo = new JComboBox();
 		comboCargo.setBounds(329, 259, 237, 28);
 		panelRegistro.add(comboCargo);

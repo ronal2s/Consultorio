@@ -110,6 +110,8 @@ public class Login extends JDialog {
 					else
 					{
 						JOptionPane.showMessageDialog(null, "Usuario y/o clave incorrectos");
+						txtClave.setText("");
+						txtCedula.requestFocus();
 					}
 				}
 			});

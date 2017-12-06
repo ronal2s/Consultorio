@@ -32,6 +32,7 @@ public class Consultorio implements Serializable{
 	private ArrayList<Vacuna> vacuna;
 	private ArrayList<Usuario> usuario;
 	public static int posProfesional =-1;
+	public static String tipoProfesional="";
 	
 	private Consultorio(){
 		
@@ -152,6 +153,7 @@ public class Consultorio implements Serializable{
 		{
 			
 		}
+		tipoProfesional = tipo;
 		return tipo;
 	}
 	

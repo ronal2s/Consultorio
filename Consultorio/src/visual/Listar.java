@@ -52,6 +52,7 @@ public class Listar extends JDialog {
 	private int posModificar=-1, posEliminar=-1;
 	private JButton okButton;
 	private Calendar c = Calendar.getInstance();
+	private JButton cancelButton;
 
 	/**
 	 * Launch the application.
@@ -254,7 +255,7 @@ public class Listar extends JDialog {
 				getRootPane().setDefaultButton(okButton);
 			}
 			{
-				JButton cancelButton = new JButton("Eliminar");
+				cancelButton = new JButton("Eliminar");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
 						switch(tipoLista)
@@ -274,6 +275,10 @@ public class Listar extends JDialog {
 							Consultorio.getInstance().getEmpleados().remove(posEliminar);
 							listarEmpleados("Todos");
 							break;
+						case "Agenda":
+							Consultorio.getInstance().getCitas().remove(posModificar-1);
+							listarAgenda("Todos");
+							break;
 						}
 						JOptionPane.showMessageDialog(null, "Eliminado correctamente");
 					}
@@ -285,8 +290,19 @@ public class Listar extends JDialog {
 		}
 		if(tipoLista.equalsIgnoreCase("Agenda"))
 		{
-			okButton.setVisible(true);
+			if(Consultorio.getInstance().tipoProfesional.equals("Profesional"))
+			{
+				okButton.setVisible(false);
+				cancelButton.setVisible(false);
+			}
+			else
+			{
+				okButton.setVisible(true);
+				cancelButton.setVisible(true);
+
+			}
 		}
+		
 	} 
 	public void listarAgenda(String tipo)
 	{

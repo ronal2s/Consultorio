@@ -92,6 +92,10 @@ public class AgregarVacuna extends JDialog {
 							lblNombre.setText(paciente.getNombre() + " "  + paciente.getApellidos());
 						    listarVacunas();
 						}
+						else
+						{
+							JOptionPane.showMessageDialog(null, "Este paciente parece no estar registrado");
+						}
 					}
 				});
 				txtCedula.setBounds(12, 39, 168, 28);

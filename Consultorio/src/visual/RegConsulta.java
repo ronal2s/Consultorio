@@ -253,9 +253,9 @@ public class RegConsulta extends JDialog {
 							{
 									String fecha = df.format(dateChooser.getDate());
 		
-								String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
-								int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
-								doctor = Consultorio.getInstance().getProfesionales().get(pos);//Esto hay que cambiarlo luego
+								//String[] partes = cbxProfesional.getSelectedItem().toString().split("-");
+								//int pos = Consultorio.getInstance().buscarProfesional(partes[1]);
+								doctor = Consultorio.getInstance().getProfesionales().get(Consultorio.posProfesional);//Esto hay que cambiarlo luego
 								sintomas = txtSintomas.getText();
 								exploracion = txtExploracion.getText();
 								diagnostico = txtDiagnostico.getText();
@@ -286,8 +286,7 @@ public class RegConsulta extends JDialog {
 							}
 					}catch(Exception es)
 					{
-						
-						
+						es.printStackTrace();	
 					JOptionPane.showMessageDialog(null, "Este paciente no tiene cita");
 					}
 					}

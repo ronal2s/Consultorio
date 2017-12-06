@@ -106,7 +106,16 @@ public class Principal extends JFrame {
 	 */
 	public Principal(String tipo) {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Principal.class.getResource("/img/icono.png")));
-		setTitle("Consultorio");
+		Profesional p = null;
+		try
+		{
+			 p = Consultorio.getInstance().getProfesionales().get(Consultorio.posProfesional);
+			 setTitle("Consultorio. Profesional: " + p.getNombre() + " " + p.getApellidos());
+		}catch(Exception e)
+		{
+			setTitle("Consultorio");
+		}
+		
 		this.tipo = tipo;
 		System.out.println("Tipo: " + tipo);
 		addWindowFocusListener(new WindowFocusListener() {
@@ -313,6 +322,8 @@ public class Principal extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					Consultorio.getInstance().SaveMe();
+					Consultorio.posProfesional = -1;
+					Consultorio.tipoProfesional ="";
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
